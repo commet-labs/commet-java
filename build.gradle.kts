@@ -1,6 +1,8 @@
 plugins {
     `java-library`
     `maven-publish`
+    signing
+    id("net.thebugmc.gradle.sonatype-central-portal-publisher") version "1.2.4"
 }
 
 group = "co.commet"
@@ -29,23 +31,38 @@ tasks.test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
+centralPortal {
+    username = providers.gradleProperty("centralPortalUsername")
+    password = providers.gradleProperty("centralPortalPassword")
 
-            pom {
-                name.set("Commet Java SDK")
-                description.set("Billing and usage tracking for SaaS applications")
-                url.set("https://github.com/commet-billing/commet-java")
+    pom {
+        name.set("Commet Java SDK")
+        description.set("Billing and usage tracking for SaaS applications")
+        url.set("https://github.com/commet-labs/commet-java")
 
-                licenses {
-                    license {
-                        name.set("MIT License")
-                        url.set("https://opensource.org/licenses/MIT")
-                    }
-                }
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
             }
         }
+
+        developers {
+            developer {
+                id.set("commet")
+                name.set("Commet Team")
+                email.set("dev@commet.co")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/commet-labs/commet-java")
+            connection.set("scm:git:git://github.com/commet-labs/commet-java.git")
+            developerConnection.set("scm:git:ssh://github.com/commet-labs/commet-java.git")
+        }
     }
+}
+
+signing {
+    useGpgCmd()
 }
