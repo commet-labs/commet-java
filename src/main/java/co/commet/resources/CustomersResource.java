@@ -21,18 +21,18 @@ public class CustomersResource {
         return create(email, null, null, null, null, null, null, null, null, null, null);
     }
 
-    public ApiResponse create(String email, String externalId) {
-        return create(email, externalId, null, null, null, null, null, null, null, null, null);
+    public ApiResponse create(String email, String id) {
+        return create(email, id, null, null, null, null, null, null, null, null, null);
     }
 
-    public ApiResponse create(String email, String externalId, String fullName,
+    public ApiResponse create(String email, String id, String fullName,
                               String domain, String website, String timezone,
                               String language, String industry,
                               Map<String, Object> metadata, Map<String, String> address,
                               String idempotencyKey) {
         return http.post("/customers", buildBody(
                 "billing_email", email,
-                "external_id", externalId,
+                "external_id", id,
                 "full_name", fullName,
                 "domain", domain,
                 "website", website,
@@ -71,14 +71,13 @@ public class CustomersResource {
         return http.get("/customers/" + customerId);
     }
 
-    public ApiResponse update(String customerId, String email, String externalId, String fullName,
+    public ApiResponse update(String customerId, String email, String fullName,
                               String domain, String website, String timezone,
                               String language, String industry,
                               Map<String, Object> metadata, Map<String, String> address,
                               String idempotencyKey) {
         return http.put("/customers/" + customerId, buildBody(
                 "billing_email", email,
-                "external_id", externalId,
                 "full_name", fullName,
                 "domain", domain,
                 "website", website,
