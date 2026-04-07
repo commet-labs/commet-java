@@ -74,7 +74,8 @@ public class CustomersResource {
     public ApiResponse update(String customerId, String email, String externalId, String fullName,
                               String domain, String website, String timezone,
                               String language, String industry,
-                              Map<String, Object> metadata, String idempotencyKey) {
+                              Map<String, Object> metadata, Map<String, String> address,
+                              String idempotencyKey) {
         return http.put("/customers/" + customerId, buildBody(
                 "billing_email", email,
                 "external_id", externalId,
@@ -84,7 +85,8 @@ public class CustomersResource {
                 "timezone", timezone,
                 "language", language,
                 "industry", industry,
-                "metadata", metadata
+                "metadata", metadata,
+                "address", address
         ), idempotencyKey);
     }
 
@@ -92,10 +94,10 @@ public class CustomersResource {
         return list(null, null, null, null, null);
     }
 
-    public ApiResponse list(String externalId, Boolean isActive, String search,
+    public ApiResponse list(String customerId, Boolean isActive, String search,
                             Integer limit, String cursor) {
         return http.get("/customers", buildBody(
-                "external_id", externalId,
+                "customer_id", customerId,
                 "is_active", isActive,
                 "search", search,
                 "limit", limit,

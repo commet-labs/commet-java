@@ -13,12 +13,12 @@ public class FeaturesResource {
         this.http = http;
     }
 
-    public ApiResponse get(String code, String externalId) {
-        return http.get("/features/" + code, Map.of("external_id", externalId));
+    public ApiResponse get(String code, String customerId) {
+        return http.get("/features/" + code, Map.of("customer_id", customerId));
     }
 
-    public ApiResponse check(String code, String externalId) {
-        ApiResponse result = http.get("/features/" + code, Map.of("external_id", externalId));
+    public ApiResponse check(String code, String customerId) {
+        ApiResponse result = http.get("/features/" + code, Map.of("customer_id", customerId));
 
         if (!result.isSuccess() || result.getData() == null) {
             return new ApiResponse(false, Map.of("allowed", false), null, result.getMessage(), null, null);
@@ -31,11 +31,11 @@ public class FeaturesResource {
         return new ApiResponse(true, Map.of("allowed", allowed), null, result.getMessage(), null, null);
     }
 
-    public ApiResponse canUse(String code, String externalId) {
-        return http.get("/features/" + code, Map.of("external_id", externalId, "action", "canUse"));
+    public ApiResponse canUse(String code, String customerId) {
+        return http.get("/features/" + code, Map.of("customer_id", customerId, "action", "canUse"));
     }
 
-    public ApiResponse list(String externalId) {
-        return http.get("/features", Map.of("external_id", externalId));
+    public ApiResponse list(String customerId) {
+        return http.get("/features", Map.of("customer_id", customerId));
     }
 }

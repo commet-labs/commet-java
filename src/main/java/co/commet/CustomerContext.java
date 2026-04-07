@@ -10,22 +10,22 @@ import java.util.Map;
 
 public class CustomerContext {
 
-    private final String externalId;
+    private final String customerId;
     private final CustomerFeatures features;
     private final CustomerSeats seats;
     private final CustomerUsage usage;
     private final CustomerSubscription subscription;
     private final CustomerPortal portal;
 
-    public CustomerContext(String externalId, FeaturesResource features, SeatsResource seats,
+    public CustomerContext(String customerId, FeaturesResource features, SeatsResource seats,
                            UsageResource usage, SubscriptionsResource subscriptions,
                            PortalResource portal) {
-        this.externalId = externalId;
-        this.features = new CustomerFeatures(externalId, features);
-        this.seats = new CustomerSeats(externalId, seats);
-        this.usage = new CustomerUsage(externalId, usage);
-        this.subscription = new CustomerSubscription(externalId, subscriptions);
-        this.portal = new CustomerPortal(externalId, portal);
+        this.customerId = customerId;
+        this.features = new CustomerFeatures(customerId, features);
+        this.seats = new CustomerSeats(customerId, seats);
+        this.usage = new CustomerUsage(customerId, usage);
+        this.subscription = new CustomerSubscription(customerId, subscriptions);
+        this.portal = new CustomerPortal(customerId, portal);
     }
 
     public CustomerFeatures features() {
@@ -50,38 +50,38 @@ public class CustomerContext {
 
     public static class CustomerFeatures {
 
-        private final String externalId;
+        private final String customerId;
         private final FeaturesResource resource;
 
-        CustomerFeatures(String externalId, FeaturesResource resource) {
-            this.externalId = externalId;
+        CustomerFeatures(String customerId, FeaturesResource resource) {
+            this.customerId = customerId;
             this.resource = resource;
         }
 
         public ApiResponse get(String code) {
-            return resource.get(code, externalId);
+            return resource.get(code, customerId);
         }
 
         public ApiResponse check(String code) {
-            return resource.check(code, externalId);
+            return resource.check(code, customerId);
         }
 
         public ApiResponse canUse(String code) {
-            return resource.canUse(code, externalId);
+            return resource.canUse(code, customerId);
         }
 
         public ApiResponse list() {
-            return resource.list(externalId);
+            return resource.list(customerId);
         }
     }
 
     public static class CustomerSeats {
 
-        private final String externalId;
+        private final String customerId;
         private final SeatsResource resource;
 
-        CustomerSeats(String externalId, SeatsResource resource) {
-            this.externalId = externalId;
+        CustomerSeats(String customerId, SeatsResource resource) {
+            this.customerId = customerId;
             this.resource = resource;
         }
 
@@ -90,7 +90,7 @@ public class CustomerContext {
         }
 
         public ApiResponse add(String seatType, int count) {
-            return resource.add(seatType, count, null, externalId, null);
+            return resource.add(seatType, count, customerId, null);
         }
 
         public ApiResponse remove(String seatType) {
@@ -98,25 +98,25 @@ public class CustomerContext {
         }
 
         public ApiResponse remove(String seatType, int count) {
-            return resource.remove(seatType, count, null, externalId, null);
+            return resource.remove(seatType, count, customerId, null);
         }
 
         public ApiResponse set(String seatType, int count) {
-            return resource.set(seatType, count, null, externalId, null);
+            return resource.set(seatType, count, customerId, null);
         }
 
         public ApiResponse getBalance(String seatType) {
-            return resource.getBalance(seatType, null, externalId);
+            return resource.getBalance(seatType, customerId);
         }
     }
 
     public static class CustomerUsage {
 
-        private final String externalId;
+        private final String customerId;
         private final UsageResource resource;
 
-        CustomerUsage(String externalId, UsageResource resource) {
-            this.externalId = externalId;
+        CustomerUsage(String customerId, UsageResource resource) {
+            this.customerId = customerId;
             this.resource = resource;
         }
 
@@ -125,37 +125,37 @@ public class CustomerContext {
         }
 
         public ApiResponse track(String feature, Integer value, Map<String, String> properties) {
-            return resource.track(feature, null, externalId, value, null, null, null, null, null, null, null, properties);
+            return resource.track(feature, customerId, value, null, null, null, null, null, null, null, properties);
         }
     }
 
     public static class CustomerSubscription {
 
-        private final String externalId;
+        private final String customerId;
         private final SubscriptionsResource resource;
 
-        CustomerSubscription(String externalId, SubscriptionsResource resource) {
-            this.externalId = externalId;
+        CustomerSubscription(String customerId, SubscriptionsResource resource) {
+            this.customerId = customerId;
             this.resource = resource;
         }
 
         public ApiResponse get() {
-            return resource.get(externalId);
+            return resource.get(customerId);
         }
     }
 
     public static class CustomerPortal {
 
-        private final String externalId;
+        private final String customerId;
         private final PortalResource resource;
 
-        CustomerPortal(String externalId, PortalResource resource) {
-            this.externalId = externalId;
+        CustomerPortal(String customerId, PortalResource resource) {
+            this.customerId = customerId;
             this.resource = resource;
         }
 
         public ApiResponse getUrl() {
-            return resource.getUrl(null, externalId, null, null);
+            return resource.getUrl(customerId, null, null);
         }
     }
 }

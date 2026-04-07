@@ -16,17 +16,16 @@ public class SubscriptionsResource {
     }
 
     public ApiResponse create(String customerId, String planCode) {
-        return create(customerId, null, planCode, null, null, null, null, null, null, null, null);
+        return create(customerId, planCode, null, null, null, null, null, null, null, null);
     }
 
-    public ApiResponse create(String customerId, String externalId, String planCode,
+    public ApiResponse create(String customerId, String planCode,
                               String planId, String billingInterval,
                               Map<String, Integer> initialSeats, Boolean skipTrial,
                               String name, String startDate, String successUrl,
                               String idempotencyKey) {
         return http.post("/subscriptions", buildBody(
                 "customer_id", customerId,
-                "external_id", externalId,
                 "plan_code", planCode,
                 "plan_id", planId,
                 "billing_interval", billingInterval,
@@ -38,8 +37,8 @@ public class SubscriptionsResource {
         ), idempotencyKey);
     }
 
-    public ApiResponse get(String externalId) {
-        return http.get("/subscriptions/active", Map.of("external_id", externalId));
+    public ApiResponse get(String customerId) {
+        return http.get("/subscriptions/active", Map.of("customer_id", customerId));
     }
 
     public ApiResponse cancel(String subscriptionId) {

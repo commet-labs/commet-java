@@ -14,14 +14,13 @@ public class PortalResource {
     }
 
     public ApiResponse getUrl() {
-        return getUrl(null, null, null, null);
+        return getUrl(null, null, null);
     }
 
-    public ApiResponse getUrl(String customerId, String externalId, String email,
+    public ApiResponse getUrl(String customerId, String email,
                               String idempotencyKey) {
         return http.post("/portal/request-access", buildBody(
                 "customer_id", customerId,
-                "external_id", externalId,
                 "email", email
         ), idempotencyKey);
     }

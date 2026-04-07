@@ -99,8 +99,8 @@ public class Commet implements AutoCloseable {
         return webhooks;
     }
 
-    public CustomerContext customer(String externalId) {
-        return new CustomerContext(externalId, features, seats, usage, subscriptions, portal);
+    public CustomerContext customer(String customerId) {
+        return new CustomerContext(customerId, features, seats, usage, subscriptions, portal);
     }
 
     public Environment getEnvironment() {

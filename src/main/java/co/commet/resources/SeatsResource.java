@@ -16,80 +16,74 @@ public class SeatsResource {
     }
 
     public ApiResponse add(String seatType, int count) {
-        return add(seatType, count, null, null, null);
+        return add(seatType, count, null, null);
     }
 
-    public ApiResponse add(String seatType, int count, String customerId, String externalId,
+    public ApiResponse add(String seatType, int count, String customerId,
                            String idempotencyKey) {
         return http.post("/seats", buildBody(
                 "seat_type", seatType,
                 "count", count,
-                "customer_id", customerId,
-                "external_id", externalId
+                "customer_id", customerId
         ), idempotencyKey);
     }
 
     public ApiResponse remove(String seatType, int count) {
-        return remove(seatType, count, null, null, null);
+        return remove(seatType, count, null, null);
     }
 
-    public ApiResponse remove(String seatType, int count, String customerId, String externalId,
+    public ApiResponse remove(String seatType, int count, String customerId,
                               String idempotencyKey) {
         return http.delete("/seats", buildBody(
                 "seat_type", seatType,
                 "count", count,
-                "customer_id", customerId,
-                "external_id", externalId
+                "customer_id", customerId
         ), idempotencyKey);
     }
 
     public ApiResponse set(String seatType, int count) {
-        return set(seatType, count, null, null, null);
+        return set(seatType, count, null, null);
     }
 
-    public ApiResponse set(String seatType, int count, String customerId, String externalId,
+    public ApiResponse set(String seatType, int count, String customerId,
                            String idempotencyKey) {
         return http.put("/seats", buildBody(
                 "seat_type", seatType,
                 "count", count,
-                "customer_id", customerId,
-                "external_id", externalId
+                "customer_id", customerId
         ), idempotencyKey);
     }
 
     public ApiResponse setAll(Map<String, Integer> seats) {
-        return setAll(seats, null, null, null);
+        return setAll(seats, null, null);
     }
 
-    public ApiResponse setAll(Map<String, Integer> seats, String customerId, String externalId,
+    public ApiResponse setAll(Map<String, Integer> seats, String customerId,
                               String idempotencyKey) {
         return http.put("/seats/bulk", buildBody(
                 "seats", seats,
-                "customer_id", customerId,
-                "external_id", externalId
+                "customer_id", customerId
         ), idempotencyKey);
     }
 
     public ApiResponse getBalance(String seatType) {
-        return getBalance(seatType, null, null);
+        return getBalance(seatType, null);
     }
 
-    public ApiResponse getBalance(String seatType, String customerId, String externalId) {
+    public ApiResponse getBalance(String seatType, String customerId) {
         return http.get("/seats/balance", buildBody(
                 "seat_type", seatType,
-                "customer_id", customerId,
-                "external_id", externalId
+                "customer_id", customerId
         ));
     }
 
     public ApiResponse getAllBalances() {
-        return getAllBalances(null, null);
+        return getAllBalances(null);
     }
 
-    public ApiResponse getAllBalances(String customerId, String externalId) {
+    public ApiResponse getAllBalances(String customerId) {
         return http.get("/seats/balances", buildBody(
-                "customer_id", customerId,
-                "external_id", externalId
+                "customer_id", customerId
         ));
     }
 }
