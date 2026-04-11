@@ -1,12 +1,21 @@
 package co.commet;
 
+import co.commet.models.CheckResult;
+import co.commet.models.Feature;
+import co.commet.models.FeatureAccess;
+import co.commet.models.PortalSession;
+import co.commet.models.SeatBalance;
+import co.commet.models.SeatEvent;
+import co.commet.models.Subscription;
+import co.commet.models.UsageEvent;
+import co.commet.params.TrackParams;
 import co.commet.resources.FeaturesResource;
 import co.commet.resources.PortalResource;
 import co.commet.resources.SeatsResource;
 import co.commet.resources.SubscriptionsResource;
 import co.commet.resources.UsageResource;
 
-import java.util.Map;
+import java.util.List;
 
 public class CustomerContext {
 
@@ -58,19 +67,19 @@ public class CustomerContext {
             this.resource = resource;
         }
 
-        public ApiResponse get(String code) {
+        public ApiResponse<Feature> get(String code) {
             return resource.get(code, customerId);
         }
 
-        public ApiResponse check(String code) {
+        public ApiResponse<CheckResult> check(String code) {
             return resource.check(code, customerId);
         }
 
-        public ApiResponse canUse(String code) {
+        public ApiResponse<FeatureAccess> canUse(String code) {
             return resource.canUse(code, customerId);
         }
 
-        public ApiResponse list() {
+        public ApiResponse<List<Feature>> list() {
             return resource.list(customerId);
         }
     }
@@ -85,27 +94,27 @@ public class CustomerContext {
             this.resource = resource;
         }
 
-        public ApiResponse add(String seatType) {
+        public ApiResponse<SeatEvent> add(String seatType) {
             return add(seatType, 1);
         }
 
-        public ApiResponse add(String seatType, int count) {
+        public ApiResponse<SeatEvent> add(String seatType, int count) {
             return resource.add(seatType, count, customerId, null);
         }
 
-        public ApiResponse remove(String seatType) {
+        public ApiResponse<SeatEvent> remove(String seatType) {
             return remove(seatType, 1);
         }
 
-        public ApiResponse remove(String seatType, int count) {
+        public ApiResponse<SeatEvent> remove(String seatType, int count) {
             return resource.remove(seatType, count, customerId, null);
         }
 
-        public ApiResponse set(String seatType, int count) {
+        public ApiResponse<SeatEvent> set(String seatType, int count) {
             return resource.set(seatType, count, customerId, null);
         }
 
-        public ApiResponse getBalance(String seatType) {
+        public ApiResponse<SeatBalance> getBalance(String seatType) {
             return resource.getBalance(seatType, customerId);
         }
     }
@@ -120,12 +129,12 @@ public class CustomerContext {
             this.resource = resource;
         }
 
-        public ApiResponse track(String feature) {
-            return track(feature, null, null);
+        public ApiResponse<UsageEvent> track(String feature) {
+            return resource.track(feature, customerId);
         }
 
-        public ApiResponse track(String feature, Integer value, Map<String, String> properties) {
-            return resource.track(feature, customerId, value, null, null, null, null, null, null, null, properties);
+        public ApiResponse<UsageEvent> track(TrackParams params) {
+            return resource.track(params.withCustomerId(customerId));
         }
     }
 
@@ -139,7 +148,7 @@ public class CustomerContext {
             this.resource = resource;
         }
 
-        public ApiResponse get() {
+        public ApiResponse<Subscription> get() {
             return resource.get(customerId);
         }
     }
@@ -154,7 +163,7 @@ public class CustomerContext {
             this.resource = resource;
         }
 
-        public ApiResponse getUrl() {
+        public ApiResponse<PortalSession> getUrl() {
             return resource.getUrl(customerId, null, null);
         }
     }

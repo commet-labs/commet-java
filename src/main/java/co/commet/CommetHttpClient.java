@@ -1,6 +1,7 @@
 package co.commet;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -10,16 +11,16 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommetHttpClient implements AutoCloseable {
@@ -36,7 +37,7 @@ public class CommetHttpClient implements AutoCloseable {
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json");
     private static final Pattern UPPER_AFTER_LOWER = Pattern.compile("(.)([A-Z][a-z]+)");
     private static final Pattern LOWER_BEFORE_UPPER = Pattern.compile("([a-z0-9])([A-Z])");
-    private static final String VERSION = "0.1.0";
+    private static final String VERSION = loadVersion();
 
     private final OkHttpClient httpClient;
     private final String baseUrl;
@@ -62,53 +63,67 @@ public class CommetHttpClient implements AutoCloseable {
         httpClient.connectionPool().evictAll();
     }
 
-    public ApiResponse get(String endpoint) {
-        return get(endpoint, null, null);
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 
-    public ApiResponse get(String endpoint, Map<String, Object> params) {
-        return get(endpoint, params, null);
+    public <T> ApiResponse<T> get(String endpoint, TypeReference<T> typeRef) {
+        return get(endpoint, null, null, typeRef);
     }
 
-    public ApiResponse get(String endpoint, Map<String, Object> params, String idempotencyKey) {
-        Map<String, Object> camelParams = null;
-        if (params != null) {
-            camelParams = new LinkedHashMap<>();
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                if (entry.getValue() != null) {
-                    camelParams.put(toCamel(entry.getKey()), entry.getValue());
-                }
+    public <T> ApiResponse<T> get(String endpoint, Map<String, Object> params, TypeReference<T> typeRef) {
+        return get(endpoint, params, null, typeRef);
+    }
+
+    public <T> ApiResponse<T> get(String endpoint, Map<String, Object> params, String idempotencyKey,
+                                  TypeReference<T> typeRef) {
+        Map<String, Object> camelParams = convertParamKeys(params);
+        return request("GET", endpoint, null, camelParams, idempotencyKey, typeRef);
+    }
+
+    public <T> ApiResponse<T> post(String endpoint, Map<String, Object> body, TypeReference<T> typeRef) {
+        return post(endpoint, body, null, typeRef);
+    }
+
+    public <T> ApiResponse<T> post(String endpoint, Map<String, Object> body, String idempotencyKey,
+                                   TypeReference<T> typeRef) {
+        return request("POST", endpoint, body, null, idempotencyKey, typeRef);
+    }
+
+    public <T> ApiResponse<T> put(String endpoint, Map<String, Object> body, TypeReference<T> typeRef) {
+        return put(endpoint, body, null, typeRef);
+    }
+
+    public <T> ApiResponse<T> put(String endpoint, Map<String, Object> body, String idempotencyKey,
+                                  TypeReference<T> typeRef) {
+        return request("PUT", endpoint, body, null, idempotencyKey, typeRef);
+    }
+
+    public <T> ApiResponse<T> delete(String endpoint, Map<String, Object> body, TypeReference<T> typeRef) {
+        return delete(endpoint, body, null, typeRef);
+    }
+
+    public <T> ApiResponse<T> delete(String endpoint, Map<String, Object> body, String idempotencyKey,
+                                     TypeReference<T> typeRef) {
+        return request("DELETE", endpoint, body, null, idempotencyKey, typeRef);
+    }
+
+    private Map<String, Object> convertParamKeys(Map<String, Object> params) {
+        if (params == null) {
+            return null;
+        }
+        Map<String, Object> camelParams = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            if (entry.getValue() != null) {
+                camelParams.put(toCamel(entry.getKey()), entry.getValue());
             }
         }
-        return request("GET", endpoint, null, camelParams, idempotencyKey);
+        return camelParams;
     }
 
-    public ApiResponse post(String endpoint, Map<String, Object> body) {
-        return post(endpoint, body, null);
-    }
-
-    public ApiResponse post(String endpoint, Map<String, Object> body, String idempotencyKey) {
-        return request("POST", endpoint, body, null, idempotencyKey);
-    }
-
-    public ApiResponse put(String endpoint, Map<String, Object> body) {
-        return put(endpoint, body, null);
-    }
-
-    public ApiResponse put(String endpoint, Map<String, Object> body, String idempotencyKey) {
-        return request("PUT", endpoint, body, null, idempotencyKey);
-    }
-
-    public ApiResponse delete(String endpoint, Map<String, Object> body) {
-        return delete(endpoint, body, null);
-    }
-
-    public ApiResponse delete(String endpoint, Map<String, Object> body, String idempotencyKey) {
-        return request("DELETE", endpoint, body, null, idempotencyKey);
-    }
-
-    private ApiResponse request(String method, String endpoint, Map<String, Object> body,
-                                Map<String, Object> params, String idempotencyKey) {
+    private <T> ApiResponse<T> request(String method, String endpoint, Map<String, Object> body,
+                                       Map<String, Object> params, String idempotencyKey,
+                                       TypeReference<T> typeRef) {
         Map<String, String> headers = new LinkedHashMap<>();
         if ("POST".equals(method)) {
             headers.put("Idempotency-Key",
@@ -119,13 +134,13 @@ public class CommetHttpClient implements AutoCloseable {
 
         logger.fine(method + " " + endpoint);
 
-        return execute(method, endpoint, jsonBody, params, headers, 1);
+        return execute(method, endpoint, jsonBody, params, headers, 1, typeRef);
     }
 
     @SuppressWarnings("unchecked")
-    private ApiResponse execute(String method, String endpoint, Object jsonBody,
-                                Map<String, Object> params, Map<String, String> extraHeaders,
-                                int attempt) {
+    private <T> ApiResponse<T> execute(String method, String endpoint, Object jsonBody,
+                                       Map<String, Object> params, Map<String, String> extraHeaders,
+                                       int attempt, TypeReference<T> typeRef) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + endpoint).newBuilder();
         if (params != null) {
             for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -173,7 +188,7 @@ public class CommetHttpClient implements AutoCloseable {
         } catch (SocketTimeoutException e) {
             if (attempt <= maxRetries) {
                 wait(attempt);
-                return execute(method, endpoint, jsonBody, params, extraHeaders, attempt + 1);
+                return execute(method, endpoint, jsonBody, params, extraHeaders, attempt + 1, typeRef);
             }
             throw new CommetException("Request timed out after " + maxRetries + " retries");
         } catch (IOException e) {
@@ -185,36 +200,38 @@ public class CommetHttpClient implements AutoCloseable {
         if (isRetryable(response.code()) && attempt <= maxRetries) {
             response.close();
             wait(attempt);
-            return execute(method, endpoint, jsonBody, params, extraHeaders, attempt + 1);
+            return execute(method, endpoint, jsonBody, params, extraHeaders, attempt + 1, typeRef);
         }
 
         try {
             String responseBody = response.body() != null ? response.body().string() : "";
 
-            Map<String, Object> data;
+            Map<String, Object> rawData;
             try {
-                data = objectMapper.readValue(responseBody, new TypeReference<>() {});
+                rawData = objectMapper.readValue(responseBody, new TypeReference<>() {});
             } catch (Exception e) {
-                if (response.code() == 404) {
-                    return new ApiResponse(false, null, "not_found", "Resource not found", null, null);
-                }
                 throw new CommetApiException(
                         "Invalid JSON response: " + response.code(), response.code(), "INVALID_JSON", null);
             }
 
             if (!response.isSuccessful()) {
-                handleError(response.code(), data);
+                handleError(response.code(), rawData);
             }
 
-            Map<String, Object> converted = (Map<String, Object>) convertKeys(data, false);
+            T typedData = null;
+            Object dataField = rawData.get("data");
+            if (dataField != null && typeRef != null) {
+                JavaType javaType = objectMapper.getTypeFactory().constructType(typeRef.getType());
+                typedData = objectMapper.convertValue(dataField, javaType);
+            }
 
-            return new ApiResponse(
-                    converted.containsKey("success") ? (Boolean) converted.get("success") : true,
-                    converted.get("data"),
-                    (String) converted.get("code"),
-                    (String) converted.get("message"),
-                    (Boolean) converted.get("has_more"),
-                    (String) converted.get("next_cursor")
+            return new ApiResponse<>(
+                    rawData.containsKey("success") ? (Boolean) rawData.get("success") : true,
+                    typedData,
+                    (String) rawData.get("code"),
+                    (String) rawData.get("message"),
+                    (Boolean) rawData.get("has_more"),
+                    (String) rawData.get("next_cursor")
             );
         } catch (CommetException e) {
             throw e;
@@ -304,6 +321,19 @@ public class CommetHttpClient implements AutoCloseable {
             }
         }
         return sb.toString();
+    }
+
+    private static String loadVersion() {
+        try (InputStream input = CommetHttpClient.class.getClassLoader()
+                .getResourceAsStream("commet-version.properties")) {
+            if (input != null) {
+                Properties props = new Properties();
+                props.load(input);
+                return props.getProperty("version", "unknown");
+            }
+        } catch (IOException ignored) {
+        }
+        return "unknown";
     }
 
     public static Map<String, Object> buildBody(Object... keyValues) {

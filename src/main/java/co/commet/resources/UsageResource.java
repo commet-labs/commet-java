@@ -2,6 +2,9 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.models.UsageEvent;
+import co.commet.params.TrackParams;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -18,48 +21,40 @@ public class UsageResource {
         this.http = http;
     }
 
-    public ApiResponse track(String feature) {
-        return track(feature, null, null, null, null, null, null, null, null, null, null);
+    public ApiResponse<UsageEvent> track(String feature, String customerId) {
+        return track(TrackParams.builder(feature).customerId(customerId).build());
     }
 
-    public ApiResponse track(String feature, String customerId) {
-        return track(feature, customerId, null, null, null, null, null, null, null, null, null);
-    }
-
-    public ApiResponse track(String feature, String customerId,
-                             Integer value, String model, Integer inputTokens,
-                             Integer outputTokens, Integer cacheReadTokens,
-                             Integer cacheWriteTokens, String idempotencyKey,
-                             String timestamp, Map<String, String> properties) {
+    public ApiResponse<UsageEvent> track(TrackParams params) {
         List<Map<String, Object>> formattedProperties = null;
-        if (properties != null) {
+        if (params.getProperties() != null) {
             formattedProperties = new ArrayList<>();
-            for (Map.Entry<String, String> entry : properties.entrySet()) {
+            for (Map.Entry<String, String> entry : params.getProperties().entrySet()) {
                 formattedProperties.add(Map.of("property", entry.getKey(), "value", entry.getValue()));
             }
         }
 
         Map<String, Object> body = buildBody(
-                "feature", feature,
-                "customer_id", customerId,
-                "idempotency_key", idempotencyKey,
-                "timestamp", timestamp != null ? timestamp : Instant.now().toString(),
+                "feature", params.getFeature(),
+                "customer_id", params.getCustomerId(),
+                "idempotency_key", params.getIdempotencyKey(),
+                "timestamp", params.getTimestamp() != null ? params.getTimestamp() : Instant.now().toString(),
                 "properties", formattedProperties
         );
 
-        if (model != null) {
+        if (params.getModel() != null) {
             body.putAll(buildBody(
-                    "model", model,
-                    "input_tokens", inputTokens,
-                    "output_tokens", outputTokens,
-                    "cache_read_tokens", cacheReadTokens,
-                    "cache_write_tokens", cacheWriteTokens
+                    "model", params.getModel(),
+                    "input_tokens", params.getInputTokens(),
+                    "output_tokens", params.getOutputTokens(),
+                    "cache_read_tokens", params.getCacheReadTokens(),
+                    "cache_write_tokens", params.getCacheWriteTokens()
             ));
-        } else if (value != null) {
-            body.put("value", value);
+        } else if (params.getValue() != null) {
+            body.put("value", params.getValue());
         }
 
-        return http.post("/usage/events", body, idempotencyKey);
+        return http.post("/usage/events", body, params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
 }

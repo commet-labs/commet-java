@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "co.commet"
-version = "0.3.0"
+version = "1.9.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -24,11 +24,20 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.named<ProcessResources>("processResources") {
+    val props = mapOf("version" to project.version.toString())
+    inputs.properties(props)
+    filesMatching("commet-version.properties") {
+        expand(props)
+    }
 }
 
 centralPortal {

@@ -1,15 +1,15 @@
 package co.commet;
 
-public class ApiResponse {
+public class ApiResponse<T> {
 
     private final boolean success;
-    private final Object data;
+    private final T data;
     private final String code;
     private final String message;
     private final Boolean hasMore;
     private final String nextCursor;
 
-    public ApiResponse(boolean success, Object data, String code, String message,
+    public ApiResponse(boolean success, T data, String code, String message,
                        Boolean hasMore, String nextCursor) {
         this.success = success;
         this.data = data;
@@ -23,7 +23,7 @@ public class ApiResponse {
         return success;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 

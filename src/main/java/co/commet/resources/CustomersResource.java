@@ -2,6 +2,12 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.models.BatchResult;
+import co.commet.models.Customer;
+import co.commet.params.CreateCustomerParams;
+import co.commet.params.ListCustomersParams;
+import co.commet.params.UpdateCustomerParams;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,38 +23,30 @@ public class CustomersResource {
         this.http = http;
     }
 
-    public ApiResponse create(String email) {
-        return create(email, null, null, null, null, null, null, null, null, null, null);
+    public ApiResponse<Customer> create(String email) {
+        return create(CreateCustomerParams.builder(email).build());
     }
 
-    public ApiResponse create(String email, String id) {
-        return create(email, id, null, null, null, null, null, null, null, null, null);
-    }
-
-    public ApiResponse create(String email, String id, String fullName,
-                              String domain, String website, String timezone,
-                              String language, String industry,
-                              Map<String, Object> metadata, Map<String, String> address,
-                              String idempotencyKey) {
+    public ApiResponse<Customer> create(CreateCustomerParams params) {
         return http.post("/customers", buildBody(
-                "billing_email", email,
-                "external_id", id,
-                "full_name", fullName,
-                "domain", domain,
-                "website", website,
-                "timezone", timezone,
-                "language", language,
-                "industry", industry,
-                "metadata", metadata,
-                "address", address
-        ), idempotencyKey);
+                "billing_email", params.getEmail(),
+                "external_id", params.getId(),
+                "full_name", params.getFullName(),
+                "domain", params.getDomain(),
+                "website", params.getWebsite(),
+                "timezone", params.getTimezone(),
+                "language", params.getLanguage(),
+                "industry", params.getIndustry(),
+                "metadata", params.getMetadata(),
+                "address", params.getAddress()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse createBatch(List<Map<String, Object>> customers) {
+    public ApiResponse<BatchResult> createBatch(List<Map<String, Object>> customers) {
         return createBatch(customers, null);
     }
 
-    public ApiResponse createBatch(List<Map<String, Object>> customers, String idempotencyKey) {
+    public ApiResponse<BatchResult> createBatch(List<Map<String, Object>> customers, String idempotencyKey) {
         List<Map<String, Object>> mapped = new ArrayList<>();
         for (Map<String, Object> c : customers) {
             mapped.add(buildBody(
@@ -64,51 +62,48 @@ public class CustomersResource {
                     "address", c.get("address")
             ));
         }
-        return http.post("/customers/batch", Map.of("customers", mapped), idempotencyKey);
+        return http.post("/customers/batch", Map.of("customers", mapped), idempotencyKey,
+                new TypeReference<>() {});
     }
 
-    public ApiResponse get(String customerId) {
-        return http.get("/customers/" + customerId);
+    public ApiResponse<Customer> get(String customerId) {
+        return http.get("/customers/" + customerId, new TypeReference<>() {});
     }
 
-    public ApiResponse update(String customerId, String email, String fullName,
-                              String domain, String website, String timezone,
-                              String language, String industry,
-                              Map<String, Object> metadata, Map<String, String> address,
-                              String idempotencyKey) {
+    public ApiResponse<Customer> update(String customerId, UpdateCustomerParams params) {
         return http.put("/customers/" + customerId, buildBody(
-                "billing_email", email,
-                "full_name", fullName,
-                "domain", domain,
-                "website", website,
-                "timezone", timezone,
-                "language", language,
-                "industry", industry,
-                "metadata", metadata,
-                "address", address
-        ), idempotencyKey);
+                "billing_email", params.getEmail(),
+                "full_name", params.getFullName(),
+                "domain", params.getDomain(),
+                "website", params.getWebsite(),
+                "timezone", params.getTimezone(),
+                "language", params.getLanguage(),
+                "industry", params.getIndustry(),
+                "metadata", params.getMetadata(),
+                "address", params.getAddress()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse list() {
-        return list(null, null, null, null, null);
+    public ApiResponse<List<Customer>> list() {
+        return http.get("/customers", new TypeReference<>() {});
     }
 
-    public ApiResponse list(String customerId, Boolean isActive, String search,
-                            Integer limit, String cursor) {
+    public ApiResponse<List<Customer>> list(ListCustomersParams params) {
         return http.get("/customers", buildBody(
-                "customer_id", customerId,
-                "is_active", isActive,
-                "search", search,
-                "limit", limit,
-                "cursor", cursor
-        ));
+                "customer_id", params.getCustomerId(),
+                "is_active", params.getIsActive(),
+                "search", params.getSearch(),
+                "limit", params.getLimit(),
+                "cursor", params.getCursor()
+        ), new TypeReference<>() {});
     }
 
-    public ApiResponse archive(String customerId) {
+    public ApiResponse<Customer> archive(String customerId) {
         return archive(customerId, null);
     }
 
-    public ApiResponse archive(String customerId, String idempotencyKey) {
-        return http.put("/customers/" + customerId, Map.of("is_active", false), idempotencyKey);
+    public ApiResponse<Customer> archive(String customerId, String idempotencyKey) {
+        return http.put("/customers/" + customerId, Map.of("is_active", false), idempotencyKey,
+                new TypeReference<>() {});
     }
 }

@@ -2,7 +2,12 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.models.CheckResult;
+import co.commet.models.Feature;
+import co.commet.models.FeatureAccess;
+import com.fasterxml.jackson.core.type.TypeReference;
 
+import java.util.List;
 import java.util.Map;
 
 public class FeaturesResource {
@@ -13,29 +18,29 @@ public class FeaturesResource {
         this.http = http;
     }
 
-    public ApiResponse get(String code, String customerId) {
-        return http.get("/features/" + code, Map.of("customer_id", customerId));
+    public ApiResponse<Feature> get(String code, String customerId) {
+        return http.get("/features/" + code, Map.of("customer_id", customerId),
+                new TypeReference<>() {});
     }
 
-    public ApiResponse check(String code, String customerId) {
-        ApiResponse result = http.get("/features/" + code, Map.of("customer_id", customerId));
+    public ApiResponse<CheckResult> check(String code, String customerId) {
+        ApiResponse<Feature> result = http.get("/features/" + code, Map.of("customer_id", customerId),
+                new TypeReference<>() {});
 
-        if (!result.isSuccess() || result.getData() == null) {
-            return new ApiResponse(false, Map.of("allowed", false), null, result.getMessage(), null, null);
+        if (!result.isSuccess()) {
+            return new ApiResponse<>(false, null, result.getCode(), result.getMessage(), null, null);
         }
 
-        @SuppressWarnings("unchecked")
-        Map<String, Object> data = (Map<String, Object>) result.getData();
-        boolean allowed = Boolean.TRUE.equals(data.get("allowed"));
-
-        return new ApiResponse(true, Map.of("allowed", allowed), null, result.getMessage(), null, null);
+        return new ApiResponse<>(true, new CheckResult(result.getData().allowed()), null, null, null, null);
     }
 
-    public ApiResponse canUse(String code, String customerId) {
-        return http.get("/features/" + code, Map.of("customer_id", customerId, "action", "canUse"));
+    public ApiResponse<FeatureAccess> canUse(String code, String customerId) {
+        return http.get("/features/" + code, Map.of("customer_id", customerId, "action", "canUse"),
+                new TypeReference<>() {});
     }
 
-    public ApiResponse list(String customerId) {
-        return http.get("/features", Map.of("customer_id", customerId));
+    public ApiResponse<List<Feature>> list(String customerId) {
+        return http.get("/features", Map.of("customer_id", customerId),
+                new TypeReference<>() {});
     }
 }
