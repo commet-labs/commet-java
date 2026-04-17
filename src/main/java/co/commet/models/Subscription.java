@@ -14,6 +14,7 @@ public record Subscription(
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
         @JsonProperty("status") String status,
+        @JsonProperty("consumption_model") String consumptionModel,
         @JsonProperty("billing_interval") String billingInterval,
         @JsonProperty("trial_ends_at") String trialEndsAt,
         @JsonProperty("start_date") String startDate,
@@ -25,6 +26,8 @@ public record Subscription(
         @JsonProperty("plan") SubscriptionPlan plan,
         @JsonProperty("current_period") CurrentPeriod currentPeriod,
         @JsonProperty("features") List<FeatureSummary> features,
+        @JsonProperty("credits") CreditsSummary credits,
+        @JsonProperty("balance") BalanceSummary balance,
         @JsonProperty("next_billing_date") String nextBillingDate,
         @JsonProperty("intro_offer_ends_at") String introOfferEndsAt,
         @JsonProperty("intro_offer_discount_type") String introOfferDiscountType,
@@ -45,6 +48,20 @@ public record Subscription(
             @JsonProperty("start") String start,
             @JsonProperty("end") String end,
             @JsonProperty("days_remaining") Integer daysRemaining
+    ) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CreditsSummary(
+            @JsonProperty("remaining") Long remaining,
+            @JsonProperty("included") Long included,
+            @JsonProperty("purchased") Long purchased
+    ) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record BalanceSummary(
+            @JsonProperty("remaining") Long remaining,
+            @JsonProperty("included") Long included,
+            @JsonProperty("currency") String currency
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
