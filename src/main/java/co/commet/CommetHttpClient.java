@@ -27,10 +27,7 @@ public class CommetHttpClient implements AutoCloseable {
 
     private static final Logger logger = Logger.getLogger("co.commet");
 
-    private static final Map<String, String> BASE_URLS = Map.of(
-            "production", "https://commet.co",
-            "sandbox", "https://sandbox.commet.co"
-    );
+    private static final String BASE_URL = "https://commet.co";
 
     private static final int[] RETRYABLE_STATUS_CODES = {408, 429, 500, 502, 503, 504};
 
@@ -45,9 +42,9 @@ public class CommetHttpClient implements AutoCloseable {
     private final int maxRetries;
     private final ObjectMapper objectMapper;
 
-    public CommetHttpClient(String apiKey, String environment, Duration timeout, int retries) {
+    public CommetHttpClient(String apiKey, Duration timeout, int retries) {
         this.apiKey = apiKey;
-        this.baseUrl = BASE_URLS.get(environment) + "/api";
+        this.baseUrl = BASE_URL + "/api";
         this.maxRetries = retries;
         this.objectMapper = new ObjectMapper();
         this.httpClient = new OkHttpClient.Builder()

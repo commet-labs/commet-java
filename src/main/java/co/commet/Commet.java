@@ -17,7 +17,6 @@ public class Commet implements AutoCloseable {
 
     private static final Logger logger = Logger.getLogger("co.commet");
 
-    private final Environment environment;
     private final CommetHttpClient httpClient;
 
     private final CustomersResource customers;
@@ -30,7 +29,7 @@ public class Commet implements AutoCloseable {
     private final CreditPacksResource creditPacks;
     private final Webhooks webhooks;
 
-    private Commet(String apiKey, Environment environment, Duration timeout, int retries) {
+    private Commet(String apiKey, Duration timeout, int retries) {
         if (apiKey == null || apiKey.isEmpty()) {
             throw new IllegalArgumentException("Commet SDK: API key is required");
         }
@@ -38,8 +37,7 @@ public class Commet implements AutoCloseable {
             throw new IllegalArgumentException("Commet SDK: Invalid API key format. Expected format: ck_xxx...");
         }
 
-        this.environment = environment;
-        this.httpClient = new CommetHttpClient(apiKey, environment.getValue(), timeout, retries);
+        this.httpClient = new CommetHttpClient(apiKey, timeout, retries);
 
         this.customers = new CustomersResource(httpClient);
         this.plans = new PlansResource(httpClient);
@@ -51,7 +49,7 @@ public class Commet implements AutoCloseable {
         this.creditPacks = new CreditPacksResource(httpClient);
         this.webhooks = new Webhooks();
 
-        logger.fine("Initialized in " + environment.getValue() + " mode");
+        logger.fine("Commet client initialized");
     }
 
     public static Builder builder() {
@@ -103,22 +101,9 @@ public class Commet implements AutoCloseable {
         return new CustomerContext(customerId, features, seats, usage, subscriptions, portal);
     }
 
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public boolean isSandbox() {
-        return environment == Environment.SANDBOX;
-    }
-
-    public boolean isProduction() {
-        return environment == Environment.PRODUCTION;
-    }
-
     public static class Builder {
 
         private String apiKey;
-        private Environment environment = Environment.SANDBOX;
         private Duration timeout = Duration.ofSeconds(30);
         private int retries = 3;
 
@@ -126,11 +111,6 @@ public class Commet implements AutoCloseable {
 
         public Builder apiKey(String apiKey) {
             this.apiKey = apiKey;
-            return this;
-        }
-
-        public Builder environment(Environment environment) {
-            this.environment = environment;
             return this;
         }
 
@@ -145,7 +125,7 @@ public class Commet implements AutoCloseable {
         }
 
         public Commet build() {
-            return new Commet(apiKey, environment, timeout, retries);
+            return new Commet(apiKey, timeout, retries);
         }
     }
 }

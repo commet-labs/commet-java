@@ -24,11 +24,9 @@ implementation("co.commet:commet-java:0.1.0")
 
 ```java
 import co.commet.Commet;
-import co.commet.Environment;
 
 Commet commet = Commet.builder()
     .apiKey("ck_xxx")
-    .environment(Environment.PRODUCTION)
     .build();
 
 // Create a customer
@@ -88,17 +86,6 @@ try (Commet commet = Commet.builder().apiKey("ck_xxx").build()) {
     commet.usage().track("api_calls", "user_123");
 }
 // HTTP client is automatically closed
-```
-
-## Environments
-
-The SDK defaults to `SANDBOX`. Set `Environment.PRODUCTION` for live operations:
-
-```java
-Commet commet = Commet.builder()
-    .apiKey("ck_xxx")
-    .environment(Environment.PRODUCTION)
-    .build();
 ```
 
 ## License

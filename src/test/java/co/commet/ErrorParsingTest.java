@@ -182,7 +182,7 @@ class ErrorParsingTest {
 
     static class TestableHttpClient extends CommetHttpClient {
         TestableHttpClient(String apiKey, String baseUrl, Duration timeout, int retries) {
-            super(apiKey, "sandbox", timeout, retries);
+            super(apiKey, timeout, retries);
             try {
                 var field = CommetHttpClient.class.getDeclaredField("baseUrl");
                 field.setAccessible(true);

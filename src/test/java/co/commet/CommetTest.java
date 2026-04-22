@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommetTest {
 
     @Test
-    void validKeyWithSandboxDefaults() {
+    void validKeyBuilds() {
         Commet commet = Commet.builder()
                 .apiKey("ck_test_123456")
                 .build();
 
-        assertTrue(commet.isSandbox());
+        assertNotNull(commet);
         commet.close();
     }
 
