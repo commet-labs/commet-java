@@ -29,7 +29,7 @@ public class Commet implements AutoCloseable {
     private final CreditPacksResource creditPacks;
     private final Webhooks webhooks;
 
-    private Commet(String apiKey, Duration timeout, int retries) {
+    private Commet(String apiKey, Duration timeout, int retries, boolean telemetry) {
         if (apiKey == null || apiKey.isEmpty()) {
             throw new IllegalArgumentException("Commet SDK: API key is required");
         }
@@ -37,7 +37,7 @@ public class Commet implements AutoCloseable {
             throw new IllegalArgumentException("Commet SDK: Invalid API key format. Expected format: ck_xxx...");
         }
 
-        this.httpClient = new CommetHttpClient(apiKey, timeout, retries);
+        this.httpClient = new CommetHttpClient(apiKey, timeout, retries, telemetry);
 
         this.customers = new CustomersResource(httpClient);
         this.plans = new PlansResource(httpClient);
@@ -106,6 +106,7 @@ public class Commet implements AutoCloseable {
         private String apiKey;
         private Duration timeout = Duration.ofSeconds(30);
         private int retries = 3;
+        private boolean telemetry = true;
 
         private Builder() {}
 
@@ -124,8 +125,13 @@ public class Commet implements AutoCloseable {
             return this;
         }
 
+        public Builder telemetry(boolean telemetry) {
+            this.telemetry = telemetry;
+            return this;
+        }
+
         public Commet build() {
-            return new Commet(apiKey, timeout, retries);
+            return new Commet(apiKey, timeout, retries, telemetry);
         }
     }
 }

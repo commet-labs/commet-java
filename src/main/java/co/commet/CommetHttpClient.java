@@ -43,17 +43,44 @@ public class CommetHttpClient implements AutoCloseable {
     private final String apiKey;
     private final int maxRetries;
     private final ObjectMapper objectMapper;
+    private final boolean telemetryEnabled;
+    private final String userAgent;
+    private final String clientInfoHeader;
+    private volatile String lastTelemetryHeader;
 
     public CommetHttpClient(String apiKey, Duration timeout, int retries) {
+        this(apiKey, timeout, retries, true);
+    }
+
+    public CommetHttpClient(String apiKey, Duration timeout, int retries, boolean telemetry) {
         this.apiKey = apiKey;
         this.baseUrl = BASE_URL + "/api/v1";
         this.maxRetries = retries;
+        this.telemetryEnabled = telemetry;
         this.objectMapper = new ObjectMapper();
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(timeout)
                 .readTimeout(timeout)
                 .writeTimeout(timeout)
                 .build();
+
+        String osName = System.getProperty("os.name", "unknown").toLowerCase().replace(" ", "");
+        String osArch = System.getProperty("os.arch", "unknown");
+        String javaVersion = System.getProperty("java.version", "unknown");
+        String vmName = System.getProperty("java.vm.name", "unknown").toLowerCase();
+
+        this.userAgent = "commet-java/" + VERSION + " java/" + javaVersion + " " + osName + "/" + osArch;
+
+        if (telemetry) {
+            String runtime = vmName.contains("graal") ? "graalvm" : "jvm";
+            this.clientInfoHeader = String.format(
+                "{\"sdk\":\"commet-java\",\"sdk_version\":\"%s\",\"lang\":\"java\",\"lang_version\":\"%s\","
+                + "\"platform\":\"%s\",\"arch\":\"%s\",\"runtime\":\"%s\",\"runtime_version\":\"%s\"}",
+                VERSION, javaVersion, osName, osArch, runtime, javaVersion
+            );
+        } else {
+            this.clientInfoHeader = null;
+        }
     }
 
     @Override
@@ -152,7 +179,16 @@ public class CommetHttpClient implements AutoCloseable {
                 .header("x-api-key", apiKey)
                 .header("commet-version", API_VERSION)
                 .header("Content-Type", "application/json")
-                .header("User-Agent", "commet-java/" + VERSION);
+                .header("User-Agent", userAgent);
+
+        if (telemetryEnabled) {
+            requestBuilder.header("commet-client-info", clientInfoHeader);
+            String telemetryHeader = lastTelemetryHeader;
+            if (telemetryHeader != null) {
+                requestBuilder.header("commet-client-telemetry", telemetryHeader);
+                lastTelemetryHeader = null;
+            }
+        }
 
         if (extraHeaders != null) {
             for (Map.Entry<String, String> header : extraHeaders.entrySet()) {
@@ -182,6 +218,7 @@ public class CommetHttpClient implements AutoCloseable {
             }
         }
 
+        long requestStart = System.currentTimeMillis();
         Response response;
         try {
             response = httpClient.newCall(requestBuilder.build()).execute();
@@ -223,6 +260,18 @@ public class CommetHttpClient implements AutoCloseable {
             if (dataField != null && typeRef != null) {
                 JavaType javaType = objectMapper.getTypeFactory().constructType(typeRef.getType());
                 typedData = objectMapper.convertValue(dataField, javaType);
+            }
+
+            if (telemetryEnabled) {
+                long durationMs = System.currentTimeMillis() - requestStart;
+                String requestId = response.header("x-request-id");
+                if (requestId == null) {
+                    requestId = "req_" + System.currentTimeMillis();
+                }
+                lastTelemetryHeader = String.format(
+                    "{\"last_request_metrics\":{\"request_id\":\"%s\",\"duration_ms\":%d}}",
+                    requestId, durationMs
+                );
             }
 
             return new ApiResponse<>(
