@@ -29,6 +29,8 @@ public class CommetHttpClient implements AutoCloseable {
 
     private static final String BASE_URL = "https://commet.co";
 
+    public static final String API_VERSION = "2026-05-01";
+
     private static final int[] RETRYABLE_STATUS_CODES = {408, 429, 500, 502, 503, 504};
 
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json");
@@ -44,7 +46,7 @@ public class CommetHttpClient implements AutoCloseable {
 
     public CommetHttpClient(String apiKey, Duration timeout, int retries) {
         this.apiKey = apiKey;
-        this.baseUrl = BASE_URL + "/api";
+        this.baseUrl = BASE_URL + "/api/v1";
         this.maxRetries = retries;
         this.objectMapper = new ObjectMapper();
         this.httpClient = new OkHttpClient.Builder()
@@ -148,6 +150,7 @@ public class CommetHttpClient implements AutoCloseable {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(urlBuilder.build())
                 .header("x-api-key", apiKey)
+                .header("commet-version", API_VERSION)
                 .header("Content-Type", "application/json")
                 .header("User-Agent", "commet-java/" + VERSION);
 
