@@ -3,14 +3,12 @@ package co.commet.params;
 public final class ListCustomersParams {
 
     private final String customerId;
-    private final Boolean isActive;
     private final String search;
     private final Integer limit;
     private final String cursor;
 
     private ListCustomersParams(Builder builder) {
         this.customerId = builder.customerId;
-        this.isActive = builder.isActive;
         this.search = builder.search;
         this.limit = builder.limit;
         this.cursor = builder.cursor;
@@ -21,7 +19,6 @@ public final class ListCustomersParams {
     }
 
     public String getCustomerId() { return customerId; }
-    public Boolean getIsActive() { return isActive; }
     public String getSearch() { return search; }
     public Integer getLimit() { return limit; }
     public String getCursor() { return cursor; }
@@ -29,7 +26,6 @@ public final class ListCustomersParams {
     public static final class Builder {
 
         private String customerId;
-        private Boolean isActive;
         private String search;
         private Integer limit;
         private String cursor;
@@ -38,11 +34,6 @@ public final class ListCustomersParams {
 
         public Builder customerId(String customerId) {
             this.customerId = customerId;
-            return this;
-        }
-
-        public Builder isActive(boolean isActive) {
-            this.isActive = isActive;
             return this;
         }
 

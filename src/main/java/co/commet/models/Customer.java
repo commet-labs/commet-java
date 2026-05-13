@@ -19,7 +19,6 @@ public record Customer(
         @JsonProperty("industry") String industry,
         @JsonProperty("employee_count") String employeeCount,
         @JsonProperty("metadata") Map<String, Object> metadata,
-        @JsonProperty("is_active") boolean isActive,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt
 ) {}

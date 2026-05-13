@@ -136,7 +136,6 @@ class ErrorParsingTest {
                         "data", Map.of(
                                 "id", "cus_abc123",
                                 "billing_email", "user@example.com",
-                                "is_active", true,
                                 "created_at", "2024-01-01T00:00:00Z",
                                 "updated_at", "2024-01-01T00:00:00Z"
                         )
@@ -148,7 +147,6 @@ class ErrorParsingTest {
         assertNotNull(response.getData());
         assertEquals("cus_abc123", response.getData().id());
         assertEquals("user@example.com", response.getData().billingEmail());
-        assertTrue(response.getData().isActive());
     }
 
     @Test
@@ -160,10 +158,10 @@ class ErrorParsingTest {
                         "success", true,
                         "data", List.of(
                                 Map.of("id", "cus_1", "billing_email", "a@test.com",
-                                        "is_active", true, "created_at", "2024-01-01T00:00:00Z",
+                                        "created_at", "2024-01-01T00:00:00Z",
                                         "updated_at", "2024-01-01T00:00:00Z"),
                                 Map.of("id", "cus_2", "billing_email", "b@test.com",
-                                        "is_active", false, "created_at", "2024-01-01T00:00:00Z",
+                                        "created_at", "2024-01-01T00:00:00Z",
                                         "updated_at", "2024-01-01T00:00:00Z")
                         ),
                         "has_more", true,

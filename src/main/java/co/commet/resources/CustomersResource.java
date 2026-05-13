@@ -91,19 +91,10 @@ public class CustomersResource {
     public ApiResponse<List<Customer>> list(ListCustomersParams params) {
         return http.get("/customers", buildBody(
                 "customer_id", params.getCustomerId(),
-                "is_active", params.getIsActive(),
                 "search", params.getSearch(),
                 "limit", params.getLimit(),
                 "cursor", params.getCursor()
         ), new TypeReference<>() {});
     }
 
-    public ApiResponse<Customer> archive(String customerId) {
-        return archive(customerId, null);
-    }
-
-    public ApiResponse<Customer> archive(String customerId, String idempotencyKey) {
-        return http.put("/customers/" + customerId, Map.of("is_active", false), idempotencyKey,
-                new TypeReference<>() {});
-    }
 }

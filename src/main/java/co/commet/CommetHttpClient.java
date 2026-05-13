@@ -29,7 +29,7 @@ public class CommetHttpClient implements AutoCloseable {
 
     private static final String BASE_URL = "https://commet.co";
 
-    public static final String API_VERSION = "2026-05-01";
+    public static final String API_VERSION = "2026-05-12";
 
     private static final int[] RETRYABLE_STATUS_CODES = {408, 429, 500, 502, 503, 504};
 
