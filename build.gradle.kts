@@ -21,9 +21,9 @@ repositories {
 
 dependencies {
     api("com.squareup.okhttp3:okhttp:4.12.0")
-    api("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+    api("com.fasterxml.jackson.core:jackson-databind:2.21.3")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.14.4")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
