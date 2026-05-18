@@ -8,6 +8,7 @@ public record SeatEvent(
         @JsonProperty("id") String id,
         @JsonProperty("organization_id") String organizationId,
         @JsonProperty("customer_id") String customerId,
+        @JsonProperty("feature_code") String featureCode,
         @JsonProperty("seat_type") String seatType,
         @JsonProperty("event_type") String eventType,
         @JsonProperty("quantity") int quantity,
