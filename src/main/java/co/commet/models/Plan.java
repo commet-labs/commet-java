@@ -22,7 +22,7 @@ public record Plan(
 ) {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record PlanPrice(
-            @JsonProperty("billing_interval") String billingInterval,
+            @JsonProperty("billing_interval") BillingInterval billingInterval,
             @JsonProperty("price") Long price,
             @JsonProperty("is_default") boolean isDefault,
             @JsonProperty("trial_days") int trialDays,
@@ -31,7 +31,7 @@ public record Plan(
         @JsonIgnoreProperties(ignoreUnknown = true)
         public record IntroOffer(
                 @JsonProperty("enabled") boolean enabled,
-                @JsonProperty("discount_type") String discountType,
+                @JsonProperty("discount_type") DiscountType discountType,
                 @JsonProperty("discount_value") Long discountValue,
                 @JsonProperty("duration_cycles") Integer durationCycles
         ) {}
@@ -41,7 +41,7 @@ public record Plan(
     public record PlanFeature(
             @JsonProperty("code") String code,
             @JsonProperty("name") String name,
-            @JsonProperty("type") String type,
+            @JsonProperty("type") FeatureType type,
             @JsonProperty("unit_name") String unitName,
             @JsonProperty("enabled") Boolean enabled,
             @JsonProperty("included_amount") Integer includedAmount,
@@ -53,7 +53,7 @@ public record Plan(
         @JsonIgnoreProperties(ignoreUnknown = true)
         public record Overage(
                 @JsonProperty("enabled") boolean enabled,
-                @JsonProperty("model") String model,
+                @JsonProperty("model") OverageModel model,
                 @JsonProperty("unit_price") Long unitPrice
         ) {}
     }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record Feature(
         @JsonProperty("code") String code,
         @JsonProperty("name") String name,
-        @JsonProperty("type") String type,
+        @JsonProperty("type") FeatureType type,
         @JsonProperty("allowed") boolean allowed,
         @JsonProperty("enabled") Boolean enabled,
         @JsonProperty("current") Integer current,

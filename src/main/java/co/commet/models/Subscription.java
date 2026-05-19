@@ -13,9 +13,9 @@ public record Subscription(
         @JsonProperty("plan_name") String planName,
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
-        @JsonProperty("status") String status,
-        @JsonProperty("consumption_model") String consumptionModel,
-        @JsonProperty("billing_interval") String billingInterval,
+        @JsonProperty("status") SubscriptionStatus status,
+        @JsonProperty("consumption_model") ConsumptionModel consumptionModel,
+        @JsonProperty("billing_interval") BillingInterval billingInterval,
         @JsonProperty("trial_ends_at") String trialEndsAt,
         @JsonProperty("start_date") String startDate,
         @JsonProperty("end_date") String endDate,
@@ -30,7 +30,7 @@ public record Subscription(
         @JsonProperty("balance") BalanceSummary balance,
         @JsonProperty("next_billing_date") String nextBillingDate,
         @JsonProperty("intro_offer_ends_at") String introOfferEndsAt,
-        @JsonProperty("intro_offer_discount_type") String introOfferDiscountType,
+        @JsonProperty("intro_offer_discount_type") DiscountType introOfferDiscountType,
         @JsonProperty("intro_offer_discount_value") Long introOfferDiscountValue,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt
@@ -40,7 +40,7 @@ public record Subscription(
             @JsonProperty("id") String id,
             @JsonProperty("name") String name,
             @JsonProperty("base_price") Long basePrice,
-            @JsonProperty("billing_interval") String billingInterval
+            @JsonProperty("billing_interval") BillingInterval billingInterval
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -61,14 +61,14 @@ public record Subscription(
     public record BalanceSummary(
             @JsonProperty("remaining") Long remaining,
             @JsonProperty("included") Long included,
-            @JsonProperty("currency") String currency
+            @JsonProperty("currency") Currency currency
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record FeatureSummary(
             @JsonProperty("code") String code,
             @JsonProperty("name") String name,
-            @JsonProperty("type") String type,
+            @JsonProperty("type") FeatureType type,
             @JsonProperty("enabled") Boolean enabled,
             @JsonProperty("usage") FeatureUsage usage
     ) {

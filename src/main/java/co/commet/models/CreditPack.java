@@ -10,5 +10,5 @@ public record CreditPack(
         @JsonProperty("description") String description,
         @JsonProperty("credits") int credits,
         @JsonProperty("price") Long price,
-        @JsonProperty("currency") String currency
+        @JsonProperty("currency") Currency currency
 ) {}

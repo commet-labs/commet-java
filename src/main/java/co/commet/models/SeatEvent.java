@@ -10,7 +10,7 @@ public record SeatEvent(
         @JsonProperty("customer_id") String customerId,
         @JsonProperty("feature_code") String featureCode,
         @JsonProperty("seat_type") String seatType,
-        @JsonProperty("event_type") String eventType,
+        @JsonProperty("event_type") SeatEventType eventType,
         @JsonProperty("quantity") int quantity,
         @JsonProperty("previous_balance") Integer previousBalance,
         @JsonProperty("new_balance") int newBalance,
