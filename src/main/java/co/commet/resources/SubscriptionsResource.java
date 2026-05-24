@@ -52,4 +52,9 @@ public class SubscriptionsResource {
                 "immediate", params.getImmediate()
         ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
+
+    public ApiResponse<Subscription> uncancel(String subscriptionId) {
+        return http.post("/subscriptions/" + subscriptionId + "/uncancel",
+                Map.of(), null, new TypeReference<>() {});
+    }
 }
