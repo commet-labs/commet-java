@@ -1,5 +1,6 @@
 package co.commet;
 
+import co.commet.resources.AddonsResource;
 import co.commet.resources.CreditPacksResource;
 import co.commet.resources.CustomersResource;
 import co.commet.resources.FeaturesResource;
@@ -27,6 +28,7 @@ public class Commet implements AutoCloseable {
     private final FeaturesResource features;
     private final PortalResource portal;
     private final CreditPacksResource creditPacks;
+    private final AddonsResource addons;
     private final Webhooks webhooks;
 
     private Commet(String apiKey, Duration timeout, int retries, boolean telemetry) {
@@ -47,6 +49,7 @@ public class Commet implements AutoCloseable {
         this.features = new FeaturesResource(httpClient);
         this.portal = new PortalResource(httpClient);
         this.creditPacks = new CreditPacksResource(httpClient);
+        this.addons = new AddonsResource(httpClient);
         this.webhooks = new Webhooks();
 
         logger.fine("Commet client initialized");
@@ -91,6 +94,10 @@ public class Commet implements AutoCloseable {
 
     public CreditPacksResource creditPacks() {
         return creditPacks;
+    }
+
+    public AddonsResource addons() {
+        return addons;
     }
 
     public Webhooks webhooks() {

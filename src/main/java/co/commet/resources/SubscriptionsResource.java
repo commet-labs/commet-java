@@ -4,6 +4,7 @@ import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.Subscription;
 import co.commet.params.CancelSubscriptionParams;
+import co.commet.params.ChangePlanParams;
 import co.commet.params.CreateSubscriptionParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -56,5 +57,16 @@ public class SubscriptionsResource {
     public ApiResponse<Subscription> uncancel(String subscriptionId) {
         return http.post("/subscriptions/" + subscriptionId + "/uncancel",
                 Map.of(), null, new TypeReference<>() {});
+    }
+
+    public ApiResponse<Subscription> changePlan(String subscriptionId, String newPlanId) {
+        return changePlan(ChangePlanParams.builder(subscriptionId, newPlanId).build());
+    }
+
+    public ApiResponse<Subscription> changePlan(ChangePlanParams params) {
+        return http.post("/subscriptions/" + params.getSubscriptionId() + "/change-plan", buildBody(
+                "new_plan_id", params.getNewPlanId(),
+                "new_billing_interval", params.getNewBillingInterval()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 }

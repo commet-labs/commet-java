@@ -2,7 +2,9 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.models.CheckUsageResult;
 import co.commet.models.UsageEvent;
+import co.commet.params.CheckUsageParams;
 import co.commet.params.TrackParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -57,4 +59,15 @@ public class UsageResource {
         return http.post("/usage/events", body, params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
+    public ApiResponse<CheckUsageResult> check(String customerId, String featureCode) {
+        return check(CheckUsageParams.builder(customerId, featureCode).build());
+    }
+
+    public ApiResponse<CheckUsageResult> check(CheckUsageParams params) {
+        return http.post("/usage/check", buildBody(
+                "customer_id", params.getCustomerId(),
+                "feature_code", params.getFeatureCode(),
+                "quantity", params.getQuantity()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
+    }
 }
