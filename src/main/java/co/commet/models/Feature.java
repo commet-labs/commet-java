@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Feature(
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode,
         @JsonProperty("code") String code,
         @JsonProperty("name") String name,
         @JsonProperty("type") FeatureType type,

@@ -8,6 +8,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Plan(
         @JsonProperty("id") String id,
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode,
         @JsonProperty("code") String code,
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,

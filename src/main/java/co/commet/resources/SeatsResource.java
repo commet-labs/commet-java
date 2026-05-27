@@ -19,14 +19,11 @@ public class SeatsResource {
         this.http = http;
     }
 
-    private static String resolveCode(String featureCode, String seatType) {
-        if (featureCode != null && !featureCode.isEmpty()) {
-            return featureCode;
-        }
-        return seatType;
-    }
-
     // --- add ---
+
+    public ApiResponse<SeatEvent> add(String featureCode) {
+        return add(featureCode, 1);
+    }
 
     public ApiResponse<SeatEvent> add(String featureCode, int count) {
         return add(featureCode, count, null, null);
@@ -35,26 +32,17 @@ public class SeatsResource {
     public ApiResponse<SeatEvent> add(String featureCode, int count, String customerId,
                            String idempotencyKey) {
         return http.post("/seats", buildBody(
-                "seat_type", featureCode,
+                "feature_code", featureCode,
                 "count", count,
                 "customer_id", customerId
         ), idempotencyKey, new TypeReference<>() {});
     }
 
-    /** @deprecated Use {@link #add(String, int)} with featureCode instead. */
-    @Deprecated
-    public ApiResponse<SeatEvent> addBySeatType(String seatType, int count) {
-        return add(seatType, count, null, null);
-    }
-
-    /** @deprecated Use {@link #add(String, int, String, String)} with featureCode instead. */
-    @Deprecated
-    public ApiResponse<SeatEvent> addBySeatType(String seatType, int count, String customerId,
-                           String idempotencyKey) {
-        return add(seatType, count, customerId, idempotencyKey);
-    }
-
     // --- remove ---
+
+    public ApiResponse<SeatEvent> remove(String featureCode) {
+        return remove(featureCode, 1);
+    }
 
     public ApiResponse<SeatEvent> remove(String featureCode, int count) {
         return remove(featureCode, count, null, null);
@@ -63,23 +51,10 @@ public class SeatsResource {
     public ApiResponse<SeatEvent> remove(String featureCode, int count, String customerId,
                               String idempotencyKey) {
         return http.delete("/seats", buildBody(
-                "seat_type", featureCode,
+                "feature_code", featureCode,
                 "count", count,
                 "customer_id", customerId
         ), idempotencyKey, new TypeReference<>() {});
-    }
-
-    /** @deprecated Use {@link #remove(String, int)} with featureCode instead. */
-    @Deprecated
-    public ApiResponse<SeatEvent> removeBySeatType(String seatType, int count) {
-        return remove(seatType, count, null, null);
-    }
-
-    /** @deprecated Use {@link #remove(String, int, String, String)} with featureCode instead. */
-    @Deprecated
-    public ApiResponse<SeatEvent> removeBySeatType(String seatType, int count, String customerId,
-                              String idempotencyKey) {
-        return remove(seatType, count, customerId, idempotencyKey);
     }
 
     // --- set ---
@@ -91,23 +66,10 @@ public class SeatsResource {
     public ApiResponse<SeatEvent> set(String featureCode, int count, String customerId,
                            String idempotencyKey) {
         return http.put("/seats", buildBody(
-                "seat_type", featureCode,
+                "feature_code", featureCode,
                 "count", count,
                 "customer_id", customerId
         ), idempotencyKey, new TypeReference<>() {});
-    }
-
-    /** @deprecated Use {@link #set(String, int)} with featureCode instead. */
-    @Deprecated
-    public ApiResponse<SeatEvent> setBySeatType(String seatType, int count) {
-        return set(seatType, count, null, null);
-    }
-
-    /** @deprecated Use {@link #set(String, int, String, String)} with featureCode instead. */
-    @Deprecated
-    public ApiResponse<SeatEvent> setBySeatType(String seatType, int count, String customerId,
-                           String idempotencyKey) {
-        return set(seatType, count, customerId, idempotencyKey);
     }
 
     // --- setAll ---
@@ -132,21 +94,9 @@ public class SeatsResource {
 
     public ApiResponse<SeatBalance> getBalance(String featureCode, String customerId) {
         return http.get("/seats/balance", buildBody(
-                "seat_type", featureCode,
+                "feature_code", featureCode,
                 "customer_id", customerId
         ), new TypeReference<>() {});
-    }
-
-    /** @deprecated Use {@link #getBalance(String)} with featureCode instead. */
-    @Deprecated
-    public ApiResponse<SeatBalance> getBalanceBySeatType(String seatType) {
-        return getBalance(seatType, null);
-    }
-
-    /** @deprecated Use {@link #getBalance(String, String)} with featureCode instead. */
-    @Deprecated
-    public ApiResponse<SeatBalance> getBalanceBySeatType(String seatType, String customerId) {
-        return getBalance(seatType, customerId);
     }
 
     // --- getAllBalances ---

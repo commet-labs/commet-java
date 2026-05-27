@@ -8,6 +8,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Subscription(
         @JsonProperty("id") String id,
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode,
         @JsonProperty("customer_id") String customerId,
         @JsonProperty("plan_id") String planId,
         @JsonProperty("plan_name") String planName,
@@ -28,6 +30,8 @@ public record Subscription(
         @JsonProperty("features") List<FeatureSummary> features,
         @JsonProperty("credits") CreditsSummary credits,
         @JsonProperty("balance") BalanceSummary balance,
+        @JsonProperty("cancellation") CancellationSummary cancellation,
+        @JsonProperty("discount") DiscountSummary discount,
         @JsonProperty("next_billing_date") String nextBillingDate,
         @JsonProperty("intro_offer_ends_at") String introOfferEndsAt,
         @JsonProperty("intro_offer_discount_type") DiscountType introOfferDiscountType,
@@ -62,6 +66,21 @@ public record Subscription(
             @JsonProperty("remaining") Long remaining,
             @JsonProperty("included") Long included,
             @JsonProperty("currency") Currency currency
+    ) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CancellationSummary(
+            @JsonProperty("scheduled_at") String scheduledAt,
+            @JsonProperty("reason") String reason,
+            @JsonProperty("effective_at") String effectiveAt
+    ) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record DiscountSummary(
+            @JsonProperty("type") String type,
+            @JsonProperty("value") Long value,
+            @JsonProperty("name") String name,
+            @JsonProperty("ends_at") String endsAt
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)

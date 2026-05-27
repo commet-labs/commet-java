@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -29,9 +30,11 @@ public class CommetHttpClient implements AutoCloseable {
 
     private static final String BASE_URL = "https://commet.co";
 
-    public static final String API_VERSION = "2026-05-18";
+    public static final String API_VERSION = "2026-05-25";
 
     private static final int[] RETRYABLE_STATUS_CODES = {408, 429, 500, 502, 503, 504};
+
+    private static final Set<String> BODY_METHODS = Set.of("POST", "PUT", "PATCH");
 
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json");
     private static final Pattern UPPER_AFTER_LOWER = Pattern.compile("(.)([A-Z][a-z]+)");
@@ -41,7 +44,9 @@ public class CommetHttpClient implements AutoCloseable {
     private final OkHttpClient httpClient;
     private final String baseUrl;
     private final String apiKey;
+    private final String apiVersion;
     private final int maxRetries;
+    private final boolean debug;
     private final ObjectMapper objectMapper;
     private final boolean telemetryEnabled;
     private final String userAgent;
@@ -49,13 +54,25 @@ public class CommetHttpClient implements AutoCloseable {
     private volatile String lastTelemetryHeader;
 
     public CommetHttpClient(String apiKey, Duration timeout, int retries) {
-        this(apiKey, timeout, retries, true);
+        this(apiKey, timeout, retries, true, null, false);
     }
 
     public CommetHttpClient(String apiKey, Duration timeout, int retries, boolean telemetry) {
+        this(apiKey, timeout, retries, telemetry, null, false);
+    }
+
+    public CommetHttpClient(String apiKey, Duration timeout, int retries, boolean telemetry,
+                            String apiVersion) {
+        this(apiKey, timeout, retries, telemetry, apiVersion, false);
+    }
+
+    public CommetHttpClient(String apiKey, Duration timeout, int retries, boolean telemetry,
+                            String apiVersion, boolean debug) {
         this.apiKey = apiKey;
+        this.apiVersion = apiVersion;
         this.baseUrl = BASE_URL + "/api/v1";
         this.maxRetries = retries;
+        this.debug = debug;
         this.telemetryEnabled = telemetry;
         this.objectMapper = new ObjectMapper();
         this.httpClient = new OkHttpClient.Builder()
@@ -94,44 +111,78 @@ public class CommetHttpClient implements AutoCloseable {
     }
 
     public <T> ApiResponse<T> get(String endpoint, TypeReference<T> typeRef) {
-        return get(endpoint, null, null, typeRef);
+        return request("GET", endpoint, null, null, null, typeRef);
     }
 
     public <T> ApiResponse<T> get(String endpoint, Map<String, Object> params, TypeReference<T> typeRef) {
-        return get(endpoint, params, null, typeRef);
+        Map<String, Object> camelParams = convertParamKeys(params);
+        return request("GET", endpoint, null, camelParams, null, typeRef);
     }
 
     public <T> ApiResponse<T> get(String endpoint, Map<String, Object> params, String idempotencyKey,
                                   TypeReference<T> typeRef) {
         Map<String, Object> camelParams = convertParamKeys(params);
-        return request("GET", endpoint, null, camelParams, idempotencyKey, typeRef);
+        RequestOptions options = idempotencyKey != null
+                ? RequestOptions.builder().idempotencyKey(idempotencyKey).build()
+                : null;
+        return request("GET", endpoint, null, camelParams, options, typeRef);
+    }
+
+    public <T> ApiResponse<T> get(String endpoint, Map<String, Object> params, RequestOptions options,
+                                  TypeReference<T> typeRef) {
+        Map<String, Object> camelParams = convertParamKeys(params);
+        return request("GET", endpoint, null, camelParams, options, typeRef);
     }
 
     public <T> ApiResponse<T> post(String endpoint, Map<String, Object> body, TypeReference<T> typeRef) {
-        return post(endpoint, body, null, typeRef);
+        return request("POST", endpoint, body, null, null, typeRef);
     }
 
     public <T> ApiResponse<T> post(String endpoint, Map<String, Object> body, String idempotencyKey,
                                    TypeReference<T> typeRef) {
-        return request("POST", endpoint, body, null, idempotencyKey, typeRef);
+        RequestOptions options = idempotencyKey != null
+                ? RequestOptions.builder().idempotencyKey(idempotencyKey).build()
+                : null;
+        return request("POST", endpoint, body, null, options, typeRef);
+    }
+
+    public <T> ApiResponse<T> post(String endpoint, Map<String, Object> body, RequestOptions options,
+                                   TypeReference<T> typeRef) {
+        return request("POST", endpoint, body, null, options, typeRef);
     }
 
     public <T> ApiResponse<T> put(String endpoint, Map<String, Object> body, TypeReference<T> typeRef) {
-        return put(endpoint, body, null, typeRef);
+        return request("PUT", endpoint, body, null, null, typeRef);
     }
 
     public <T> ApiResponse<T> put(String endpoint, Map<String, Object> body, String idempotencyKey,
                                   TypeReference<T> typeRef) {
-        return request("PUT", endpoint, body, null, idempotencyKey, typeRef);
+        RequestOptions options = idempotencyKey != null
+                ? RequestOptions.builder().idempotencyKey(idempotencyKey).build()
+                : null;
+        return request("PUT", endpoint, body, null, options, typeRef);
+    }
+
+    public <T> ApiResponse<T> put(String endpoint, Map<String, Object> body, RequestOptions options,
+                                  TypeReference<T> typeRef) {
+        return request("PUT", endpoint, body, null, options, typeRef);
     }
 
     public <T> ApiResponse<T> delete(String endpoint, Map<String, Object> body, TypeReference<T> typeRef) {
-        return delete(endpoint, body, null, typeRef);
+        return request("DELETE", endpoint, body, null, null, typeRef);
     }
 
     public <T> ApiResponse<T> delete(String endpoint, Map<String, Object> body, String idempotencyKey,
                                      TypeReference<T> typeRef) {
-        return request("DELETE", endpoint, body, null, idempotencyKey, typeRef);
+        RequestOptions options = idempotencyKey != null
+                ? RequestOptions.builder().idempotencyKey(idempotencyKey).build()
+                : null;
+        return request("DELETE", endpoint, body, null, options, typeRef);
+    }
+
+    public <T> ApiResponse<T> delete(String endpoint, Map<String, Object> body, RequestOptions options,
+                                     TypeReference<T> typeRef) {
+        return request("DELETE", endpoint, body, null, options, typeRef);
     }
 
     private Map<String, Object> convertParamKeys(Map<String, Object> params) {
@@ -148,25 +199,46 @@ public class CommetHttpClient implements AutoCloseable {
     }
 
     private <T> ApiResponse<T> request(String method, String endpoint, Map<String, Object> body,
-                                       Map<String, Object> params, String idempotencyKey,
+                                       Map<String, Object> params, RequestOptions options,
                                        TypeReference<T> typeRef) {
+        if (BODY_METHODS.contains(method)
+                && maxRetries > 0
+                && (options == null || options.getIdempotencyKey() == null)) {
+            options = options != null
+                    ? RequestOptions.builder()
+                        .apiVersion(options.getApiVersion())
+                        .idempotencyKey(generateIdempotencyKey())
+                        .timeout(options.getTimeout())
+                        .build()
+                    : RequestOptions.builder()
+                        .idempotencyKey(generateIdempotencyKey())
+                        .build();
+        }
+
         Map<String, String> headers = new LinkedHashMap<>();
-        if ("POST".equals(method)) {
-            headers.put("Idempotency-Key",
-                    idempotencyKey != null ? idempotencyKey : "sdk_" + UUID.randomUUID().toString().replace("-", ""));
+        if (options != null && options.getIdempotencyKey() != null) {
+            headers.put("Idempotency-Key", options.getIdempotencyKey());
         }
 
         Object jsonBody = body != null ? convertKeys(body, true) : null;
 
-        logger.fine(method + " " + endpoint);
+        if (debug) {
+            logger.info("[Commet SDK] " + method + " " + baseUrl + endpoint);
+            if (jsonBody != null) {
+                try {
+                    logger.info("[Commet SDK] Request body: " + objectMapper.writeValueAsString(jsonBody));
+                } catch (IOException ignored) {
+                }
+            }
+        }
 
-        return execute(method, endpoint, jsonBody, params, headers, 1, typeRef);
+        return execute(method, endpoint, jsonBody, params, headers, options, 1, typeRef);
     }
 
     @SuppressWarnings("unchecked")
     private <T> ApiResponse<T> execute(String method, String endpoint, Object jsonBody,
                                        Map<String, Object> params, Map<String, String> extraHeaders,
-                                       int attempt, TypeReference<T> typeRef) {
+                                       RequestOptions options, int attempt, TypeReference<T> typeRef) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + endpoint).newBuilder();
         if (params != null) {
             for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -177,7 +249,7 @@ public class CommetHttpClient implements AutoCloseable {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(urlBuilder.build())
                 .header("x-api-key", apiKey)
-                .header("commet-version", API_VERSION)
+                .header("commet-version", resolveApiVersion(options))
                 .header("Content-Type", "application/json")
                 .header("User-Agent", userAgent);
 
@@ -209,6 +281,7 @@ public class CommetHttpClient implements AutoCloseable {
             case "GET" -> requestBuilder.get();
             case "POST" -> requestBuilder.post(requestBody != null ? requestBody : RequestBody.create("", JSON_MEDIA_TYPE));
             case "PUT" -> requestBuilder.put(requestBody != null ? requestBody : RequestBody.create("", JSON_MEDIA_TYPE));
+            case "PATCH" -> requestBuilder.patch(requestBody != null ? requestBody : RequestBody.create("", JSON_MEDIA_TYPE));
             case "DELETE" -> {
                 if (requestBody != null) {
                     requestBuilder.delete(requestBody);
@@ -218,26 +291,46 @@ public class CommetHttpClient implements AutoCloseable {
             }
         }
 
+        OkHttpClient clientForRequest = resolveClientForRequest(options);
+
         long requestStart = System.currentTimeMillis();
         Response response;
         try {
-            response = httpClient.newCall(requestBuilder.build()).execute();
+            response = clientForRequest.newCall(requestBuilder.build()).execute();
         } catch (SocketTimeoutException e) {
             if (attempt <= maxRetries) {
-                wait(attempt);
-                return execute(method, endpoint, jsonBody, params, extraHeaders, attempt + 1, typeRef);
+                long delay = retryDelay(attempt);
+                if (debug) {
+                    logger.info("[Commet SDK] Timeout, retrying in " + delay + "ms (attempt " + attempt + "/" + maxRetries + ")");
+                }
+                sleep(delay);
+                return execute(method, endpoint, jsonBody, params, extraHeaders, options, attempt + 1, typeRef);
             }
             throw new CommetException("Request timed out after " + maxRetries + " retries");
         } catch (IOException e) {
+            if (attempt <= maxRetries) {
+                long delay = retryDelay(attempt);
+                if (debug) {
+                    logger.info("[Commet SDK] Network error, retrying in " + delay + "ms (attempt " + attempt + "/" + maxRetries + ")");
+                }
+                sleep(delay);
+                return execute(method, endpoint, jsonBody, params, extraHeaders, options, attempt + 1, typeRef);
+            }
             throw new CommetException("Request failed: " + e.getMessage());
         }
 
-        logger.fine("Response: " + response.code());
+        if (debug) {
+            logger.info("[Commet SDK] Response status: " + response.code());
+        }
 
         if (isRetryable(response.code()) && attempt <= maxRetries) {
             response.close();
-            wait(attempt);
-            return execute(method, endpoint, jsonBody, params, extraHeaders, attempt + 1, typeRef);
+            long delay = retryDelay(attempt);
+            if (debug) {
+                logger.info("[Commet SDK] Retrying in " + delay + "ms (attempt " + attempt + "/" + maxRetries + ")");
+            }
+            sleep(delay);
+            return execute(method, endpoint, jsonBody, params, extraHeaders, options, attempt + 1, typeRef);
         }
 
         try {
@@ -293,35 +386,70 @@ public class CommetHttpClient implements AutoCloseable {
 
     @SuppressWarnings("unchecked")
     private void handleError(int statusCode, Map<String, Object> data) {
-        if ("validation_error".equals(data.get("code")) && data.get("details") instanceof List) {
+        Map<String, Object> errorObj = data;
+        if (data.get("error") instanceof Map) {
+            errorObj = (Map<String, Object>) data.get("error");
+        }
+
+        String type = errorObj.get("type") != null ? errorObj.get("type").toString() : "api_error";
+        String code = errorObj.get("code") != null ? errorObj.get("code").toString() : "unknown";
+        String message = errorObj.get("message") != null
+                ? errorObj.get("message").toString()
+                : "Request failed with status " + statusCode;
+        String param = errorObj.get("param") != null ? errorObj.get("param").toString() : null;
+        Object details = errorObj.get("details");
+        String docUrl = errorObj.get("doc_url") != null ? errorObj.get("doc_url").toString() : null;
+
+        if ("validation_error".equals(code) && details instanceof List) {
             Map<String, List<String>> errors = new LinkedHashMap<>();
-            List<Map<String, Object>> details = (List<Map<String, Object>>) data.get("details");
-            for (Map<String, Object> detail : details) {
+            List<Map<String, Object>> detailList = (List<Map<String, Object>>) details;
+            for (Map<String, Object> detail : detailList) {
                 String field = detail.getOrDefault("field", "unknown").toString();
                 errors.computeIfAbsent(field, k -> new ArrayList<>())
                         .add(detail.getOrDefault("message", "").toString());
             }
-            throw new CommetValidationException(
-                    data.getOrDefault("message", "Validation failed").toString(), errors);
+            throw new CommetValidationException(message, errors);
         }
 
-        throw new CommetApiException(
-                data.getOrDefault("message", "Request failed with status " + statusCode).toString(),
-                statusCode,
-                data.get("code") != null ? data.get("code").toString() : null,
-                data.get("details")
-        );
+        throw new CommetApiException(message, statusCode, code, details, type, param, docUrl);
     }
 
-    private void wait(int attempt) {
-        long delay = Math.min((long) (1000 * Math.pow(2, attempt - 1)), 8000);
-        logger.fine("Retrying in " + delay + "ms (attempt " + attempt + "/" + maxRetries + ")");
+    private long retryDelay(int attempt) {
+        return Math.min((long) (1000 * Math.pow(2, attempt - 1)), 8000);
+    }
+
+    private void sleep(long ms) {
         try {
-            Thread.sleep(delay);
+            Thread.sleep(ms);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new CommetException("Retry interrupted");
         }
+    }
+
+    private String resolveApiVersion(RequestOptions options) {
+        if (options != null && options.getApiVersion() != null) {
+            return options.getApiVersion();
+        }
+        if (apiVersion != null) {
+            return apiVersion;
+        }
+        return API_VERSION;
+    }
+
+    private OkHttpClient resolveClientForRequest(RequestOptions options) {
+        if (options == null || options.getTimeout() == null) {
+            return httpClient;
+        }
+        return httpClient.newBuilder()
+                .connectTimeout(options.getTimeout())
+                .readTimeout(options.getTimeout())
+                .writeTimeout(options.getTimeout())
+                .build();
+    }
+
+    private String generateIdempotencyKey() {
+        return "commet-java-retry-" + UUID.randomUUID();
     }
 
     private boolean isRetryable(int statusCode) {

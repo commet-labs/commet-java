@@ -8,8 +8,9 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Customer(
         @JsonProperty("id") String id,
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode,
         @JsonProperty("organization_id") String organizationId,
-        @JsonProperty("external_id") String externalId,
         @JsonProperty("full_name") String fullName,
         @JsonProperty("domain") String domain,
         @JsonProperty("website") String website,

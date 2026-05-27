@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum OverageModel {
-    PER_UNIT("per_unit"),
-    TIERED("tiered");
+    PER_UNIT("per_unit");
 
     private final String value;
 

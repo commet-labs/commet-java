@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Addon(
+public record AddonDetail(
         @JsonProperty("id") String id,
-        @JsonProperty("object") String object,
-        @JsonProperty("livemode") boolean livemode,
         @JsonProperty("name") String name,
         @JsonProperty("slug") String slug,
         @JsonProperty("description") String description,

@@ -30,7 +30,6 @@ public class CustomersResource {
     public ApiResponse<Customer> create(CreateCustomerParams params) {
         return http.post("/customers", buildBody(
                 "billing_email", params.getEmail(),
-                "external_id", params.getId(),
                 "full_name", params.getFullName(),
                 "domain", params.getDomain(),
                 "website", params.getWebsite(),
@@ -42,24 +41,23 @@ public class CustomersResource {
         ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse<BatchResult> createBatch(List<Map<String, Object>> customers) {
+    public ApiResponse<BatchResult> createBatch(List<CreateCustomerParams> customers) {
         return createBatch(customers, null);
     }
 
-    public ApiResponse<BatchResult> createBatch(List<Map<String, Object>> customers, String idempotencyKey) {
+    public ApiResponse<BatchResult> createBatch(List<CreateCustomerParams> customers, String idempotencyKey) {
         List<Map<String, Object>> mapped = new ArrayList<>();
-        for (Map<String, Object> c : customers) {
+        for (CreateCustomerParams c : customers) {
             mapped.add(buildBody(
-                    "billing_email", c.get("email"),
-                    "external_id", c.get("external_id"),
-                    "full_name", c.get("full_name"),
-                    "domain", c.get("domain"),
-                    "website", c.get("website"),
-                    "timezone", c.get("timezone"),
-                    "language", c.get("language"),
-                    "industry", c.get("industry"),
-                    "metadata", c.get("metadata"),
-                    "address", c.get("address")
+                    "billing_email", c.getEmail(),
+                    "full_name", c.getFullName(),
+                    "domain", c.getDomain(),
+                    "website", c.getWebsite(),
+                    "timezone", c.getTimezone(),
+                    "language", c.getLanguage(),
+                    "industry", c.getIndustry(),
+                    "metadata", c.getMetadata(),
+                    "address", c.getAddress()
             ));
         }
         return http.post("/customers/batch", Map.of("customers", mapped), idempotencyKey,
@@ -96,5 +94,4 @@ public class CustomersResource {
                 "cursor", params.getCursor()
         ), new TypeReference<>() {});
     }
-
 }

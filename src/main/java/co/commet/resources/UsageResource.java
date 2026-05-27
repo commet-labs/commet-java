@@ -59,6 +59,24 @@ public class UsageResource {
         return http.post("/usage/events", body, params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
+    public ApiResponse<UsageEvent> trackModelTokens(String feature, String customerId, String model,
+                                                     int inputTokens, int outputTokens) {
+        return trackModelTokens(feature, customerId, model, inputTokens, outputTokens, null, null);
+    }
+
+    public ApiResponse<UsageEvent> trackModelTokens(String feature, String customerId, String model,
+                                                     int inputTokens, int outputTokens,
+                                                     Integer cacheReadTokens, Integer cacheWriteTokens) {
+        return track(TrackParams.builder(feature)
+                .customerId(customerId)
+                .model(model)
+                .inputTokens(inputTokens)
+                .outputTokens(outputTokens)
+                .cacheReadTokens(cacheReadTokens)
+                .cacheWriteTokens(cacheWriteTokens)
+                .build());
+    }
+
     public ApiResponse<CheckUsageResult> check(String customerId, String featureCode) {
         return check(CheckUsageParams.builder(customerId, featureCode).build());
     }

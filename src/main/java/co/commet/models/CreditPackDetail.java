@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record CreditPack(
+public record CreditPackDetail(
         @JsonProperty("id") String id,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode,
@@ -12,5 +12,7 @@ public record CreditPack(
         @JsonProperty("description") String description,
         @JsonProperty("credits") int credits,
         @JsonProperty("price") Long price,
-        @JsonProperty("currency") Currency currency
+        @JsonProperty("is_active") boolean isActive,
+        @JsonProperty("created_at") String createdAt,
+        @JsonProperty("updated_at") String updatedAt
 ) {}

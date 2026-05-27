@@ -3,21 +3,25 @@ package co.commet.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Addon(
+public record PlanGroup(
         @JsonProperty("id") String id,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode,
         @JsonProperty("name") String name,
-        @JsonProperty("slug") String slug,
         @JsonProperty("description") String description,
-        @JsonProperty("base_price") Long basePrice,
-        @JsonProperty("feature_code") String featureCode,
-        @JsonProperty("feature_name") String featureName,
-        @JsonProperty("consumption_model") String consumptionModel,
-        @JsonProperty("included_units") Integer includedUnits,
-        @JsonProperty("overage_rate") Long overageRate,
-        @JsonProperty("credit_cost") Integer creditCost,
+        @JsonProperty("is_public") boolean isPublic,
+        @JsonProperty("plans") List<PlanGroupPlan> plans,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt
-) {}
+) {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record PlanGroupPlan(
+            @JsonProperty("id") String id,
+            @JsonProperty("code") String code,
+            @JsonProperty("name") String name,
+            @JsonProperty("sort_order") int sortOrder
+    ) {}
+}

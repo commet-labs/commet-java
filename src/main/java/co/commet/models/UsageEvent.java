@@ -8,6 +8,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UsageEvent(
         @JsonProperty("id") String id,
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode,
         @JsonProperty("organization_id") String organizationId,
         @JsonProperty("customer_id") String customerId,
         @JsonProperty("feature") String feature,

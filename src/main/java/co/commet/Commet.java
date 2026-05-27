@@ -1,13 +1,18 @@
 package co.commet;
 
 import co.commet.resources.AddonsResource;
+import co.commet.resources.ApiKeysResource;
 import co.commet.resources.CreditPacksResource;
 import co.commet.resources.CustomersResource;
 import co.commet.resources.FeaturesResource;
+import co.commet.resources.InvoicesResource;
+import co.commet.resources.PlanGroupsResource;
 import co.commet.resources.PlansResource;
 import co.commet.resources.PortalResource;
+import co.commet.resources.PromoCodesResource;
 import co.commet.resources.SeatsResource;
 import co.commet.resources.SubscriptionsResource;
+import co.commet.resources.TransactionsResource;
 import co.commet.resources.UsageResource;
 import co.commet.resources.Webhooks;
 
@@ -30,8 +35,14 @@ public class Commet implements AutoCloseable {
     private final CreditPacksResource creditPacks;
     private final AddonsResource addons;
     private final Webhooks webhooks;
+    private final ApiKeysResource apiKeys;
+    private final InvoicesResource invoices;
+    private final TransactionsResource transactions;
+    private final PromoCodesResource promoCodes;
+    private final PlanGroupsResource planGroups;
 
-    private Commet(String apiKey, Duration timeout, int retries, boolean telemetry) {
+    private Commet(String apiKey, Duration timeout, int retries, boolean telemetry, String apiVersion,
+                   boolean debug) {
         if (apiKey == null || apiKey.isEmpty()) {
             throw new IllegalArgumentException("Commet SDK: API key is required");
         }
@@ -39,7 +50,7 @@ public class Commet implements AutoCloseable {
             throw new IllegalArgumentException("Commet SDK: Invalid API key format. Expected format: ck_xxx...");
         }
 
-        this.httpClient = new CommetHttpClient(apiKey, timeout, retries, telemetry);
+        this.httpClient = new CommetHttpClient(apiKey, timeout, retries, telemetry, apiVersion, debug);
 
         this.customers = new CustomersResource(httpClient);
         this.plans = new PlansResource(httpClient);
@@ -50,7 +61,12 @@ public class Commet implements AutoCloseable {
         this.portal = new PortalResource(httpClient);
         this.creditPacks = new CreditPacksResource(httpClient);
         this.addons = new AddonsResource(httpClient);
-        this.webhooks = new Webhooks();
+        this.webhooks = new Webhooks(httpClient);
+        this.apiKeys = new ApiKeysResource(httpClient);
+        this.invoices = new InvoicesResource(httpClient);
+        this.transactions = new TransactionsResource(httpClient);
+        this.promoCodes = new PromoCodesResource(httpClient);
+        this.planGroups = new PlanGroupsResource(httpClient);
 
         logger.fine("Commet client initialized");
     }
@@ -104,16 +120,34 @@ public class Commet implements AutoCloseable {
         return webhooks;
     }
 
-    public CustomerContext customer(String customerId) {
-        return new CustomerContext(customerId, features, seats, usage, subscriptions, portal);
+    public ApiKeysResource apiKeys() {
+        return apiKeys;
+    }
+
+    public InvoicesResource invoices() {
+        return invoices;
+    }
+
+    public TransactionsResource transactions() {
+        return transactions;
+    }
+
+    public PromoCodesResource promoCodes() {
+        return promoCodes;
+    }
+
+    public PlanGroupsResource planGroups() {
+        return planGroups;
     }
 
     public static class Builder {
 
         private String apiKey;
+        private String apiVersion;
         private Duration timeout = Duration.ofSeconds(30);
         private int retries = 3;
         private boolean telemetry = true;
+        private boolean debug = false;
 
         private Builder() {}
 
@@ -137,8 +171,18 @@ public class Commet implements AutoCloseable {
             return this;
         }
 
+        public Builder apiVersion(String apiVersion) {
+            this.apiVersion = apiVersion;
+            return this;
+        }
+
+        public Builder debug(boolean debug) {
+            this.debug = debug;
+            return this;
+        }
+
         public Commet build() {
-            return new Commet(apiKey, timeout, retries, telemetry);
+            return new Commet(apiKey, timeout, retries, telemetry, apiVersion, debug);
         }
     }
 }
