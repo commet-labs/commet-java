@@ -30,6 +30,7 @@ public class CustomersResource {
     public ApiResponse<Customer> create(CreateCustomerParams params) {
         return http.post("/customers", buildBody(
                 "billing_email", params.getEmail(),
+                "id", params.getId(),
                 "full_name", params.getFullName(),
                 "domain", params.getDomain(),
                 "website", params.getWebsite(),
@@ -50,6 +51,7 @@ public class CustomersResource {
         for (CreateCustomerParams c : customers) {
             mapped.add(buildBody(
                     "billing_email", c.getEmail(),
+                    "id", c.getId(),
                     "full_name", c.getFullName(),
                     "domain", c.getDomain(),
                     "website", c.getWebsite(),

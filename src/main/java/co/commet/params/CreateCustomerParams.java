@@ -5,6 +5,7 @@ import java.util.Map;
 public final class CreateCustomerParams {
 
     private final String email;
+    private final String id;
     private final String fullName;
     private final String domain;
     private final String website;
@@ -17,6 +18,7 @@ public final class CreateCustomerParams {
 
     private CreateCustomerParams(Builder builder) {
         this.email = builder.email;
+        this.id = builder.id;
         this.fullName = builder.fullName;
         this.domain = builder.domain;
         this.website = builder.website;
@@ -33,6 +35,7 @@ public final class CreateCustomerParams {
     }
 
     public String getEmail() { return email; }
+    public String getId() { return id; }
     public String getFullName() { return fullName; }
     public String getDomain() { return domain; }
     public String getWebsite() { return website; }
@@ -46,6 +49,7 @@ public final class CreateCustomerParams {
     public static final class Builder {
 
         private final String email;
+        private String id;
         private String fullName;
         private String domain;
         private String website;
@@ -58,6 +62,11 @@ public final class CreateCustomerParams {
 
         private Builder(String email) {
             this.email = email;
+        }
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
         }
 
         public Builder fullName(String fullName) {
