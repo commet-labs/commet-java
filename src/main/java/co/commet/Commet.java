@@ -10,6 +10,7 @@ import co.commet.resources.PlanGroupsResource;
 import co.commet.resources.PlansResource;
 import co.commet.resources.PortalResource;
 import co.commet.resources.PromoCodesResource;
+import co.commet.resources.QuotaResource;
 import co.commet.resources.SeatsResource;
 import co.commet.resources.SubscriptionsResource;
 import co.commet.resources.TransactionsResource;
@@ -30,6 +31,7 @@ public class Commet implements AutoCloseable {
     private final SubscriptionsResource subscriptions;
     private final UsageResource usage;
     private final SeatsResource seats;
+    private final QuotaResource quota;
     private final FeaturesResource features;
     private final PortalResource portal;
     private final CreditPacksResource creditPacks;
@@ -57,6 +59,7 @@ public class Commet implements AutoCloseable {
         this.subscriptions = new SubscriptionsResource(httpClient);
         this.usage = new UsageResource(httpClient);
         this.seats = new SeatsResource(httpClient);
+        this.quota = new QuotaResource(httpClient);
         this.features = new FeaturesResource(httpClient);
         this.portal = new PortalResource(httpClient);
         this.creditPacks = new CreditPacksResource(httpClient);
@@ -98,6 +101,10 @@ public class Commet implements AutoCloseable {
 
     public SeatsResource seats() {
         return seats;
+    }
+
+    public QuotaResource quota() {
+        return quota;
     }
 
     public FeaturesResource features() {

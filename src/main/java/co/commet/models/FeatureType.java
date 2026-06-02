@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum FeatureType {
     BOOLEAN("boolean"),
     USAGE("usage"),
-    SEATS("seats");
+    SEATS("seats"),
+    QUOTA("quota");
 
     private final String value;
 
