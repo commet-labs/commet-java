@@ -44,6 +44,19 @@ commet.usage().track("ai_generation", null, "user_123",
     null, null, null, null, null);
 ```
 
+## Quota
+
+Add to, set, or remove from a customer's quota balance, and read allowances. `count` defaults to `1` for `add` and `remove`.
+
+```java
+commet.quota().add("projects");
+commet.quota().add("projects", 5, "user_123", null);
+commet.quota().set("projects", 100, "user_123", null);
+commet.quota().remove("projects", 2, "user_123", null);
+commet.quota().get("projects", "user_123");
+commet.quota().getAll("user_123");
+```
+
 ## Customer context
 
 Scope all operations to a customer to avoid repeating `externalId`:
