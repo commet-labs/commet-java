@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record QuotaAllowance(
-        @JsonProperty("feature_code") String featureCode,
+        @JsonProperty("featureCode") String featureCode,
         @JsonProperty("current") int current,
         @JsonProperty("included") int included,
         @JsonProperty("remaining") Integer remaining,
+        @JsonProperty("billedQuantity") Integer billedQuantity,
         @JsonProperty("unlimited") boolean unlimited,
-        @JsonProperty("overage_enabled") boolean overageEnabled,
-        @JsonProperty("as_of") String asOf
+        @JsonProperty("overageEnabled") boolean overageEnabled,
+        @JsonProperty("asOf") String asOf
 ) {}

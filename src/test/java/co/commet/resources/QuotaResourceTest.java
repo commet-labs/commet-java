@@ -116,13 +116,14 @@ class QuotaResourceTest {
                 .setBody(mapper.writeValueAsString(Map.of(
                         "success", true,
                         "data", Map.of(
-                                "feature_code", "projects",
+                                "featureCode", "projects",
                                 "current", 5,
                                 "included", 100,
                                 "remaining", 95,
+                                "billedQuantity", 100,
                                 "unlimited", false,
-                                "overage_enabled", true,
-                                "as_of", "2026-05-29T00:00:00.000Z"
+                                "overageEnabled", true,
+                                "asOf", "2026-05-29T00:00:00.000Z"
                         )
                 ))));
 
@@ -138,6 +139,7 @@ class QuotaResourceTest {
         assertEquals(5, allowance.current());
         assertEquals(100, allowance.included());
         assertEquals(95, allowance.remaining());
+        assertEquals(100, allowance.billedQuantity());
         assertFalse(allowance.unlimited());
         assertTrue(allowance.overageEnabled());
         assertEquals("2026-05-29T00:00:00.000Z", allowance.asOf());
@@ -152,13 +154,14 @@ class QuotaResourceTest {
                         "success", true,
                         "data", List.of(
                                 Map.of(
-                                        "feature_code", "projects",
+                                        "featureCode", "projects",
                                         "current", 42,
                                         "included", 1000,
                                         "remaining", 958,
+                                        "billedQuantity", 1000,
                                         "unlimited", false,
-                                        "overage_enabled", true,
-                                        "as_of", "2026-05-29T00:00:00.000Z"
+                                        "overageEnabled", true,
+                                        "asOf", "2026-05-29T00:00:00.000Z"
                                 )
                         )
                 ))));
@@ -174,6 +177,7 @@ class QuotaResourceTest {
         assertEquals("projects", response.getData().get(0).featureCode());
         assertEquals(42, response.getData().get(0).current());
         assertEquals(958, response.getData().get(0).remaining());
+        assertEquals(1000, response.getData().get(0).billedQuantity());
     }
 
     private MockResponse quotaEventResponse() throws Exception {
@@ -184,12 +188,12 @@ class QuotaResourceTest {
                         "success", true,
                         "data", Map.of(
                                 "id", "qe_1",
-                                "customer_id", "cus_1",
-                                "feature_code", "projects",
-                                "previous_balance", 10,
-                                "new_balance", 11,
+                                "customerId", "cus_1",
+                                "featureCode", "projects",
+                                "previousBalance", 10,
+                                "newBalance", 11,
                                 "ts", "2026-05-29T00:00:00.000Z",
-                                "created_at", "2026-05-29T00:00:00.000Z"
+                                "createdAt", "2026-05-29T00:00:00.000Z"
                         )
                 )));
     }

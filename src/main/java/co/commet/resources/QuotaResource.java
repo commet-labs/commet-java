@@ -29,9 +29,9 @@ public class QuotaResource {
     public ApiResponse<QuotaEvent> add(String featureCode, int count, String customerId,
                            String idempotencyKey) {
         return http.post("/usage/quota", buildBody(
-                "feature_code", featureCode,
+                "featureCode", featureCode,
                 "count", count,
-                "customer_id", customerId
+                "customerId", customerId
         ), idempotencyKey, new TypeReference<>() {});
     }
 
@@ -42,9 +42,9 @@ public class QuotaResource {
     public ApiResponse<QuotaEvent> set(String featureCode, int count, String customerId,
                            String idempotencyKey) {
         return http.put("/usage/quota", buildBody(
-                "feature_code", featureCode,
+                "featureCode", featureCode,
                 "count", count,
-                "customer_id", customerId
+                "customerId", customerId
         ), idempotencyKey, new TypeReference<>() {});
     }
 
@@ -59,9 +59,9 @@ public class QuotaResource {
     public ApiResponse<QuotaEvent> remove(String featureCode, int count, String customerId,
                               String idempotencyKey) {
         return http.delete("/usage/quota", buildBody(
-                "feature_code", featureCode,
+                "featureCode", featureCode,
                 "count", count,
-                "customer_id", customerId
+                "customerId", customerId
         ), idempotencyKey, new TypeReference<>() {});
     }
 
@@ -71,8 +71,8 @@ public class QuotaResource {
 
     public ApiResponse<QuotaAllowance> get(String featureCode, String customerId) {
         return http.get("/usage/quota", buildBody(
-                "feature_code", featureCode,
-                "customer_id", customerId
+                "featureCode", featureCode,
+                "customerId", customerId
         ), new TypeReference<>() {});
     }
 
@@ -82,7 +82,7 @@ public class QuotaResource {
 
     public ApiResponse<List<QuotaAllowance>> getAll(String customerId) {
         return http.get("/usage/quota/all", buildBody(
-                "customer_id", customerId
+                "customerId", customerId
         ), new TypeReference<>() {});
     }
 }

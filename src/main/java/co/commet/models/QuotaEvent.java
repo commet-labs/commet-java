@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record QuotaEvent(
         @JsonProperty("id") String id,
-        @JsonProperty("customer_id") String customerId,
-        @JsonProperty("feature_code") String featureCode,
-        @JsonProperty("previous_balance") int previousBalance,
-        @JsonProperty("new_balance") int newBalance,
+        @JsonProperty("customerId") String customerId,
+        @JsonProperty("featureCode") String featureCode,
+        @JsonProperty("previousBalance") int previousBalance,
+        @JsonProperty("newBalance") int newBalance,
         @JsonProperty("ts") String ts,
-        @JsonProperty("created_at") String createdAt
+        @JsonProperty("createdAt") String createdAt
 ) {}
