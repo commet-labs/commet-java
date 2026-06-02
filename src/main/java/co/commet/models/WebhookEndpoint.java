@@ -14,6 +14,7 @@ public record WebhookEndpoint(
         @JsonProperty("events") List<String> events,
         @JsonProperty("description") String description,
         @JsonProperty("is_active") boolean isActive,
+        @JsonProperty("api_version") String apiVersion,
         @JsonProperty("secret_key") String secretKey,
         @JsonProperty("created_at") String createdAt
 ) {}

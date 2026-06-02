@@ -17,6 +17,7 @@ public record Feature(
         @JsonProperty("remaining") Integer remaining,
         @JsonProperty("overage") Integer overage,
         @JsonProperty("overage_unit_price") Long overageUnitPrice,
+        @JsonProperty("billed_quantity") Integer billedQuantity,
         @JsonProperty("unlimited") Boolean unlimited,
         @JsonProperty("overage_enabled") Boolean overageEnabled
 ) {}

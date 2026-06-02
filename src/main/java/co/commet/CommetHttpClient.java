@@ -90,14 +90,48 @@ public class CommetHttpClient implements AutoCloseable {
 
         if (telemetry) {
             String runtime = vmName.contains("graal") ? "graalvm" : "jvm";
-            this.clientInfoHeader = String.format(
+            String executionContext = detectExecutionContext();
+            StringBuilder clientInfo = new StringBuilder(String.format(
                 "{\"sdk\":\"commet-java\",\"sdk_version\":\"%s\",\"lang\":\"java\",\"lang_version\":\"%s\","
-                + "\"platform\":\"%s\",\"arch\":\"%s\",\"runtime\":\"%s\",\"runtime_version\":\"%s\"}",
+                + "\"platform\":\"%s\",\"arch\":\"%s\",\"runtime\":\"%s\",\"runtime_version\":\"%s\"",
                 VERSION, javaVersion, osName, osArch, runtime, javaVersion
-            );
+            ));
+            if (executionContext != null) {
+                clientInfo.append(String.format(",\"execution_context\":\"%s\"", executionContext));
+            }
+            clientInfo.append("}");
+            this.clientInfoHeader = clientInfo.toString();
         } else {
             this.clientInfoHeader = null;
         }
+    }
+
+    private static String detectExecutionContext() {
+        if (isRunningUnderTest()) {
+            return "test";
+        }
+        if (System.getenv("CI") != null
+                || System.getenv("GITHUB_ACTIONS") != null
+                || System.getenv("GITLAB_CI") != null
+                || System.getenv("CIRCLECI") != null) {
+            return "ci";
+        }
+        return null;
+    }
+
+    private static boolean isRunningUnderTest() {
+        if (System.getProperty("commet.executionContext", "").equals("test")) {
+            return true;
+        }
+        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            String className = element.getClassName();
+            if (className.startsWith("org.junit.")
+                    || className.startsWith("org.testng.")
+                    || className.startsWith("org.gradle.api.internal.tasks.testing.")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -352,7 +386,8 @@ public class CommetHttpClient implements AutoCloseable {
             Object dataField = rawData.get("data");
             if (dataField != null && typeRef != null) {
                 JavaType javaType = objectMapper.getTypeFactory().constructType(typeRef.getType());
-                typedData = objectMapper.convertValue(dataField, javaType);
+                Object snakeData = convertKeys(dataField, false);
+                typedData = objectMapper.convertValue(snakeData, javaType);
             }
 
             if (telemetryEnabled) {

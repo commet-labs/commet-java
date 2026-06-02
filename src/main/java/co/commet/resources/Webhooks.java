@@ -78,6 +78,21 @@ public class Webhooks {
         ), new TypeReference<>() {});
     }
 
+    public ApiResponse<WebhookEndpoint> get(String id) {
+        return http.get("/webhooks/" + id, new TypeReference<>() {});
+    }
+
+    public ApiResponse<WebhookEndpoint> update(String id, String url, List<String> events,
+                                               String description, Boolean isActive, String apiVersion) {
+        return http.put("/webhooks/" + id, buildBody(
+                "url", url,
+                "events", events,
+                "description", description,
+                "isActive", isActive,
+                "apiVersion", apiVersion
+        ), new TypeReference<>() {});
+    }
+
     public ApiResponse<DeleteResult> delete(String id) {
         return http.delete("/webhooks/" + id, null, new TypeReference<>() {});
     }
