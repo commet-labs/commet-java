@@ -75,7 +75,8 @@ public class SubscriptionsResource {
     public ApiResponse<ChangePlanResult> changePlan(ChangePlanParams params) {
         return http.post("/subscriptions/" + params.getSubscriptionId() + "/change-plan", buildBody(
                 "new_plan_id", params.getNewPlanId(),
-                "new_billing_interval", params.getNewBillingInterval()
+                "new_billing_interval", params.getNewBillingInterval(),
+                "success_url", params.getSuccessUrl()
         ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
