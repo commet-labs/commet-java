@@ -14,6 +14,7 @@ import co.commet.models.TopupBalanceResult;
 import co.commet.params.CancelSubscriptionParams;
 import co.commet.params.ChangePlanParams;
 import co.commet.params.CreateSubscriptionParams;
+import co.commet.params.CustomIntroOffer;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class SubscriptionsResource {
     }
 
     public ApiResponse<Subscription> create(CreateSubscriptionParams params) {
-        return http.post("/subscriptions", buildBody(
+        Map<String, Object> body = buildBody(
                 "customer_id", params.getCustomerId(),
                 "plan_code", params.getPlanCode(),
                 "plan_id", params.getPlanId(),
@@ -44,7 +45,16 @@ public class SubscriptionsResource {
                 "name", params.getName(),
                 "start_date", params.getStartDate(),
                 "success_url", params.getSuccessUrl()
-        ), params.getIdempotencyKey(), new TypeReference<>() {});
+        );
+        CustomIntroOffer offer = params.getCustomIntroOffer();
+        if (offer != null) {
+            body.put("custom_intro_offer", buildBody(
+                    "discount_type", offer.getDiscountType(),
+                    "discount_value", offer.getDiscountValue(),
+                    "duration_cycles", offer.getDurationCycles()
+            ));
+        }
+        return http.post("/subscriptions", body, params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
     public ApiResponse<Subscription> getActive(String customerId) {

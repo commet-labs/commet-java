@@ -13,6 +13,7 @@ public final class CreateSubscriptionParams {
     private final String name;
     private final String startDate;
     private final String successUrl;
+    private final CustomIntroOffer customIntroOffer;
     private final String idempotencyKey;
 
     private CreateSubscriptionParams(Builder builder) {
@@ -25,6 +26,7 @@ public final class CreateSubscriptionParams {
         this.name = builder.name;
         this.startDate = builder.startDate;
         this.successUrl = builder.successUrl;
+        this.customIntroOffer = builder.customIntroOffer;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -41,6 +43,7 @@ public final class CreateSubscriptionParams {
     public String getName() { return name; }
     public String getStartDate() { return startDate; }
     public String getSuccessUrl() { return successUrl; }
+    public CustomIntroOffer getCustomIntroOffer() { return customIntroOffer; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -54,6 +57,7 @@ public final class CreateSubscriptionParams {
         private String name;
         private String startDate;
         private String successUrl;
+        private CustomIntroOffer customIntroOffer;
         private String idempotencyKey;
 
         private Builder(String customerId, String planCode) {
@@ -93,6 +97,11 @@ public final class CreateSubscriptionParams {
 
         public Builder successUrl(String successUrl) {
             this.successUrl = successUrl;
+            return this;
+        }
+
+        public Builder customIntroOffer(CustomIntroOffer customIntroOffer) {
+            this.customIntroOffer = customIntroOffer;
             return this;
         }
 
