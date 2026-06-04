@@ -13,7 +13,7 @@ public record PlanManage(
         @JsonProperty("name") String name,
         @JsonProperty("code") String code,
         @JsonProperty("description") String description,
-        @JsonProperty("consumption_model") String consumptionModel,
+        @JsonProperty("consumption_model") ConsumptionModel consumptionModel,
         @JsonProperty("is_public") boolean isPublic,
         @JsonProperty("is_default") boolean isDefault,
         @JsonProperty("is_free") boolean isFree,

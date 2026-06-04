@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CheckUsageResult(
         @JsonProperty("allowed") boolean allowed,
-        @JsonProperty("consumption_model") String consumptionModel,
+        @JsonProperty("consumption_model") ConsumptionModel consumptionModel,
         @JsonProperty("feature") String feature,
         @JsonProperty("quantity") int quantity,
         @JsonProperty("current") Integer current,
@@ -25,6 +25,6 @@ public record CheckUsageResult(
         @JsonProperty("current_balance") Long currentBalance,
         @JsonProperty("block_on_exhaustion") Boolean blockOnExhaustion,
         @JsonProperty("currency") String currency,
-        @JsonProperty("reason") String reason,
+        @JsonProperty("reason") UsageCheckDenialReason reason,
         @JsonProperty("message") String message
 ) {}

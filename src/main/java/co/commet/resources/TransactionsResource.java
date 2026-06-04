@@ -5,6 +5,7 @@ import co.commet.CommetHttpClient;
 import co.commet.models.Transaction;
 import co.commet.models.TransactionRefundResult;
 import co.commet.models.TransactionRetryResult;
+import co.commet.models.TransactionStatus;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
@@ -24,10 +25,10 @@ public class TransactionsResource {
         return list(null, null, null, null);
     }
 
-    public ApiResponse<List<Transaction>> list(String status, String customerEmail,
+    public ApiResponse<List<Transaction>> list(TransactionStatus status, String customerEmail,
                                                Integer limit, String cursor) {
         return http.get("/transactions", buildBody(
-                "status", status,
+                "status", status == null ? null : status.getValue(),
                 "customer_email", customerEmail,
                 "limit", limit,
                 "cursor", cursor

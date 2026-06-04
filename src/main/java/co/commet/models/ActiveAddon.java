@@ -12,7 +12,7 @@ public record ActiveAddon(
         @JsonProperty("base_price") Long basePrice,
         @JsonProperty("feature_code") String featureCode,
         @JsonProperty("feature_name") String featureName,
-        @JsonProperty("feature_type") String featureType,
-        @JsonProperty("consumption_model") String consumptionModel,
+        @JsonProperty("feature_type") FeatureType featureType,
+        @JsonProperty("consumption_model") AddonConsumptionModel consumptionModel,
         @JsonProperty("activated_at") String activatedAt
 ) {}

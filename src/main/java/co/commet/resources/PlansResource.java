@@ -2,6 +2,7 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.models.ConsumptionModel;
 import co.commet.models.DeleteResult;
 import co.commet.models.Plan;
 import co.commet.models.PlanFeatureManage;
@@ -45,14 +46,14 @@ public class PlansResource {
     }
 
     public ApiResponse<PlanManage> create(String name, String code, String description,
-                                          String consumptionModel, Boolean isPublic, Boolean isFree,
+                                          ConsumptionModel consumptionModel, Boolean isPublic, Boolean isFree,
                                           Boolean blockOnExhaustion, String planGroupId,
                                           Map<String, Object> metadata) {
         return http.post("/plans/manage", buildBody(
                 "name", name,
                 "code", code,
                 "description", description,
-                "consumption_model", consumptionModel,
+                "consumption_model", consumptionModel == null ? null : consumptionModel.getValue(),
                 "is_public", isPublic,
                 "is_free", isFree,
                 "block_on_exhaustion", blockOnExhaustion,

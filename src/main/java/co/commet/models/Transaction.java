@@ -13,7 +13,7 @@ public record Transaction(
         @JsonProperty("subtotal") Long subtotal,
         @JsonProperty("tax_amount") Long taxAmount,
         @JsonProperty("currency") String currency,
-        @JsonProperty("status") String status,
+        @JsonProperty("status") TransactionStatus status,
         @JsonProperty("customer_email") String customerEmail,
         @JsonProperty("customer_name") String customerName,
         @JsonProperty("available_at") String availableAt,

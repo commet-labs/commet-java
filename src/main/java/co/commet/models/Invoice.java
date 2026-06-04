@@ -14,8 +14,8 @@ public record Invoice(
         @JsonProperty("customer_id") String customerId,
         @JsonProperty("subscription_id") String subscriptionId,
         @JsonProperty("invoice_number") String invoiceNumber,
-        @JsonProperty("status") String status,
-        @JsonProperty("invoice_type") String invoiceType,
+        @JsonProperty("status") InvoiceStatus status,
+        @JsonProperty("invoice_type") InvoiceType invoiceType,
         @JsonProperty("currency") String currency,
         @JsonProperty("subtotal") Long subtotal,
         @JsonProperty("discount_amount") Long discountAmount,
@@ -37,7 +37,7 @@ public record Invoice(
 ) {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record LineItem(
-            @JsonProperty("line_type") String lineType,
+            @JsonProperty("line_type") InvoiceLineType lineType,
             @JsonProperty("feature_name") String featureName,
             @JsonProperty("description") String description,
             @JsonProperty("quantity") int quantity,
@@ -46,9 +46,9 @@ public record Invoice(
             @JsonProperty("included_amount") Integer includedAmount,
             @JsonProperty("used_amount") Integer usedAmount,
             @JsonProperty("overage_amount") Integer overageAmount,
-            @JsonProperty("discount_type") String discountType,
+            @JsonProperty("discount_type") DiscountType discountType,
             @JsonProperty("discount_value") Long discountValue,
             @JsonProperty("discount_name") String discountName,
-            @JsonProperty("charge_type") String chargeType
+            @JsonProperty("charge_type") ChargeType chargeType
     ) {}
 }

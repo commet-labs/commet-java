@@ -12,7 +12,7 @@ public record AddonDetail(
         @JsonProperty("base_price") Long basePrice,
         @JsonProperty("feature_code") String featureCode,
         @JsonProperty("feature_name") String featureName,
-        @JsonProperty("consumption_model") String consumptionModel,
+        @JsonProperty("consumption_model") AddonConsumptionModel consumptionModel,
         @JsonProperty("included_units") Integer includedUnits,
         @JsonProperty("overage_rate") Long overageRate,
         @JsonProperty("credit_cost") Integer creditCost,

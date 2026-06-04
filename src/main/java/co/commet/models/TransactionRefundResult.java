@@ -6,5 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record TransactionRefundResult(
         @JsonProperty("id") String id,
-        @JsonProperty("status") String status
+        // Always TransactionStatus.REFUNDED for this endpoint (full refund only).
+        @JsonProperty("status") TransactionStatus status
 ) {}

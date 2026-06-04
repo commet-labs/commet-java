@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record InvoiceStatusResult(
         @JsonProperty("id") String id,
-        @JsonProperty("status") String status,
+        // Restricted to InvoiceStatus.PAID or InvoiceStatus.VOID for this endpoint.
+        @JsonProperty("status") InvoiceStatus status,
         @JsonProperty("updated_at") String updatedAt
 ) {}

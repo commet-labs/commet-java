@@ -5,6 +5,7 @@ import co.commet.CommetHttpClient;
 import co.commet.models.Invoice;
 import co.commet.models.InvoiceDownloadResult;
 import co.commet.models.InvoiceSendResult;
+import co.commet.models.InvoiceStatus;
 import co.commet.models.InvoiceStatusResult;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -25,11 +26,11 @@ public class InvoicesResource {
         return list(null, null, null, null, null);
     }
 
-    public ApiResponse<List<Invoice>> list(String customerId, String status, String subscriptionId,
+    public ApiResponse<List<Invoice>> list(String customerId, InvoiceStatus status, String subscriptionId,
                                            Integer limit, String cursor) {
         return http.get("/invoices", buildBody(
                 "customer_id", customerId,
-                "status", status,
+                "status", status == null ? null : status.getValue(),
                 "subscription_id", subscriptionId,
                 "limit", limit,
                 "cursor", cursor
@@ -62,9 +63,9 @@ public class InvoicesResource {
         return http.post("/invoices/" + id + "/send", Map.of(), new TypeReference<>() {});
     }
 
-    public ApiResponse<InvoiceStatusResult> updateStatus(String id, String status) {
+    public ApiResponse<InvoiceStatusResult> updateStatus(String id, InvoiceStatus status) {
         return http.put("/invoices/" + id + "/status", buildBody(
-                "status", status
+                "status", status == null ? null : status.getValue()
         ), new TypeReference<>() {});
     }
 }
