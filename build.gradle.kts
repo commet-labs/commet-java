@@ -2,6 +2,8 @@ plugins {
     `java-library`
     `maven-publish`
     signing
+    jacoco
+    id("com.github.spotbugs") version "6.0.26"
     id("net.thebugmc.gradle.sonatype-central-portal-publisher") version "1.2.4"
 }
 
@@ -28,8 +30,27 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.add("-Xlint:all")
+}
+
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+spotbugs {
+    toolVersion.set("4.9.6")
+    ignoreFailures.set(true)
+    excludeFilter.set(file("config/spotbugs/exclude.xml"))
 }
 
 tasks.named<ProcessResources>("processResources") {

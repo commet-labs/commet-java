@@ -76,7 +76,7 @@ public class CommetHttpClient implements AutoCloseable {
         this.debug = debug;
         this.telemetryEnabled = telemetry;
         this.objectMapper = new ObjectMapper()
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(timeout)
                 .readTimeout(timeout)
@@ -275,7 +275,11 @@ public class CommetHttpClient implements AutoCloseable {
     private <T> ApiResponse<T> execute(String method, String endpoint, Object jsonBody,
                                        Map<String, Object> params, Map<String, String> extraHeaders,
                                        RequestOptions options, int attempt, TypeReference<T> typeRef) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + endpoint).newBuilder();
+        HttpUrl parsedUrl = HttpUrl.parse(baseUrl + endpoint);
+        if (parsedUrl == null) {
+            throw new CommetException("Invalid request URL: " + baseUrl + endpoint);
+        }
+        HttpUrl.Builder urlBuilder = parsedUrl.newBuilder();
         if (params != null) {
             for (Map.Entry<String, Object> entry : params.entrySet()) {
                 urlBuilder.addQueryParameter(entry.getKey(), String.valueOf(entry.getValue()));
@@ -325,6 +329,7 @@ public class CommetHttpClient implements AutoCloseable {
                     requestBuilder.delete();
                 }
             }
+            default -> throw new CommetException("Unsupported HTTP method: " + method);
         }
 
         OkHttpClient clientForRequest = resolveClientForRequest(options);
@@ -370,7 +375,8 @@ public class CommetHttpClient implements AutoCloseable {
         }
 
         try {
-            String responseBody = response.body() != null ? response.body().string() : "";
+            okhttp3.ResponseBody body = response.body();
+            String responseBody = body != null ? body.string() : "";
 
             Map<String, Object> rawData;
             try {
