@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SeatBalance(
-        @JsonProperty("current") int current,
-        @JsonProperty("as_of") String asOf
+        @JsonProperty("current") long current,
+        @JsonProperty("as_of") String asOf,
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode
 ) {}

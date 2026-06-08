@@ -1,5 +1,7 @@
 package co.commet;
 
+import co.commet.models.BatchCreateCustomersParamsCustomersItem;
+import co.commet.params.BatchCreateCustomersParams;
 import co.commet.params.CreateCustomerParams;
 import co.commet.resources.CustomersResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +43,7 @@ class CustomerCreateIdTest {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
-                .setBody("{\"success\":true,\"data\":{\"id\":\"cus_x\",\"billing_email\":\"a@b.com\",\"created_at\":\"2024-01-01T00:00:00Z\",\"updated_at\":\"2024-01-01T00:00:00Z\"}}"));
+                .setBody("{\"success\":true,\"data\":{\"id\":\"cus_x\",\"email\":\"a@b.com\",\"created_at\":\"2024-01-01T00:00:00Z\",\"updated_at\":\"2024-01-01T00:00:00Z\"}}"));
     }
 
     @SuppressWarnings("unchecked")
@@ -57,7 +59,7 @@ class CustomerCreateIdTest {
 
         Map<String, Object> body = bodyOf(server.takeRequest());
         assertEquals("ext_123", body.get("id"));
-        assertEquals("a@b.com", body.get("billingEmail"));
+        assertEquals("a@b.com", body.get("email"));
     }
 
     @Test
@@ -78,10 +80,10 @@ class CustomerCreateIdTest {
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":{\"successful\":[],\"failed\":[]}}"));
 
-        customers.createBatch(List.of(
-                CreateCustomerParams.builder("a@b.com").id("ext_a").build(),
-                CreateCustomerParams.builder("b@b.com").build()
-        ));
+        customers.createBatch(BatchCreateCustomersParams.builder(List.of(
+                new BatchCreateCustomersParamsCustomersItem("a@b.com", "ext_a", null, null, null, null, null),
+                new BatchCreateCustomersParamsCustomersItem("b@b.com", null, null, null, null, null, null)
+        )).build());
 
         Map<String, Object> body = bodyOf(server.takeRequest());
         List<Map<String, Object>> sent = (List<Map<String, Object>>) body.get("customers");

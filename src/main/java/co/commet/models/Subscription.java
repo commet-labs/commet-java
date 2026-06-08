@@ -2,101 +2,33 @@ package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Subscription(
         @JsonProperty("id") String id,
-        @JsonProperty("object") String object,
-        @JsonProperty("livemode") boolean livemode,
         @JsonProperty("customer_id") String customerId,
-        @JsonProperty("plan_id") String planId,
-        @JsonProperty("plan_name") String planName,
+        @JsonProperty("plan") SubscriptionPlan plan,
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
         @JsonProperty("status") SubscriptionStatus status,
-        @JsonProperty("consumption_model") ConsumptionModel consumptionModel,
         @JsonProperty("billing_interval") BillingInterval billingInterval,
+        @JsonProperty("consumption_model") ConsumptionModel consumptionModel,
         @JsonProperty("trial_ends_at") String trialEndsAt,
+        @JsonProperty("current_period") SubscriptionCurrentPeriod currentPeriod,
+        @JsonProperty("features") List<SubscriptionFeaturesItem> features,
+        @JsonProperty("credits") SubscriptionCredits credits,
+        @JsonProperty("balance") SubscriptionBalance balance,
+        @JsonProperty("cancellation") SubscriptionCancellation cancellation,
+        @JsonProperty("cancel_at_period_end") boolean cancelAtPeriodEnd,
+        @JsonProperty("discount") SubscriptionDiscount discount,
         @JsonProperty("start_date") String startDate,
         @JsonProperty("end_date") String endDate,
-        @JsonProperty("current_period_start") String currentPeriodStart,
-        @JsonProperty("current_period_end") String currentPeriodEnd,
-        @JsonProperty("billing_day_of_month") Integer billingDayOfMonth,
-        @JsonProperty("checkout_url") String checkoutUrl,
-        @JsonProperty("plan") SubscriptionPlan plan,
-        @JsonProperty("current_period") CurrentPeriod currentPeriod,
-        @JsonProperty("features") List<FeatureSummary> features,
-        @JsonProperty("credits") CreditsSummary credits,
-        @JsonProperty("balance") BalanceSummary balance,
-        @JsonProperty("cancellation") CancellationSummary cancellation,
-        @JsonProperty("discount") DiscountSummary discount,
+        @JsonProperty("billing_day_of_month") Long billingDayOfMonth,
         @JsonProperty("next_billing_date") String nextBillingDate,
-        @JsonProperty("intro_offer_ends_at") String introOfferEndsAt,
-        @JsonProperty("intro_offer_discount_type") DiscountType introOfferDiscountType,
-        @JsonProperty("intro_offer_discount_value") Long introOfferDiscountValue,
+        @JsonProperty("checkout_url") String checkoutUrl,
         @JsonProperty("created_at") String createdAt,
-        @JsonProperty("updated_at") String updatedAt
-) {
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record SubscriptionPlan(
-            @JsonProperty("id") String id,
-            @JsonProperty("name") String name,
-            @JsonProperty("base_price") Long basePrice,
-            @JsonProperty("billing_interval") BillingInterval billingInterval
-    ) {}
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record CurrentPeriod(
-            @JsonProperty("start") String start,
-            @JsonProperty("end") String end,
-            @JsonProperty("days_remaining") Integer daysRemaining
-    ) {}
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record CreditsSummary(
-            @JsonProperty("remaining") Long remaining,
-            @JsonProperty("included") Long included,
-            @JsonProperty("purchased") Long purchased
-    ) {}
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record BalanceSummary(
-            @JsonProperty("remaining") Long remaining,
-            @JsonProperty("included") Long included,
-            @JsonProperty("currency") Currency currency
-    ) {}
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record CancellationSummary(
-            @JsonProperty("scheduled_at") String scheduledAt,
-            @JsonProperty("reason") String reason,
-            @JsonProperty("effective_at") String effectiveAt
-    ) {}
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record DiscountSummary(
-            @JsonProperty("type") String type,
-            @JsonProperty("value") Long value,
-            @JsonProperty("name") String name,
-            @JsonProperty("ends_at") String endsAt
-    ) {}
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record FeatureSummary(
-            @JsonProperty("code") String code,
-            @JsonProperty("name") String name,
-            @JsonProperty("type") FeatureType type,
-            @JsonProperty("enabled") Boolean enabled,
-            @JsonProperty("usage") FeatureUsage usage
-    ) {
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public record FeatureUsage(
-                @JsonProperty("current") Integer current,
-                @JsonProperty("included") Integer included,
-                @JsonProperty("overage") Integer overage,
-                @JsonProperty("overage_unit_price") Long overageUnitPrice
-        ) {}
-    }
-}
+        @JsonProperty("updated_at") String updatedAt,
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode
+) {}

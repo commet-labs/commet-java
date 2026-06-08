@@ -2,7 +2,7 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
-import co.commet.models.ChangePlanResult;
+import co.commet.models.PlanChange;
 import co.commet.params.ChangePlanParams;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,14 +40,16 @@ class SubscriptionsChangePlanSuccessUrlTest {
     }
 
     @Test
-    void changePlanSendsSuccessUrlAsCamelCaseInRequestBody() throws Exception {
+    void changePlanSendsSuccessUrlAndNewPlanIdInRequestBody() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":{\"id\":\"sub_1\",\"scheduled\":false}}"));
 
-        ApiResponse<ChangePlanResult> response = subscriptions.changePlan(
-                ChangePlanParams.builder("sub_1", "plan_pro")
+        ApiResponse<PlanChange> response = subscriptions.changePlan(
+                "sub_1",
+                ChangePlanParams.builder()
+                        .newPlanId("plan_pro")
                         .successUrl("https://app.example.com/billing/success")
                         .build());
 

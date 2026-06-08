@@ -1,5 +1,6 @@
 package co.commet;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +31,7 @@ public class CommetHttpClient implements AutoCloseable {
 
     private static final String BASE_URL = "https://commet.co";
 
-    public static final String API_VERSION = "2026-05-25";
+    public static final String API_VERSION = "2026-06-07";
 
     private static final int[] RETRYABLE_STATUS_CODES = {408, 429, 500, 502, 503, 504};
 
@@ -74,7 +75,8 @@ public class CommetHttpClient implements AutoCloseable {
         this.maxRetries = retries;
         this.debug = debug;
         this.telemetryEnabled = telemetry;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapper()
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(timeout)
                 .readTimeout(timeout)
@@ -254,7 +256,7 @@ public class CommetHttpClient implements AutoCloseable {
             headers.put("Idempotency-Key", options.getIdempotencyKey());
         }
 
-        Object jsonBody = body != null ? convertKeys(body, true) : null;
+        Object jsonBody = body != null ? convertKeys(normalizeToTree(body), true) : null;
 
         if (debug) {
             logger.info("[Commet SDK] " + method + " " + baseUrl + endpoint);
@@ -492,6 +494,21 @@ public class CommetHttpClient implements AutoCloseable {
             if (code == statusCode) return true;
         }
         return false;
+    }
+
+    // The generated resource layer passes typed model/params records as body
+    // values (e.g. a nested address record). convertKeys only recurses into Map
+    // and List, so flatten the whole body to a plain Map/List tree first — Jackson
+    // serializes each record using its @JsonProperty (snake_case) keys, and the
+    // subsequent convertKeys(toCamel) converts every key, nested ones included, to
+    // the camelCase the wire expects. Plain Map/List bodies are returned unchanged.
+    @SuppressWarnings("unchecked")
+    private Object normalizeToTree(Object body) {
+        if (body == null) {
+            return null;
+        }
+        Map<String, Object> tree = objectMapper.convertValue(body, new TypeReference<>() {});
+        return tree;
     }
 
     @SuppressWarnings("unchecked")

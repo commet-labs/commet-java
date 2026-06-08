@@ -1,68 +1,69 @@
 package co.commet.params;
 
+import co.commet.models.BillingInterval;
+import co.commet.models.CreateSubscriptionParamsIntroOffer;
 import java.util.Map;
 
 public final class CreateSubscriptionParams {
 
     private final String customerId;
-    private final String planCode;
     private final String planId;
-    private final String billingInterval;
-    private final Map<String, Integer> initialSeats;
+    private final String planCode;
+    private final BillingInterval billingInterval;
+    private final Map<String, Long> initialSeats;
     private final Boolean skipTrial;
+    private final CreateSubscriptionParamsIntroOffer introOffer;
     private final String name;
     private final String startDate;
     private final String successUrl;
-    private final CustomIntroOffer customIntroOffer;
     private final String idempotencyKey;
 
     private CreateSubscriptionParams(Builder builder) {
         this.customerId = builder.customerId;
-        this.planCode = builder.planCode;
         this.planId = builder.planId;
+        this.planCode = builder.planCode;
         this.billingInterval = builder.billingInterval;
         this.initialSeats = builder.initialSeats;
         this.skipTrial = builder.skipTrial;
+        this.introOffer = builder.introOffer;
         this.name = builder.name;
         this.startDate = builder.startDate;
         this.successUrl = builder.successUrl;
-        this.customIntroOffer = builder.customIntroOffer;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
-    public static Builder builder(String customerId, String planCode) {
-        return new Builder(customerId, planCode);
+    public static Builder builder(String customerId) {
+        return new Builder(customerId);
     }
 
     public String getCustomerId() { return customerId; }
-    public String getPlanCode() { return planCode; }
     public String getPlanId() { return planId; }
-    public String getBillingInterval() { return billingInterval; }
-    public Map<String, Integer> getInitialSeats() { return initialSeats; }
+    public String getPlanCode() { return planCode; }
+    public BillingInterval getBillingInterval() { return billingInterval; }
+    public Map<String, Long> getInitialSeats() { return initialSeats; }
     public Boolean getSkipTrial() { return skipTrial; }
+    public CreateSubscriptionParamsIntroOffer getIntroOffer() { return introOffer; }
     public String getName() { return name; }
     public String getStartDate() { return startDate; }
     public String getSuccessUrl() { return successUrl; }
-    public CustomIntroOffer getCustomIntroOffer() { return customIntroOffer; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
 
         private final String customerId;
-        private final String planCode;
         private String planId;
-        private String billingInterval;
-        private Map<String, Integer> initialSeats;
+        private String planCode;
+        private BillingInterval billingInterval;
+        private Map<String, Long> initialSeats;
         private Boolean skipTrial;
+        private CreateSubscriptionParamsIntroOffer introOffer;
         private String name;
         private String startDate;
         private String successUrl;
-        private CustomIntroOffer customIntroOffer;
         private String idempotencyKey;
 
-        private Builder(String customerId, String planCode) {
+        private Builder(String customerId) {
             this.customerId = customerId;
-            this.planCode = planCode;
         }
 
         public Builder planId(String planId) {
@@ -70,18 +71,28 @@ public final class CreateSubscriptionParams {
             return this;
         }
 
-        public Builder billingInterval(String billingInterval) {
+        public Builder planCode(String planCode) {
+            this.planCode = planCode;
+            return this;
+        }
+
+        public Builder billingInterval(BillingInterval billingInterval) {
             this.billingInterval = billingInterval;
             return this;
         }
 
-        public Builder initialSeats(Map<String, Integer> initialSeats) {
+        public Builder initialSeats(Map<String, Long> initialSeats) {
             this.initialSeats = initialSeats;
             return this;
         }
 
-        public Builder skipTrial(boolean skipTrial) {
+        public Builder skipTrial(Boolean skipTrial) {
             this.skipTrial = skipTrial;
+            return this;
+        }
+
+        public Builder introOffer(CreateSubscriptionParamsIntroOffer introOffer) {
+            this.introOffer = introOffer;
             return this;
         }
 
@@ -97,11 +108,6 @@ public final class CreateSubscriptionParams {
 
         public Builder successUrl(String successUrl) {
             this.successUrl = successUrl;
-            return this;
-        }
-
-        public Builder customIntroOffer(CustomIntroOffer customIntroOffer) {
-            this.customIntroOffer = customIntroOffer;
             return this;
         }
 

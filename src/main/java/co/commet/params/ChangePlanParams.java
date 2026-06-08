@@ -2,25 +2,22 @@ package co.commet.params;
 
 public final class ChangePlanParams {
 
-    private final String subscriptionId;
     private final String newPlanId;
     private final String newBillingInterval;
     private final String successUrl;
     private final String idempotencyKey;
 
     private ChangePlanParams(Builder builder) {
-        this.subscriptionId = builder.subscriptionId;
         this.newPlanId = builder.newPlanId;
         this.newBillingInterval = builder.newBillingInterval;
         this.successUrl = builder.successUrl;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
-    public static Builder builder(String subscriptionId, String newPlanId) {
-        return new Builder(subscriptionId, newPlanId);
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public String getSubscriptionId() { return subscriptionId; }
     public String getNewPlanId() { return newPlanId; }
     public String getNewBillingInterval() { return newBillingInterval; }
     public String getSuccessUrl() { return successUrl; }
@@ -28,15 +25,17 @@ public final class ChangePlanParams {
 
     public static final class Builder {
 
-        private final String subscriptionId;
-        private final String newPlanId;
+        private String newPlanId;
         private String newBillingInterval;
         private String successUrl;
         private String idempotencyKey;
 
-        private Builder(String subscriptionId, String newPlanId) {
-            this.subscriptionId = subscriptionId;
+        private Builder() {
+        }
+
+        public Builder newPlanId(String newPlanId) {
             this.newPlanId = newPlanId;
+            return this;
         }
 
         public Builder newBillingInterval(String newBillingInterval) {
