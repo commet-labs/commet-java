@@ -6,6 +6,7 @@ import co.commet.resources.CreditPacksResource;
 import co.commet.resources.CustomersResource;
 import co.commet.resources.FeaturesResource;
 import co.commet.resources.InvoicesResource;
+import co.commet.resources.PayoutsResource;
 import co.commet.resources.PlanGroupsResource;
 import co.commet.resources.PlansResource;
 import co.commet.resources.PortalResource;
@@ -13,6 +14,7 @@ import co.commet.resources.PromoCodesResource;
 import co.commet.resources.QuotaResource;
 import co.commet.resources.SeatsResource;
 import co.commet.resources.SubscriptionsResource;
+import co.commet.resources.TestClockResource;
 import co.commet.resources.TransactionsResource;
 import co.commet.resources.UsageResource;
 import co.commet.resources.Webhooks;
@@ -42,6 +44,8 @@ public class Commet implements AutoCloseable {
     private final TransactionsResource transactions;
     private final PromoCodesResource promoCodes;
     private final PlanGroupsResource planGroups;
+    private final PayoutsResource payouts;
+    private final TestClockResource testClock;
 
     private Commet(String apiKey, Duration timeout, int retries, boolean telemetry, String apiVersion,
                    boolean debug) {
@@ -70,6 +74,8 @@ public class Commet implements AutoCloseable {
         this.transactions = new TransactionsResource(httpClient);
         this.promoCodes = new PromoCodesResource(httpClient);
         this.planGroups = new PlanGroupsResource(httpClient);
+        this.payouts = new PayoutsResource(httpClient);
+        this.testClock = new TestClockResource(httpClient);
 
         logger.fine("Commet client initialized");
     }
@@ -145,6 +151,14 @@ public class Commet implements AutoCloseable {
 
     public PlanGroupsResource planGroups() {
         return planGroups;
+    }
+
+    public PayoutsResource payouts() {
+        return payouts;
+    }
+
+    public TestClockResource testClock() {
+        return testClock;
     }
 
     public static class Builder {
