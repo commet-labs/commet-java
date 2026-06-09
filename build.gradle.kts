@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "co.commet"
-version = "5.5.0"
+version = "6.0.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
