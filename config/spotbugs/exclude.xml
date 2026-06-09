@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+      The SDK intentionally shares a single CommetHttpClient across all resource
+      objects (connection pooling and shared telemetry state depend on it). The
+      EI_EXPOSE_REP / EI_EXPOSE_REP2 detectors flag this by-design sharing as a
+      defensive-copy violation, which does not apply to an internal SDK wiring
+      object. All other detectors remain active.
+    -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+</FindBugsFilter>

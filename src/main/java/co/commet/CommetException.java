@@ -2,10 +2,12 @@ package co.commet;
 
 public class CommetException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     private final String type;
     private final String code;
     private final Integer statusCode;
-    private final Object details;
+    private final transient Object details;
     private final String param;
     private final String docUrl;
 

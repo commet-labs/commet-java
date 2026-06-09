@@ -2,12 +2,18 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.models.BulkSeatUpdate;
 import co.commet.models.SeatBalance;
+import co.commet.models.SeatBalanceListItem;
 import co.commet.models.SeatEvent;
+import co.commet.params.AddSeatsParams;
+import co.commet.params.BulkSetSeatsParams;
+import co.commet.params.GetAllSeatBalancesParams;
+import co.commet.params.GetSeatBalanceParams;
+import co.commet.params.RemoveSeatsParams;
+import co.commet.params.SetSeatsParams;
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.util.List;
-import java.util.Map;
 
 import static co.commet.CommetHttpClient.buildBody;
 
@@ -19,95 +25,65 @@ public class SeatsResource {
         this.http = http;
     }
 
-    // --- add ---
-
-    public ApiResponse<SeatEvent> add(String featureCode) {
-        return add(featureCode, 1);
-    }
-
-    public ApiResponse<SeatEvent> add(String featureCode, int count) {
-        return add(featureCode, count, null, null);
-    }
-
-    public ApiResponse<SeatEvent> add(String featureCode, int count, String customerId,
-                           String idempotencyKey) {
+    /**
+     * Add seats to a customer's subscription. Prorates charges for the current billing period.
+     */
+    public ApiResponse<SeatEvent> add(AddSeatsParams params) {
         return http.post("/seats", buildBody(
-                "feature_code", featureCode,
-                "count", count,
-                "customer_id", customerId
-        ), idempotencyKey, new TypeReference<>() {});
+                "customer_id", params.getCustomerId(),
+                "feature_code", params.getFeatureCode(),
+                "count", params.getCount()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    // --- remove ---
-
-    public ApiResponse<SeatEvent> remove(String featureCode) {
-        return remove(featureCode, 1);
-    }
-
-    public ApiResponse<SeatEvent> remove(String featureCode, int count) {
-        return remove(featureCode, count, null, null);
-    }
-
-    public ApiResponse<SeatEvent> remove(String featureCode, int count, String customerId,
-                              String idempotencyKey) {
-        return http.delete("/seats", buildBody(
-                "feature_code", featureCode,
-                "count", count,
-                "customer_id", customerId
-        ), idempotencyKey, new TypeReference<>() {});
-    }
-
-    // --- set ---
-
-    public ApiResponse<SeatEvent> set(String featureCode, int count) {
-        return set(featureCode, count, null, null);
-    }
-
-    public ApiResponse<SeatEvent> set(String featureCode, int count, String customerId,
-                           String idempotencyKey) {
+    /**
+     * Set seats to an exact count.
+     */
+    public ApiResponse<SeatEvent> set(SetSeatsParams params) {
         return http.put("/seats", buildBody(
-                "feature_code", featureCode,
-                "count", count,
-                "customer_id", customerId
-        ), idempotencyKey, new TypeReference<>() {});
+                "customer_id", params.getCustomerId(),
+                "feature_code", params.getFeatureCode(),
+                "count", params.getCount()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    // --- setAll ---
-
-    public ApiResponse<List<SeatEvent>> setAll(Map<String, Integer> seats) {
-        return setAll(seats, null, null);
-    }
-
-    public ApiResponse<List<SeatEvent>> setAll(Map<String, Integer> seats, String customerId,
-                              String idempotencyKey) {
-        return http.put("/seats/bulk", buildBody(
-                "seats", seats,
-                "customer_id", customerId
-        ), idempotencyKey, new TypeReference<>() {});
-    }
-
-    // --- getBalance ---
-
-    public ApiResponse<SeatBalance> getBalance(String featureCode) {
-        return getBalance(featureCode, null);
-    }
-
-    public ApiResponse<SeatBalance> getBalance(String featureCode, String customerId) {
-        return http.get("/seats/balance", buildBody(
-                "feature_code", featureCode,
-                "customer_id", customerId
+    /**
+     * Remove seats from a customer's subscription. Takes effect at the end of the billing period.
+     */
+    public ApiResponse<SeatEvent> remove(RemoveSeatsParams params) {
+        return http.delete("/seats", buildBody(
+                "customer_id", params.getCustomerId(),
+                "feature_code", params.getFeatureCode(),
+                "count", params.getCount()
         ), new TypeReference<>() {});
     }
 
-    // --- getAllBalances ---
-
-    public ApiResponse<Map<String, SeatBalance>> getAllBalances() {
-        return getAllBalances(null);
+    /**
+     * Set all seat types at once.
+     */
+    public ApiResponse<List<BulkSeatUpdate>> setAll(BulkSetSeatsParams params) {
+        return http.put("/seats/bulk", buildBody(
+                "customer_id", params.getCustomerId(),
+                "seats", params.getSeats()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse<Map<String, SeatBalance>> getAllBalances(String customerId) {
+    /**
+     * Get current balance for a specific seat type.
+     */
+    public ApiResponse<SeatBalance> getBalance(GetSeatBalanceParams params) {
+        return http.get("/seats/balance", buildBody(
+                "customer_id", params.getCustomerId(),
+                "feature_code", params.getFeatureCode()
+        ), new TypeReference<>() {});
+    }
+
+    /**
+     * Get the current balance for all seat types in a customer's subscription.
+     */
+    public ApiResponse<SeatBalanceListItem> getAllBalances(GetAllSeatBalancesParams params) {
         return http.get("/seats/balances", buildBody(
-                "customer_id", customerId
+                "customer_id", params.getCustomerId()
         ), new TypeReference<>() {});
     }
 }

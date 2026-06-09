@@ -3,12 +3,14 @@ package co.commet.resources;
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.ActiveAddon;
-import co.commet.models.AddonDetail;
-import co.commet.models.DeleteResult;
+import co.commet.models.Addon;
+import co.commet.models.DeletedObject;
+import co.commet.params.CreateAddonParams;
+import co.commet.params.ListActiveAddonsParams;
+import co.commet.params.ListAddonsParams;
+import co.commet.params.UpdateAddonParams;
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.util.List;
-import java.util.Map;
 
 import static co.commet.CommetHttpClient.buildBody;
 
@@ -20,60 +22,65 @@ public class AddonsResource {
         this.http = http;
     }
 
-    public ApiResponse<List<ActiveAddon>> listActive(String customerId) {
-        return http.get("/addons/active", Map.of("customer_id", customerId),
-                new TypeReference<>() {});
-    }
-
-    public ApiResponse<List<AddonDetail>> list() {
-        return list(null, null);
-    }
-
-    public ApiResponse<List<AddonDetail>> list(Integer limit, String cursor) {
-        return http.get("/addons", buildBody(
-                "limit", limit,
-                "cursor", cursor
+    /**
+     * List all active add-ons for a customer's subscription.
+     */
+    public ApiResponse<List<ActiveAddon>> listActive(ListActiveAddonsParams params) {
+        return http.get("/addons/active", buildBody(
+                "customer_id", params.getCustomerId()
         ), new TypeReference<>() {});
     }
 
-    public ApiResponse<AddonDetail> get(String id) {
+    /**
+     * List all add-ons with cursor-based pagination.
+     */
+    public ApiResponse<List<Addon>> list(ListAddonsParams params) {
+        return http.get("/addons", buildBody(
+                "limit", params.getLimit(),
+                "cursor", params.getCursor()
+        ), new TypeReference<>() {});
+    }
+
+    /**
+     * Retrieve an add-on by its public ID or slug.
+     */
+    public ApiResponse<Addon> get(String id) {
         return http.get("/addons/" + id, new TypeReference<>() {});
     }
 
-    public ApiResponse<AddonDetail> create(String name, long basePrice, String featureId,
-                                           String consumptionModel) {
-        return create(name, basePrice, featureId, consumptionModel, null, null, null, null, null);
+    /**
+     * Create a new add-on linked to a feature. Each feature can only be assigned to one add-on.
+     */
+    public ApiResponse<Addon> create(CreateAddonParams params) {
+        return http.post("/addons", buildBody(
+                "name", params.getName(),
+                "description", params.getDescription(),
+                "base_price", params.getBasePrice(),
+                "feature_id", params.getFeatureId(),
+                "consumption_model", params.getConsumptionModel(),
+                "included_units", params.getIncludedUnits(),
+                "overage_rate", params.getOverageRate(),
+                "credit_cost", params.getCreditCost()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse<AddonDetail> create(String name, long basePrice, String featureId,
-                                           String consumptionModel, String description,
-                                           Integer includedUnits, Long overageRate,
-                                           Integer creditCost, Map<String, Object> extra) {
-        Map<String, Object> body = buildBody(
-                "name", name,
-                "base_price", basePrice,
-                "feature_id", featureId,
-                "consumption_model", consumptionModel,
-                "description", description,
-                "included_units", includedUnits,
-                "overage_rate", overageRate,
-                "credit_cost", creditCost
-        );
-        return http.post("/addons", body, new TypeReference<>() {});
-    }
-
-    public ApiResponse<AddonDetail> update(String id, String name, String description,
-                                           Long basePrice, Integer includedUnits, Long overageRate) {
+    /**
+     * Update an add-on's name, description, or pricing.
+     */
+    public ApiResponse<Addon> update(String id, UpdateAddonParams params) {
         return http.put("/addons/" + id, buildBody(
-                "name", name,
-                "description", description,
-                "base_price", basePrice,
-                "included_units", includedUnits,
-                "overage_rate", overageRate
-        ), new TypeReference<>() {});
+                "name", params.getName(),
+                "description", params.getDescription(),
+                "base_price", params.getBasePrice(),
+                "included_units", params.getIncludedUnits(),
+                "overage_rate", params.getOverageRate()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse<DeleteResult> delete(String id) {
+    /**
+     * Soft-delete an add-on. Fails if the add-on has active subscriptions.
+     */
+    public ApiResponse<DeletedObject> delete(String id) {
         return http.delete("/addons/" + id, null, new TypeReference<>() {});
     }
 }

@@ -2,6 +2,8 @@ package co.commet;
 
 public class CommetApiException extends CommetException {
 
+    private static final long serialVersionUID = 1L;
+
     public CommetApiException(String message, int statusCode) {
         this(message, statusCode, null, null, null, null, null);
     }

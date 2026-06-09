@@ -5,19 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Feature(
-        @JsonProperty("object") String object,
-        @JsonProperty("livemode") boolean livemode,
-        @JsonProperty("code") String code,
+        @JsonProperty("id") String id,
         @JsonProperty("name") String name,
+        @JsonProperty("code") String code,
         @JsonProperty("type") FeatureType type,
-        @JsonProperty("allowed") boolean allowed,
-        @JsonProperty("enabled") Boolean enabled,
-        @JsonProperty("current") Integer current,
-        @JsonProperty("included") Integer included,
-        @JsonProperty("remaining") Integer remaining,
-        @JsonProperty("overage") Integer overage,
-        @JsonProperty("overage_unit_price") Long overageUnitPrice,
-        @JsonProperty("billed_quantity") Integer billedQuantity,
-        @JsonProperty("unlimited") Boolean unlimited,
-        @JsonProperty("overage_enabled") Boolean overageEnabled
+        @JsonProperty("description") String description,
+        @JsonProperty("unit_name") String unitName,
+        @JsonProperty("created_at") String createdAt,
+        @JsonProperty("updated_at") String updatedAt,
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode
 ) {}

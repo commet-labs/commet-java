@@ -8,10 +8,8 @@ public enum SubscriptionStatus {
     PENDING_PAYMENT("pending_payment"),
     TRIALING("trialing"),
     ACTIVE("active"),
-    PAUSED("paused"),
     PAST_DUE("past_due"),
-    CANCELED("canceled"),
-    EXPIRED("expired");
+    CANCELED("canceled");
 
     private final String value;
 

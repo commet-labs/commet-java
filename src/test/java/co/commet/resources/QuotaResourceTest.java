@@ -2,8 +2,13 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
-import co.commet.models.QuotaAllowance;
-import co.commet.models.QuotaEvent;
+import co.commet.models.UsageQuota;
+import co.commet.models.UsageQuotaEvent;
+import co.commet.params.AddQuotaParams;
+import co.commet.params.GetAllQuotaAllowancesParams;
+import co.commet.params.GetQuotaAllowanceParams;
+import co.commet.params.RemoveQuotaParams;
+import co.commet.params.SetQuotaParams;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
@@ -42,10 +47,10 @@ class QuotaResourceTest {
     }
 
     @Test
-    void addPostsToUsageQuotaWithCountDefaultingToOne() throws Exception {
+    void addPostsToUsageQuotaWithoutClientSideCountDefault() throws Exception {
         server.enqueue(quotaEventResponse());
 
-        ApiResponse<QuotaEvent> response = quota.add("projects");
+        ApiResponse<UsageQuotaEvent> response = quota.add(AddQuotaParams.builder("projects").build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
@@ -53,7 +58,7 @@ class QuotaResourceTest {
 
         JsonNode body = mapper.readTree(request.getBody().readUtf8());
         assertEquals("projects", body.get("featureCode").asText());
-        assertEquals(1, body.get("count").asInt());
+        assertFalse(body.has("count"));
         assertFalse(body.has("customerId"));
 
         assertTrue(response.isSuccess());
@@ -65,7 +70,11 @@ class QuotaResourceTest {
     void addPassesExplicitCountAndCustomerId() throws Exception {
         server.enqueue(quotaEventResponse());
 
-        quota.add("projects", 5, "cus_1", "idem_1");
+        quota.add(AddQuotaParams.builder("projects")
+                .count(5L)
+                .customerId("cus_1")
+                .idempotencyKey("idem_1")
+                .build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
@@ -82,7 +91,7 @@ class QuotaResourceTest {
     void setPutsExactCountToUsageQuota() throws Exception {
         server.enqueue(quotaEventResponse());
 
-        quota.set("projects", 100);
+        quota.set(SetQuotaParams.builder("projects", 100L).build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("PUT", request.getMethod());
@@ -94,10 +103,10 @@ class QuotaResourceTest {
     }
 
     @Test
-    void removeDeletesFromUsageQuotaWithCountDefaultingToOne() throws Exception {
+    void removeDeletesFromUsageQuotaWithoutClientSideCountDefault() throws Exception {
         server.enqueue(quotaEventResponse());
 
-        quota.remove("projects");
+        quota.remove(RemoveQuotaParams.builder("projects").build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("DELETE", request.getMethod());
@@ -105,7 +114,7 @@ class QuotaResourceTest {
 
         JsonNode body = mapper.readTree(request.getBody().readUtf8());
         assertEquals("projects", body.get("featureCode").asText());
-        assertEquals(1, body.get("count").asInt());
+        assertFalse(body.has("count"));
     }
 
     @Test
@@ -116,25 +125,25 @@ class QuotaResourceTest {
                 .setBody(mapper.writeValueAsString(Map.of(
                         "success", true,
                         "data", Map.of(
-                                "featureCode", "projects",
+                                "feature_code", "projects",
                                 "current", 5,
                                 "included", 100,
                                 "remaining", 95,
-                                "billedQuantity", 100,
+                                "billed_quantity", 100,
                                 "unlimited", false,
-                                "overageEnabled", true,
-                                "asOf", "2026-05-29T00:00:00.000Z"
+                                "overage_enabled", true,
+                                "as_of", "2026-05-29T00:00:00.000Z"
                         )
                 ))));
 
-        ApiResponse<QuotaAllowance> response = quota.get("projects", "cus_1");
+        ApiResponse<UsageQuota> response = quota.get(GetQuotaAllowanceParams.builder("cus_1", "projects").build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
-        assertEquals("/api/usage/quota?featureCode=projects&customerId=cus_1", request.getPath());
+        assertEquals("/api/usage/quota?customerId=cus_1&featureCode=projects", request.getPath());
 
         assertTrue(response.isSuccess());
-        QuotaAllowance allowance = response.getData();
+        UsageQuota allowance = response.getData();
         assertEquals("projects", allowance.featureCode());
         assertEquals(5, allowance.current());
         assertEquals(100, allowance.included());
@@ -154,19 +163,19 @@ class QuotaResourceTest {
                         "success", true,
                         "data", List.of(
                                 Map.of(
-                                        "featureCode", "projects",
+                                        "feature_code", "projects",
                                         "current", 42,
                                         "included", 1000,
                                         "remaining", 958,
-                                        "billedQuantity", 1000,
+                                        "billed_quantity", 1000,
                                         "unlimited", false,
-                                        "overageEnabled", true,
-                                        "asOf", "2026-05-29T00:00:00.000Z"
+                                        "overage_enabled", true,
+                                        "as_of", "2026-05-29T00:00:00.000Z"
                                 )
                         )
                 ))));
 
-        ApiResponse<List<QuotaAllowance>> response = quota.getAll("cus_1");
+        ApiResponse<List<UsageQuota>> response = quota.getAll(GetAllQuotaAllowancesParams.builder("cus_1").build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
@@ -188,12 +197,12 @@ class QuotaResourceTest {
                         "success", true,
                         "data", Map.of(
                                 "id", "qe_1",
-                                "customerId", "cus_1",
-                                "featureCode", "projects",
-                                "previousBalance", 10,
-                                "newBalance", 11,
+                                "customer_id", "cus_1",
+                                "feature_code", "projects",
+                                "previous_balance", 10,
+                                "new_balance", 11,
                                 "ts", "2026-05-29T00:00:00.000Z",
-                                "createdAt", "2026-05-29T00:00:00.000Z"
+                                "created_at", "2026-05-29T00:00:00.000Z"
                         )
                 )));
     }

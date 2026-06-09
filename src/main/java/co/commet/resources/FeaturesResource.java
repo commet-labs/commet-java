@@ -2,14 +2,17 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
-import co.commet.models.DeleteResult;
+import co.commet.models.DeletedObject;
 import co.commet.models.Feature;
 import co.commet.models.FeatureAccess;
-import co.commet.models.FeatureDefinition;
+import co.commet.models.FeatureLookup;
+import co.commet.params.CanUseFeatureParams;
+import co.commet.params.CreateFeatureParams;
+import co.commet.params.GetFeatureAccessParams;
+import co.commet.params.ListFeaturesParams;
+import co.commet.params.UpdateFeatureParams;
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.util.List;
-import java.util.Map;
 
 import static co.commet.CommetHttpClient.buildBody;
 
@@ -21,46 +24,63 @@ public class FeaturesResource {
         this.http = http;
     }
 
-    public ApiResponse<Feature> get(String code, String customerId) {
-        return http.get("/features/" + code, Map.of("customer_id", customerId),
-                new TypeReference<>() {});
+    /**
+     * List all features for a customer's active subscription.
+     */
+    public ApiResponse<List<FeatureAccess>> list(ListFeaturesParams params) {
+        return http.get("/features", buildBody(
+                "customer_id", params.getCustomerId()
+        ), new TypeReference<>() {});
     }
 
-    public ApiResponse<FeatureAccess> canUse(String code, String customerId) {
-        return http.get("/features/" + code, Map.of("customer_id", customerId, "action", "canUse"),
-                new TypeReference<>() {});
+    /**
+     * Get feature access details. Use action=canUse to check if customer can consume one more unit.
+     */
+    public ApiResponse<FeatureLookup> get(String code, GetFeatureAccessParams params) {
+        return http.get("/features/" + code, buildBody(
+                "customer_id", params.getCustomerId(),
+                "action", params.getAction()
+        ), new TypeReference<>() {});
     }
 
-    public ApiResponse<List<Feature>> list(String customerId) {
-        return http.get("/features", Map.of("customer_id", customerId),
-                new TypeReference<>() {});
+    /**
+     * Get feature access details. Use action=canUse to check if customer can consume one more unit.
+     */
+    public ApiResponse<FeatureLookup> canUse(String code, CanUseFeatureParams params) {
+        return http.get("/features/" + code, buildBody(
+                "customer_id", params.getCustomerId(),
+                "action", "canUse"
+        ), new TypeReference<>() {});
     }
 
-    public ApiResponse<FeatureDefinition> create(String code, String name, String type) {
-        return create(code, name, type, null, null);
-    }
-
-    public ApiResponse<FeatureDefinition> create(String code, String name, String type,
-                                                 String description, String unitName) {
+    /**
+     * Create a new feature. Code must be lowercase alphanumeric with underscores.
+     */
+    public ApiResponse<Feature> create(CreateFeatureParams params) {
         return http.post("/features/manage", buildBody(
-                "code", code,
-                "name", name,
-                "type", type,
-                "description", description,
-                "unit_name", unitName
-        ), new TypeReference<>() {});
+                "name", params.getName(),
+                "code", params.getCode(),
+                "type", params.getType(),
+                "description", params.getDescription(),
+                "unit_name", params.getUnitName()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse<FeatureDefinition> update(String code, String name, String description,
-                                                 String unitName) {
+    /**
+     * Update a feature's name, description, or unit name. At least one field must be provided.
+     */
+    public ApiResponse<Feature> update(String code, UpdateFeatureParams params) {
         return http.put("/features/" + code + "/manage", buildBody(
-                "name", name,
-                "description", description,
-                "unit_name", unitName
-        ), new TypeReference<>() {});
+                "name", params.getName(),
+                "description", params.getDescription(),
+                "unit_name", params.getUnitName()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse<DeleteResult> delete(String code) {
+    /**
+     * Delete a feature. Fails if the feature is attached to active plans or has an active add-on.
+     */
+    public ApiResponse<DeletedObject> delete(String code) {
         return http.delete("/features/" + code + "/manage", null, new TypeReference<>() {});
     }
 }

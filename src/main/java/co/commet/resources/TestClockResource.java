@@ -1,0 +1,44 @@
+package co.commet.resources;
+
+import co.commet.ApiResponse;
+import co.commet.CommetHttpClient;
+import co.commet.models.TestClock;
+import co.commet.models.TestClockBilling;
+import co.commet.params.AdvanceTestClockParams;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Map;
+
+import static co.commet.CommetHttpClient.buildBody;
+
+public class TestClockResource {
+
+    private final CommetHttpClient http;
+
+    public TestClockResource(CommetHttpClient http) {
+        this.http = http;
+    }
+
+    /**
+     * Returns the organization's current test clock state. Sandbox only.
+     */
+    public ApiResponse<TestClock> get() {
+        return http.get("/test-clock", new TypeReference<>() {});
+    }
+
+    /**
+     * Moves the test clock forward, by a number of days (advanceDays) or to an absolute instant (frozenTime). The clock can only move forward. Sandbox only.
+     */
+    public ApiResponse<TestClock> advance(AdvanceTestClockParams params) {
+        return http.post("/test-clock", buildBody(
+                "advance_days", params.getAdvanceDays(),
+                "frozen_time", params.getFrozenTime()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
+    }
+
+    /**
+     * Discovers customers due for billing at the org's current (simulated) time and enqueues a billing cycle for each — renewals, expired trials, pending cancellations. Enqueueing is asynchronous. Sandbox only.
+     */
+    public ApiResponse<TestClockBilling> processBilling() {
+        return http.post("/test-clock/process-billing", Map.of(), new TypeReference<>() {});
+    }
+}

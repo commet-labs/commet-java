@@ -3,11 +3,12 @@ package co.commet.resources;
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.Transaction;
-import co.commet.models.TransactionRefundResult;
-import co.commet.models.TransactionRetryResult;
-import co.commet.models.TransactionStatus;
+import co.commet.models.TransactionRefund;
+import co.commet.models.TransactionRetry;
+import co.commet.params.ListTransactionsParams;
+import co.commet.params.RefundTransactionParams;
+import co.commet.params.RetryTransactionParams;
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.util.List;
 import java.util.Map;
 
@@ -21,29 +22,36 @@ public class TransactionsResource {
         this.http = http;
     }
 
-    public ApiResponse<List<Transaction>> list() {
-        return list(null, null, null, null);
-    }
-
-    public ApiResponse<List<Transaction>> list(TransactionStatus status, String customerEmail,
-                                               Integer limit, String cursor) {
+    /**
+     * List payment transactions with cursor-based pagination. Filter by status or customer email.
+     */
+    public ApiResponse<List<Transaction>> list(ListTransactionsParams params) {
         return http.get("/transactions", buildBody(
-                "status", status == null ? null : status.getValue(),
-                "customer_email", customerEmail,
-                "limit", limit,
-                "cursor", cursor
+                "status", params.getStatus(),
+                "customer_email", params.getCustomerEmail(),
+                "limit", params.getLimit(),
+                "cursor", params.getCursor()
         ), new TypeReference<>() {});
     }
 
+    /**
+     * Retrieve a single payment transaction by its public ID, including provider details.
+     */
     public ApiResponse<Transaction> get(String id) {
         return http.get("/transactions/" + id, new TypeReference<>() {});
     }
 
-    public ApiResponse<TransactionRefundResult> refund(String id) {
-        return http.post("/transactions/" + id + "/refund", Map.of(), new TypeReference<>() {});
+    /**
+     * Issue a full refund for a payment transaction.
+     */
+    public ApiResponse<TransactionRefund> refund(String id, RefundTransactionParams params) {
+        return http.post("/transactions/" + id + "/refund", Map.of(), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
-    public ApiResponse<TransactionRetryResult> retry(String id) {
-        return http.post("/transactions/" + id + "/retry", Map.of(), new TypeReference<>() {});
+    /**
+     * Retry a failed payment transaction. Creates a new invoice and initiates a new payment attempt.
+     */
+    public ApiResponse<TransactionRetry> retry(String id, RetryTransactionParams params) {
+        return http.post("/transactions/" + id + "/retry", Map.of(), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 }

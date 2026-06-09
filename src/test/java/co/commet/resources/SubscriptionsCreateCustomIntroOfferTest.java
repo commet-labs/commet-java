@@ -2,9 +2,10 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.models.CreateSubscriptionParamsIntroOffer;
+import co.commet.models.DiscountType;
 import co.commet.models.Subscription;
 import co.commet.params.CreateSubscriptionParams;
-import co.commet.params.CustomIntroOffer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
@@ -41,15 +42,16 @@ class SubscriptionsCreateCustomIntroOfferTest {
     }
 
     @Test
-    void createSendsCustomIntroOfferAsNestedCamelCaseInRequestBody() throws Exception {
+    void createSendsIntroOfferAsNestedObjectInRequestBody() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":{\"id\":\"sub_1\"}}"));
 
         ApiResponse<Subscription> response = subscriptions.create(
-                CreateSubscriptionParams.builder("cus_1", "plan_pro")
-                        .customIntroOffer(CustomIntroOffer.builder("percentage", 2500, 3).build())
+                CreateSubscriptionParams.builder("cus_1")
+                        .planId("plan_pro")
+                        .introOffer(new CreateSubscriptionParamsIntroOffer(DiscountType.PERCENTAGE, 2500, 3))
                         .build());
 
         RecordedRequest request = server.takeRequest();
@@ -58,10 +60,10 @@ class SubscriptionsCreateCustomIntroOfferTest {
                 "unexpected path: " + request.getPath());
 
         JsonNode body = mapper.readTree(request.getBody().readUtf8());
-        assertFalse(body.has("custom_intro_offer"), "body must not carry the snake_case key on the wire");
+        assertFalse(body.has("intro_offer"), "body must not carry the snake_case key on the wire");
 
-        JsonNode offer = body.get("customIntroOffer");
-        assertNotNull(offer, "body must carry the nested customIntroOffer object");
+        JsonNode offer = body.get("introOffer");
+        assertNotNull(offer, "body must carry the nested introOffer object");
         assertEquals("percentage", offer.get("discountType").asText());
         assertEquals(2500, offer.get("discountValue").asLong());
         assertEquals(3, offer.get("durationCycles").asInt());

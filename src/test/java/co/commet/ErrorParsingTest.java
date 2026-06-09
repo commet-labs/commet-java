@@ -1,6 +1,8 @@
 package co.commet;
 
 import co.commet.models.Customer;
+import co.commet.params.CreateCustomerParams;
+import co.commet.params.ListCustomersParams;
 import co.commet.resources.CustomersResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
@@ -73,7 +75,7 @@ class ErrorParsingTest {
                 ))));
 
         CommetValidationException exception = assertThrows(CommetValidationException.class,
-                () -> customers.create(""));
+                () -> customers.create(CreateCustomerParams.builder("").build()));
 
         assertEquals("Validation failed", exception.getMessage());
 
@@ -135,7 +137,7 @@ class ErrorParsingTest {
                         "success", true,
                         "data", Map.of(
                                 "id", "cus_abc123",
-                                "billing_email", "user@example.com",
+                                "email", "user@example.com",
                                 "created_at", "2024-01-01T00:00:00Z",
                                 "updated_at", "2024-01-01T00:00:00Z"
                         )
@@ -146,7 +148,7 @@ class ErrorParsingTest {
         assertTrue(response.isSuccess());
         assertNotNull(response.getData());
         assertEquals("cus_abc123", response.getData().id());
-        assertEquals("user@example.com", response.getData().billingEmail());
+        assertEquals("user@example.com", response.getData().email());
     }
 
     @Test
@@ -157,10 +159,10 @@ class ErrorParsingTest {
                 .setBody(mapper.writeValueAsString(Map.of(
                         "success", true,
                         "data", List.of(
-                                Map.of("id", "cus_1", "billing_email", "a@test.com",
+                                Map.of("id", "cus_1", "email", "a@test.com",
                                         "created_at", "2024-01-01T00:00:00Z",
                                         "updated_at", "2024-01-01T00:00:00Z"),
-                                Map.of("id", "cus_2", "billing_email", "b@test.com",
+                                Map.of("id", "cus_2", "email", "b@test.com",
                                         "created_at", "2024-01-01T00:00:00Z",
                                         "updated_at", "2024-01-01T00:00:00Z")
                         ),
@@ -168,7 +170,7 @@ class ErrorParsingTest {
                         "next_cursor", "cursor_abc"
                 ))));
 
-        ApiResponse<List<Customer>> response = customers.list();
+        ApiResponse<List<Customer>> response = customers.list(ListCustomersParams.builder().build());
 
         assertTrue(response.isSuccess());
         assertEquals(2, response.getData().size());

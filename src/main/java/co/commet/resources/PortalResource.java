@@ -2,7 +2,8 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
-import co.commet.models.PortalSession;
+import co.commet.models.PortalAccess;
+import co.commet.params.RequestPortalAccessParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import static co.commet.CommetHttpClient.buildBody;
@@ -15,15 +16,13 @@ public class PortalResource {
         this.http = http;
     }
 
-    public ApiResponse<PortalSession> getUrl() {
-        return getUrl(null, null, null);
-    }
-
-    public ApiResponse<PortalSession> getUrl(String customerId, String email,
-                              String idempotencyKey) {
+    /**
+     * Generate a customer portal URL. Exactly one identifier (email or customerId) is required.
+     */
+    public ApiResponse<PortalAccess> getUrl(RequestPortalAccessParams params) {
         return http.post("/portal/request-access", buildBody(
-                "customer_id", customerId,
-                "email", email
-        ), idempotencyKey, new TypeReference<>() {});
+                "email", params.getEmail(),
+                "customer_id", params.getCustomerId()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 }

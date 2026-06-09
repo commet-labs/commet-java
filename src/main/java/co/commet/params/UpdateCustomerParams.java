@@ -1,28 +1,24 @@
 package co.commet.params;
 
+import co.commet.models.Timezone;
+import co.commet.models.UpdateCustomerParamsAddress;
 import java.util.Map;
 
 public final class UpdateCustomerParams {
 
     private final String email;
     private final String fullName;
-    private final String domain;
-    private final String website;
-    private final String timezone;
-    private final String language;
-    private final String industry;
+    private final String externalId;
+    private final Timezone timezone;
     private final Map<String, Object> metadata;
-    private final Map<String, String> address;
+    private final UpdateCustomerParamsAddress address;
     private final String idempotencyKey;
 
     private UpdateCustomerParams(Builder builder) {
         this.email = builder.email;
         this.fullName = builder.fullName;
-        this.domain = builder.domain;
-        this.website = builder.website;
+        this.externalId = builder.externalId;
         this.timezone = builder.timezone;
-        this.language = builder.language;
-        this.industry = builder.industry;
         this.metadata = builder.metadata;
         this.address = builder.address;
         this.idempotencyKey = builder.idempotencyKey;
@@ -34,29 +30,24 @@ public final class UpdateCustomerParams {
 
     public String getEmail() { return email; }
     public String getFullName() { return fullName; }
-    public String getDomain() { return domain; }
-    public String getWebsite() { return website; }
-    public String getTimezone() { return timezone; }
-    public String getLanguage() { return language; }
-    public String getIndustry() { return industry; }
+    public String getExternalId() { return externalId; }
+    public Timezone getTimezone() { return timezone; }
     public Map<String, Object> getMetadata() { return metadata; }
-    public Map<String, String> getAddress() { return address; }
+    public UpdateCustomerParamsAddress getAddress() { return address; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
 
         private String email;
         private String fullName;
-        private String domain;
-        private String website;
-        private String timezone;
-        private String language;
-        private String industry;
+        private String externalId;
+        private Timezone timezone;
         private Map<String, Object> metadata;
-        private Map<String, String> address;
+        private UpdateCustomerParamsAddress address;
         private String idempotencyKey;
 
-        private Builder() {}
+        private Builder() {
+        }
 
         public Builder email(String email) {
             this.email = email;
@@ -68,28 +59,13 @@ public final class UpdateCustomerParams {
             return this;
         }
 
-        public Builder domain(String domain) {
-            this.domain = domain;
+        public Builder externalId(String externalId) {
+            this.externalId = externalId;
             return this;
         }
 
-        public Builder website(String website) {
-            this.website = website;
-            return this;
-        }
-
-        public Builder timezone(String timezone) {
+        public Builder timezone(Timezone timezone) {
             this.timezone = timezone;
-            return this;
-        }
-
-        public Builder language(String language) {
-            this.language = language;
-            return this;
-        }
-
-        public Builder industry(String industry) {
-            this.industry = industry;
             return this;
         }
 
@@ -98,7 +74,7 @@ public final class UpdateCustomerParams {
             return this;
         }
 
-        public Builder address(Map<String, String> address) {
+        public Builder address(UpdateCustomerParamsAddress address) {
             this.address = address;
             return this;
         }

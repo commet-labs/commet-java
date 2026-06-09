@@ -1,32 +1,30 @@
 package co.commet.params;
 
+import co.commet.models.CreateCustomerParamsAddress;
+import co.commet.models.Timezone;
 import java.util.Map;
 
 public final class CreateCustomerParams {
 
     private final String email;
     private final String id;
+    private final String externalId;
     private final String fullName;
-    private final String domain;
-    private final String website;
-    private final String timezone;
-    private final String language;
-    private final String industry;
+    private final CreateCustomerParamsAddress address;
+    private final String addressId;
+    private final Timezone timezone;
     private final Map<String, Object> metadata;
-    private final Map<String, String> address;
     private final String idempotencyKey;
 
     private CreateCustomerParams(Builder builder) {
         this.email = builder.email;
         this.id = builder.id;
+        this.externalId = builder.externalId;
         this.fullName = builder.fullName;
-        this.domain = builder.domain;
-        this.website = builder.website;
-        this.timezone = builder.timezone;
-        this.language = builder.language;
-        this.industry = builder.industry;
-        this.metadata = builder.metadata;
         this.address = builder.address;
+        this.addressId = builder.addressId;
+        this.timezone = builder.timezone;
+        this.metadata = builder.metadata;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -36,28 +34,24 @@ public final class CreateCustomerParams {
 
     public String getEmail() { return email; }
     public String getId() { return id; }
+    public String getExternalId() { return externalId; }
     public String getFullName() { return fullName; }
-    public String getDomain() { return domain; }
-    public String getWebsite() { return website; }
-    public String getTimezone() { return timezone; }
-    public String getLanguage() { return language; }
-    public String getIndustry() { return industry; }
+    public CreateCustomerParamsAddress getAddress() { return address; }
+    public String getAddressId() { return addressId; }
+    public Timezone getTimezone() { return timezone; }
     public Map<String, Object> getMetadata() { return metadata; }
-    public Map<String, String> getAddress() { return address; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
 
         private final String email;
         private String id;
+        private String externalId;
         private String fullName;
-        private String domain;
-        private String website;
-        private String timezone;
-        private String language;
-        private String industry;
+        private CreateCustomerParamsAddress address;
+        private String addressId;
+        private Timezone timezone;
         private Map<String, Object> metadata;
-        private Map<String, String> address;
         private String idempotencyKey;
 
         private Builder(String email) {
@@ -69,43 +63,33 @@ public final class CreateCustomerParams {
             return this;
         }
 
+        public Builder externalId(String externalId) {
+            this.externalId = externalId;
+            return this;
+        }
+
         public Builder fullName(String fullName) {
             this.fullName = fullName;
             return this;
         }
 
-        public Builder domain(String domain) {
-            this.domain = domain;
+        public Builder address(CreateCustomerParamsAddress address) {
+            this.address = address;
             return this;
         }
 
-        public Builder website(String website) {
-            this.website = website;
+        public Builder addressId(String addressId) {
+            this.addressId = addressId;
             return this;
         }
 
-        public Builder timezone(String timezone) {
+        public Builder timezone(Timezone timezone) {
             this.timezone = timezone;
-            return this;
-        }
-
-        public Builder language(String language) {
-            this.language = language;
-            return this;
-        }
-
-        public Builder industry(String industry) {
-            this.industry = industry;
             return this;
         }
 
         public Builder metadata(Map<String, Object> metadata) {
             this.metadata = metadata;
-            return this;
-        }
-
-        public Builder address(Map<String, String> address) {
-            this.address = address;
             return this;
         }
 

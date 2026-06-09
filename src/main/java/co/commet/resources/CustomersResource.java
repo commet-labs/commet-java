@@ -2,16 +2,14 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
-import co.commet.models.BatchResult;
 import co.commet.models.Customer;
+import co.commet.models.CustomerBatch;
+import co.commet.params.BatchCreateCustomersParams;
 import co.commet.params.CreateCustomerParams;
 import co.commet.params.ListCustomersParams;
 import co.commet.params.UpdateCustomerParams;
 import com.fasterxml.jackson.core.type.TypeReference;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static co.commet.CommetHttpClient.buildBody;
 
@@ -23,77 +21,60 @@ public class CustomersResource {
         this.http = http;
     }
 
-    public ApiResponse<Customer> create(String email) {
-        return create(CreateCustomerParams.builder(email).build());
-    }
-
-    public ApiResponse<Customer> create(CreateCustomerParams params) {
-        return http.post("/customers", buildBody(
-                "billing_email", params.getEmail(),
-                "id", params.getId(),
-                "full_name", params.getFullName(),
-                "domain", params.getDomain(),
-                "website", params.getWebsite(),
-                "timezone", params.getTimezone(),
-                "language", params.getLanguage(),
-                "industry", params.getIndustry(),
-                "metadata", params.getMetadata(),
-                "address", params.getAddress()
-        ), params.getIdempotencyKey(), new TypeReference<>() {});
-    }
-
-    public ApiResponse<BatchResult> createBatch(List<CreateCustomerParams> customers) {
-        return createBatch(customers, null);
-    }
-
-    public ApiResponse<BatchResult> createBatch(List<CreateCustomerParams> customers, String idempotencyKey) {
-        List<Map<String, Object>> mapped = new ArrayList<>();
-        for (CreateCustomerParams c : customers) {
-            mapped.add(buildBody(
-                    "billing_email", c.getEmail(),
-                    "id", c.getId(),
-                    "full_name", c.getFullName(),
-                    "domain", c.getDomain(),
-                    "website", c.getWebsite(),
-                    "timezone", c.getTimezone(),
-                    "language", c.getLanguage(),
-                    "industry", c.getIndustry(),
-                    "metadata", c.getMetadata(),
-                    "address", c.getAddress()
-            ));
-        }
-        return http.post("/customers/batch", Map.of("customers", mapped), idempotencyKey,
-                new TypeReference<>() {});
-    }
-
-    public ApiResponse<Customer> get(String customerId) {
-        return http.get("/customers/" + customerId, new TypeReference<>() {});
-    }
-
-    public ApiResponse<Customer> update(String customerId, UpdateCustomerParams params) {
-        return http.put("/customers/" + customerId, buildBody(
-                "billing_email", params.getEmail(),
-                "full_name", params.getFullName(),
-                "domain", params.getDomain(),
-                "website", params.getWebsite(),
-                "timezone", params.getTimezone(),
-                "language", params.getLanguage(),
-                "industry", params.getIndustry(),
-                "metadata", params.getMetadata(),
-                "address", params.getAddress()
-        ), params.getIdempotencyKey(), new TypeReference<>() {});
-    }
-
-    public ApiResponse<List<Customer>> list() {
-        return http.get("/customers", new TypeReference<>() {});
-    }
-
+    /**
+     * List customers with cursor-based pagination.
+     */
     public ApiResponse<List<Customer>> list(ListCustomersParams params) {
         return http.get("/customers", buildBody(
-                "customer_id", params.getCustomerId(),
-                "search", params.getSearch(),
+                "external_id", params.getExternalId(),
                 "limit", params.getLimit(),
                 "cursor", params.getCursor()
         ), new TypeReference<>() {});
+    }
+
+    /**
+     * Create a new customer. Idempotent when customerId is provided.
+     */
+    public ApiResponse<Customer> create(CreateCustomerParams params) {
+        return http.post("/customers", buildBody(
+                "id", params.getId(),
+                "external_id", params.getExternalId(),
+                "full_name", params.getFullName(),
+                "address", params.getAddress(),
+                "address_id", params.getAddressId(),
+                "email", params.getEmail(),
+                "timezone", params.getTimezone(),
+                "metadata", params.getMetadata()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
+    }
+
+    /**
+     * Retrieve a customer by their public ID, including subscription status and metadata.
+     */
+    public ApiResponse<Customer> get(String id) {
+        return http.get("/customers/" + id, new TypeReference<>() {});
+    }
+
+    /**
+     * Update a customer's name, external ID, or metadata.
+     */
+    public ApiResponse<Customer> update(String id, UpdateCustomerParams params) {
+        return http.put("/customers/" + id, buildBody(
+                "email", params.getEmail(),
+                "full_name", params.getFullName(),
+                "external_id", params.getExternalId(),
+                "timezone", params.getTimezone(),
+                "metadata", params.getMetadata(),
+                "address", params.getAddress()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
+    }
+
+    /**
+     * Create up to 100 customers in a single request.
+     */
+    public ApiResponse<CustomerBatch> createBatch(BatchCreateCustomersParams params) {
+        return http.post("/customers/batch", buildBody(
+                "customers", params.getCustomers()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 }
