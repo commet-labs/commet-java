@@ -11,7 +11,6 @@ import co.commet.models.PlanChange;
 import co.commet.models.PreviewChange;
 import co.commet.models.Subscription;
 import co.commet.models.SubscriptionAddon;
-import co.commet.models.SubscriptionsGetActiveResult;
 import co.commet.models.UncanceledSubscription;
 import co.commet.params.ActivateAddonParams;
 import co.commet.params.AdjustBalanceParams;
@@ -76,7 +75,7 @@ public class SubscriptionsResource {
     /**
      * Get the active subscription for a customer. Returns null if none.
      */
-    public ApiResponse<SubscriptionsGetActiveResult> getActive(GetActiveSubscriptionParams params) {
+    public ApiResponse<Subscription> getActive(GetActiveSubscriptionParams params) {
         return http.get("/subscriptions/active", buildBody(
                 "customer_id", params.getCustomerId()
         ), new TypeReference<>() {});
