@@ -26,7 +26,7 @@ public class AddonsResource {
      * List all active add-ons for a customer's subscription.
      */
     public ApiResponse<List<ActiveAddon>> listActive(ListActiveAddonsParams params) {
-        return http.get("/addons/active", buildBody(
+        return http.get("/active-addons", buildBody(
                 "customer_id", params.getCustomerId()
         ), new TypeReference<>() {});
     }

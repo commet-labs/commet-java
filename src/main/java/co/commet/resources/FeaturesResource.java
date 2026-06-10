@@ -4,15 +4,11 @@ import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.DeletedObject;
 import co.commet.models.Feature;
-import co.commet.models.FeatureAccess;
-import co.commet.models.FeatureLookup;
-import co.commet.params.CanUseFeatureParams;
 import co.commet.params.CreateFeatureParams;
-import co.commet.params.GetFeatureAccessParams;
-import co.commet.params.ListFeaturesParams;
 import co.commet.params.UpdateFeatureParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
+import java.util.Map;
 
 import static co.commet.CommetHttpClient.buildBody;
 
@@ -25,32 +21,17 @@ public class FeaturesResource {
     }
 
     /**
-     * List all features for a customer's active subscription.
+     * List every feature defined in the organization. This is the organization's feature catalog (definitions), not a customer's feature access.
      */
-    public ApiResponse<List<FeatureAccess>> list(ListFeaturesParams params) {
-        return http.get("/features", buildBody(
-                "customer_id", params.getCustomerId()
-        ), new TypeReference<>() {});
+    public ApiResponse<List<Feature>> list() {
+        return http.get("/features", new TypeReference<>() {});
     }
 
     /**
-     * Get feature access details. Use action=canUse to check if customer can consume one more unit.
+     * Get a single feature definition by code from the organization's feature catalog.
      */
-    public ApiResponse<FeatureLookup> get(String code, GetFeatureAccessParams params) {
-        return http.get("/features/" + code, buildBody(
-                "customer_id", params.getCustomerId(),
-                "action", params.getAction()
-        ), new TypeReference<>() {});
-    }
-
-    /**
-     * Get feature access details. Use action=canUse to check if customer can consume one more unit.
-     */
-    public ApiResponse<FeatureLookup> canUse(String code, CanUseFeatureParams params) {
-        return http.get("/features/" + code, buildBody(
-                "customer_id", params.getCustomerId(),
-                "action", "canUse"
-        ), new TypeReference<>() {});
+    public ApiResponse<Feature> get(String code) {
+        return http.get("/features/" + code, new TypeReference<>() {});
     }
 
     /**

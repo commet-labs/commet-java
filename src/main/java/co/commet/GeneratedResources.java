@@ -4,6 +4,7 @@ import co.commet.resources.AddonsResource;
 import co.commet.resources.ApiKeysResource;
 import co.commet.resources.CreditPacksResource;
 import co.commet.resources.CustomersResource;
+import co.commet.resources.FeatureAccessResource;
 import co.commet.resources.FeaturesResource;
 import co.commet.resources.InvoicesResource;
 import co.commet.resources.PayoutsResource;
@@ -25,6 +26,7 @@ public abstract class GeneratedResources {
     protected final ApiKeysResource apiKeys;
     protected final CreditPacksResource creditPacks;
     protected final CustomersResource customers;
+    protected final FeatureAccessResource featureAccess;
     protected final FeaturesResource features;
     protected final InvoicesResource invoices;
     protected final PayoutsResource payouts;
@@ -44,6 +46,7 @@ public abstract class GeneratedResources {
         this.apiKeys = new ApiKeysResource(httpClient);
         this.creditPacks = new CreditPacksResource(httpClient);
         this.customers = new CustomersResource(httpClient);
+        this.featureAccess = new FeatureAccessResource(httpClient);
         this.features = new FeaturesResource(httpClient);
         this.invoices = new InvoicesResource(httpClient);
         this.payouts = new PayoutsResource(httpClient);
@@ -62,6 +65,7 @@ public abstract class GeneratedResources {
     public ApiKeysResource apiKeys() { return apiKeys; }
     public CreditPacksResource creditPacks() { return creditPacks; }
     public CustomersResource customers() { return customers; }
+    public FeatureAccessResource featureAccess() { return featureAccess; }
     public FeaturesResource features() { return features; }
     public InvoicesResource invoices() { return invoices; }
     public PayoutsResource payouts() { return payouts; }

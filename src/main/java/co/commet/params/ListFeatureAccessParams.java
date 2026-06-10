@@ -1,10 +1,10 @@
 package co.commet.params;
 
-public final class ListFeaturesParams {
+public final class ListFeatureAccessParams {
 
     private final String customerId;
 
-    private ListFeaturesParams(Builder builder) {
+    private ListFeatureAccessParams(Builder builder) {
         this.customerId = builder.customerId;
     }
 
@@ -22,8 +22,8 @@ public final class ListFeaturesParams {
             this.customerId = customerId;
         }
 
-        public ListFeaturesParams build() {
-            return new ListFeaturesParams(this);
+        public ListFeatureAccessParams build() {
+            return new ListFeatureAccessParams(this);
         }
     }
 }

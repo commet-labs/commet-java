@@ -21,6 +21,7 @@ public record Subscription(
         @JsonProperty("balance") SubscriptionBalance balance,
         @JsonProperty("cancellation") SubscriptionCancellation cancellation,
         @JsonProperty("cancel_at_period_end") boolean cancelAtPeriodEnd,
+        @JsonProperty("scheduled_plan_change") SubscriptionScheduledPlanChange scheduledPlanChange,
         @JsonProperty("discount") SubscriptionDiscount discount,
         @JsonProperty("start_date") String startDate,
         @JsonProperty("end_date") String endDate,
