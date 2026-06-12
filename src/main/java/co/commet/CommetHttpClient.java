@@ -365,13 +365,15 @@ public class CommetHttpClient implements AutoCloseable {
         }
 
         if (isRetryable(response.code()) && attempt <= maxRetries) {
-            response.close();
-            long delay = retryDelay(attempt);
-            if (debug) {
-                logger.info("[Commet SDK] Retrying in " + delay + "ms (attempt " + attempt + "/" + maxRetries + ")");
+            Long delay = statusRetryDelay(response, attempt);
+            if (delay != null) {
+                response.close();
+                if (debug) {
+                    logger.info("[Commet SDK] Retrying in " + delay + "ms (attempt " + attempt + "/" + maxRetries + ")");
+                }
+                sleep(delay);
+                return execute(method, endpoint, jsonBody, params, extraHeaders, options, attempt + 1, typeRef);
             }
-            sleep(delay);
-            return execute(method, endpoint, jsonBody, params, extraHeaders, options, attempt + 1, typeRef);
         }
 
         try {
@@ -459,6 +461,32 @@ public class CommetHttpClient implements AutoCloseable {
 
     private long retryDelay(int attempt) {
         return Math.min((long) (1000 * Math.pow(2, attempt - 1)), 8000);
+    }
+
+    private static final long RETRY_AFTER_CAP_MS = 30000;
+
+    // 429 retries wait exactly what the rate limiter reports in Retry-After
+    // (seconds until the window resets); a 429 without the header did not come
+    // from the rate limiter, so it is not retried (returns null). Exponential
+    // backoff only applies to statuses that carry no server-provided wait.
+    private Long statusRetryDelay(Response response, int attempt) {
+        if (response.code() != 429) {
+            return retryDelay(attempt);
+        }
+        String retryAfter = response.header("Retry-After");
+        if (retryAfter == null) {
+            return null;
+        }
+        double seconds;
+        try {
+            seconds = Double.parseDouble(retryAfter);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        if (seconds <= 0) {
+            return null;
+        }
+        return Math.min((long) (seconds * 1000), RETRY_AFTER_CAP_MS);
     }
 
     private void sleep(long ms) {
