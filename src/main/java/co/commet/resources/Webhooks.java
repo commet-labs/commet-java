@@ -2,6 +2,7 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.WebhookEvent;
 import co.commet.models.DeleteResult;
 import co.commet.models.WebhookEndpoint;
 import co.commet.models.WebhookTestResult;
@@ -43,13 +44,13 @@ public class Webhooks {
         return constantTimeEquals(signature, expected);
     }
 
-    public Map<String, Object> verifyAndParse(String rawBody, String signature, String secret) {
+    public WebhookEvent verifyAndParse(String rawBody, String signature, String secret) {
         if (!verify(rawBody, signature, secret)) {
             return null;
         }
 
         try {
-            return objectMapper.readValue(rawBody, new TypeReference<>() {});
+            return objectMapper.readValue(rawBody, WebhookEvent.class);
         } catch (Exception e) {
             return null;
         }

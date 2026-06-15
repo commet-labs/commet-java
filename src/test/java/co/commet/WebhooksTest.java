@@ -1,5 +1,7 @@
 package co.commet;
 
+import co.commet.models.CustomerCreatedData;
+import co.commet.models.WebhookEventType;
 import co.commet.resources.Webhooks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,14 +31,35 @@ class WebhooksTest {
     }
 
     @Test
-    void validSignatureReturnsPayloadOnVerifyAndParse() {
-        String payload = "{\"event\":\"subscription.created\",\"data\":{\"id\":\"sub_123\"}}";
+    void validSignatureReturnsTypedEventOnVerifyAndParse() {
+        String payload = "{\"event\":\"subscription.created\",\"timestamp\":\"2026-01-01T00:00:00Z\","
+                + "\"organizationId\":\"org_1\",\"mode\":\"live\",\"apiVersion\":\"2025-01-01\","
+                + "\"data\":{\"subscriptionId\":\"sub_123\"}}";
         String signature = computeHmac(payload, SECRET);
 
-        Map<String, Object> result = webhooks.verifyAndParse(payload, signature, SECRET);
+        WebhookEvent event = webhooks.verifyAndParse(payload, signature, SECRET);
 
-        assertNotNull(result);
-        assertEquals("subscription.created", result.get("event"));
+        assertNotNull(event);
+        assertEquals(WebhookEventType.SUBSCRIPTION_CREATED, event.event());
+        assertEquals("org_1", event.organizationId());
+    }
+
+    @Test
+    void verifyAndParseNarrowsToTypedPayloadRecord() {
+        String payload = "{\"event\":\"customer.created\",\"timestamp\":\"2026-01-01T00:00:00Z\","
+                + "\"organizationId\":\"org_1\",\"mode\":\"live\",\"apiVersion\":\"2025-01-01\","
+                + "\"data\":{\"id\":\"cus_123\",\"email\":\"ada@example.com\","
+                + "\"createdAt\":\"2026-01-01T00:00:00Z\",\"updatedAt\":\"2026-01-01T00:00:00Z\"}}";
+        String signature = computeHmac(payload, SECRET);
+
+        WebhookEvent event = webhooks.verifyAndParse(payload, signature, SECRET);
+
+        assertNotNull(event);
+        assertEquals(WebhookEventType.CUSTOMER_CREATED, event.event());
+
+        CustomerCreatedData data = event.asCustomerCreated();
+        assertEquals("cus_123", data.id());
+        assertEquals("ada@example.com", data.email());
     }
 
     @Test
