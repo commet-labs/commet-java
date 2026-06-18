@@ -7,8 +7,11 @@ import co.commet.models.BalanceTopup;
 import co.commet.models.CanceledSubscription;
 import co.commet.models.CreditGrant;
 import co.commet.models.DeletedSubscriptionAddon;
+import co.commet.models.PaymentMethodUpdateCheckout;
 import co.commet.models.PlanChange;
 import co.commet.models.PreviewChange;
+import co.commet.models.ReactivatedSubscription;
+import co.commet.models.RecoveryLink;
 import co.commet.models.Subscription;
 import co.commet.models.SubscriptionAddon;
 import co.commet.models.UncanceledSubscription;
@@ -17,12 +20,15 @@ import co.commet.params.AdjustBalanceParams;
 import co.commet.params.CancelSubscriptionParams;
 import co.commet.params.ChangePlanParams;
 import co.commet.params.CreateSubscriptionParams;
+import co.commet.params.CreateSubscriptionRecoveryLinkParams;
 import co.commet.params.GetActiveSubscriptionParams;
 import co.commet.params.ListSubscriptionsParams;
 import co.commet.params.PreviewChangePlanParams;
 import co.commet.params.PurchaseCreditsParams;
+import co.commet.params.ReactivateSubscriptionParams;
 import co.commet.params.TopupBalanceParams;
 import co.commet.params.UncancelSubscriptionParams;
+import co.commet.params.UpdatePaymentMethodParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +102,29 @@ public class SubscriptionsResource {
      */
     public ApiResponse<UncanceledSubscription> uncancel(String id, UncancelSubscriptionParams params) {
         return http.post("/subscriptions/" + id + "/uncancel", Map.of(), params.getIdempotencyKey(), new TypeReference<>() {});
+    }
+
+    /**
+     * Retries the outstanding renewal charge for a past_due subscription. On a successful charge the subscription recovers to active and a payment.recovered webhook is delivered; a declined charge returns an error and the subscription stays past_due.
+     */
+    public ApiResponse<ReactivatedSubscription> reactivate(String id, ReactivateSubscriptionParams params) {
+        return http.post("/subscriptions/" + id + "/reactivate", Map.of(), params.getIdempotencyKey(), new TypeReference<>() {});
+    }
+
+    /**
+     * Generates a hosted, signed recovery link that lets the customer pay the outstanding renewal charge for a past_due subscription. Unlike reactivate, which charges server-to-server, this returns a link the merchant can deliver through their own email, SMS, or dashboard. The link carries a self-contained signed token and stays valid until the charge is paid or the subscription is no longer past due.
+     */
+    public ApiResponse<RecoveryLink> createRecoveryLink(String id, CreateSubscriptionRecoveryLinkParams params) {
+        return http.post("/subscriptions/" + id + "/recovery-link", Map.of(), params.getIdempotencyKey(), new TypeReference<>() {});
+    }
+
+    /**
+     * Creates a hosted checkout session for the customer to update the subscription's default payment method.
+     */
+    public ApiResponse<PaymentMethodUpdateCheckout> updatePaymentMethod(String id, UpdatePaymentMethodParams params) {
+        return http.post("/subscriptions/" + id + "/payment-method/update", buildBody(
+                "success_url", params.getSuccessUrl()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 
     /**

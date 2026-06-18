@@ -7,6 +7,7 @@ import co.commet.resources.CustomersResource;
 import co.commet.resources.FeatureAccessResource;
 import co.commet.resources.FeaturesResource;
 import co.commet.resources.InvoicesResource;
+import co.commet.resources.PaymentsResource;
 import co.commet.resources.PayoutsResource;
 import co.commet.resources.PlanGroupsResource;
 import co.commet.resources.PlansResource;
@@ -29,6 +30,7 @@ public abstract class GeneratedResources {
     protected final FeatureAccessResource featureAccess;
     protected final FeaturesResource features;
     protected final InvoicesResource invoices;
+    protected final PaymentsResource payments;
     protected final PayoutsResource payouts;
     protected final PlanGroupsResource planGroups;
     protected final PlansResource plans;
@@ -49,6 +51,7 @@ public abstract class GeneratedResources {
         this.featureAccess = new FeatureAccessResource(httpClient);
         this.features = new FeaturesResource(httpClient);
         this.invoices = new InvoicesResource(httpClient);
+        this.payments = new PaymentsResource(httpClient);
         this.payouts = new PayoutsResource(httpClient);
         this.planGroups = new PlanGroupsResource(httpClient);
         this.plans = new PlansResource(httpClient);
@@ -68,6 +71,7 @@ public abstract class GeneratedResources {
     public FeatureAccessResource featureAccess() { return featureAccess; }
     public FeaturesResource features() { return features; }
     public InvoicesResource invoices() { return invoices; }
+    public PaymentsResource payments() { return payments; }
     public PayoutsResource payouts() { return payouts; }
     public PlanGroupsResource planGroups() { return planGroups; }
     public PlansResource plans() { return plans; }

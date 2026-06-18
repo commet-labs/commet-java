@@ -10,7 +10,8 @@ public enum InvoiceType {
     ADJUSTMENT("adjustment"),
     CREDIT_PURCHASE("credit_purchase"),
     BALANCE_TOPUP("balance_topup"),
-    ADDON_ACTIVATION("addon_activation");
+    ADDON_ACTIVATION("addon_activation"),
+    ONE_TIME_PAYMENT("one_time_payment");
 
     private final String value;
 

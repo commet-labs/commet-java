@@ -20,6 +20,7 @@ public record PlanChange(
         @JsonProperty("billing_interval") String billingInterval,
         @JsonProperty("billing") PlanChangeBilling billing,
         @JsonProperty("invoice_id") String invoiceId,
+        @JsonProperty("seat_limit_warning") PlanChangeSeatLimitWarning seatLimitWarning,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) {}

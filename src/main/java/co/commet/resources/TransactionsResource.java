@@ -49,7 +49,7 @@ public class TransactionsResource {
     }
 
     /**
-     * Retry a failed payment transaction. Creates a new invoice and initiates a new payment attempt.
+     * Retry a failed subscription renewal. Re-charges the outstanding renewal invoice through the recovery engine.
      */
     public ApiResponse<TransactionRetry> retry(String id, RetryTransactionParams params) {
         return http.post("/transactions/" + id + "/retry", Map.of(), params.getIdempotencyKey(), new TypeReference<>() {});
