@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
     signing
     jacoco
-    id("com.github.spotbugs") version "6.0.26"
+    id("com.github.spotbugs") version "6.5.8"
     id("net.thebugmc.gradle.sonatype-central-portal-publisher") version "1.2.4"
 }
 
@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
     api("com.squareup.okhttp3:okhttp:4.12.0")
-    api("com.fasterxml.jackson.core:jackson-databind:2.21.4")
+    api("com.fasterxml.jackson.core:jackson-databind:2.22.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.14.4")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
