@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record CustomerBatchFailedItemData(
+public record CustomerUpdatedData(
         @JsonProperty("id") String id,
-        @JsonProperty("external_id") String externalId,
+        @JsonProperty("externalId") String externalId,
+        @JsonProperty("fullName") String fullName,
         @JsonProperty("email") String email,
-        @JsonProperty("full_name") String fullName,
-        @JsonProperty("tax_document") String taxDocument,
+        @JsonProperty("taxDocument") String taxDocument,
+        @JsonProperty("documentType") String documentType,
         @JsonProperty("timezone") String timezone,
         @JsonProperty("metadata") Map<String, Object> metadata,
-        @JsonProperty("address") CustomerBatchFailedItemDataAddress address
+        @JsonProperty("createdAt") String createdAt,
+        @JsonProperty("updatedAt") String updatedAt
 ) {}

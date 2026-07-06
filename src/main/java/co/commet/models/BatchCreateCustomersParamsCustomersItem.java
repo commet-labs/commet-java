@@ -10,6 +10,7 @@ public record BatchCreateCustomersParamsCustomersItem(
         @JsonProperty("id") String id,
         @JsonProperty("external_id") String externalId,
         @JsonProperty("full_name") String fullName,
+        @JsonProperty("tax_document") String taxDocument,
         @JsonProperty("timezone") Timezone timezone,
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("address") BatchCreateCustomersParamsCustomersItemAddress address

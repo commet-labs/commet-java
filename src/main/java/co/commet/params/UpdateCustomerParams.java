@@ -8,6 +8,7 @@ public final class UpdateCustomerParams {
 
     private final String email;
     private final String fullName;
+    private final String taxDocument;
     private final String externalId;
     private final Timezone timezone;
     private final Map<String, Object> metadata;
@@ -17,6 +18,7 @@ public final class UpdateCustomerParams {
     private UpdateCustomerParams(Builder builder) {
         this.email = builder.email;
         this.fullName = builder.fullName;
+        this.taxDocument = builder.taxDocument;
         this.externalId = builder.externalId;
         this.timezone = builder.timezone;
         this.metadata = builder.metadata;
@@ -30,6 +32,7 @@ public final class UpdateCustomerParams {
 
     public String getEmail() { return email; }
     public String getFullName() { return fullName; }
+    public String getTaxDocument() { return taxDocument; }
     public String getExternalId() { return externalId; }
     public Timezone getTimezone() { return timezone; }
     public Map<String, Object> getMetadata() { return metadata; }
@@ -40,6 +43,7 @@ public final class UpdateCustomerParams {
 
         private String email;
         private String fullName;
+        private String taxDocument;
         private String externalId;
         private Timezone timezone;
         private Map<String, Object> metadata;
@@ -56,6 +60,11 @@ public final class UpdateCustomerParams {
 
         public Builder fullName(String fullName) {
             this.fullName = fullName;
+            return this;
+        }
+
+        public Builder taxDocument(String taxDocument) {
+            this.taxDocument = taxDocument;
             return this;
         }
 

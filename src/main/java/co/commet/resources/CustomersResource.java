@@ -40,6 +40,7 @@ public class CustomersResource {
                 "id", params.getId(),
                 "external_id", params.getExternalId(),
                 "full_name", params.getFullName(),
+                "tax_document", params.getTaxDocument(),
                 "address", params.getAddress(),
                 "address_id", params.getAddressId(),
                 "email", params.getEmail(),
@@ -62,6 +63,7 @@ public class CustomersResource {
         return http.put("/customers/" + id, buildBody(
                 "email", params.getEmail(),
                 "full_name", params.getFullName(),
+                "tax_document", params.getTaxDocument(),
                 "external_id", params.getExternalId(),
                 "timezone", params.getTimezone(),
                 "metadata", params.getMetadata(),
