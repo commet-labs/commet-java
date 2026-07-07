@@ -34,6 +34,10 @@ tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-Xlint:all")
 }
 
+tasks.withType<Javadoc>().configureEach {
+    (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
+}
+
 tasks.test {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
