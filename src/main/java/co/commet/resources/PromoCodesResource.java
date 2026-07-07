@@ -39,7 +39,7 @@ public class PromoCodesResource {
     /**
      * Create a new promo code. Optionally restrict to specific plans.
      * 
-     * **100% discounts are not supported.** Percentage codes must be strictly less than 100% (`discountValue` < 10000 basis points). For full waivers, use an introductory offer on the plan instead. At checkout, any code — percentage or fixed amount — that would reduce the total below the currency's minimum charge ($0.50 USD equivalent) is silently dropped.
+     * **100% discounts are not supported.** Percentage codes must be strictly less than 100% (`discountValue` &lt; 10000 basis points). For full waivers, use an introductory offer on the plan instead. At checkout, any code — percentage or fixed amount — that would reduce the total below the currency's minimum charge ($0.50 USD equivalent) is silently dropped.
      */
     public ApiResponse<PromoCode> create(CreatePromoCodeParams params) {
         return http.post("/promo-codes", buildBody(
