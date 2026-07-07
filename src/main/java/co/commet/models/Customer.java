@@ -10,6 +10,8 @@ public record Customer(
         @JsonProperty("external_id") String externalId,
         @JsonProperty("full_name") String fullName,
         @JsonProperty("email") String email,
+        @JsonProperty("tax_document") String taxDocument,
+        @JsonProperty("document_type") String documentType,
         @JsonProperty("timezone") String timezone,
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("created_at") String createdAt,

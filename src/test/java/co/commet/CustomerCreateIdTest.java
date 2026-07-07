@@ -81,8 +81,8 @@ class CustomerCreateIdTest {
                 .setBody("{\"success\":true,\"data\":{\"successful\":[],\"failed\":[]}}"));
 
         customers.createBatch(BatchCreateCustomersParams.builder(List.of(
-                new BatchCreateCustomersParamsCustomersItem("a@b.com", "ext_a", null, null, null, null, null),
-                new BatchCreateCustomersParamsCustomersItem("b@b.com", null, null, null, null, null, null)
+                new BatchCreateCustomersParamsCustomersItem("a@b.com", "ext_a", null, null, null, null, null, null),
+                new BatchCreateCustomersParamsCustomersItem("b@b.com", null, null, null, null, null, null, null)
         )).build());
 
         Map<String, Object> body = bodyOf(server.takeRequest());

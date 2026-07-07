@@ -9,7 +9,7 @@ public record Transaction(
         @JsonProperty("invoice_id") String invoiceId,
         @JsonProperty("gross_amount") long grossAmount,
         @JsonProperty("subtotal") long subtotal,
-        @JsonProperty("tax_amount") long taxAmount,
+        @JsonProperty("tax_amount") Long taxAmount,
         @JsonProperty("currency") String currency,
         @JsonProperty("status") TransactionStatus status,
         @JsonProperty("customer_email") String customerEmail,
