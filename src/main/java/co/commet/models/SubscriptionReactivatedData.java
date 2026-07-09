@@ -14,5 +14,6 @@ public record SubscriptionReactivatedData(
         @JsonProperty("invoiceId") String invoiceId,
         @JsonProperty("invoiceNumber") String invoiceNumber,
         @JsonProperty("invoiceTotal") double invoiceTotal,
-        @JsonProperty("invoiceCurrency") String invoiceCurrency
+        @JsonProperty("invoiceCurrency") String invoiceCurrency,
+        @JsonProperty("provider") PaymentProvider provider
 ) {}
