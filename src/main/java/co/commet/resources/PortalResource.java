@@ -22,7 +22,8 @@ public class PortalResource {
     public ApiResponse<PortalAccess> getUrl(RequestPortalAccessParams params) {
         return http.post("/portal/request-access", buildBody(
                 "email", params.getEmail(),
-                "customer_id", params.getCustomerId()
+                "customer_id", params.getCustomerId(),
+                "return_url", params.getReturnUrl()
         ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 }

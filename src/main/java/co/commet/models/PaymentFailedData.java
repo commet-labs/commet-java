@@ -10,5 +10,6 @@ public record PaymentFailedData(
         @JsonProperty("customerId") String customerId,
         @JsonProperty("subscriptionId") String subscriptionId,
         @JsonProperty("failureCode") String failureCode,
-        @JsonProperty("failureMessage") String failureMessage
+        @JsonProperty("failureMessage") String failureMessage,
+        @JsonProperty("recoveryUrl") String recoveryUrl
 ) {}

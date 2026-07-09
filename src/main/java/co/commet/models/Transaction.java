@@ -11,6 +11,7 @@ public record Transaction(
         @JsonProperty("subtotal") long subtotal,
         @JsonProperty("tax_amount") Long taxAmount,
         @JsonProperty("currency") String currency,
+        @JsonProperty("provider") PaymentProvider provider,
         @JsonProperty("status") TransactionStatus status,
         @JsonProperty("customer_email") String customerEmail,
         @JsonProperty("customer_name") String customerName,

@@ -11,6 +11,7 @@ public record PaymentReceivedData(
         @JsonProperty("customerId") String customerId,
         @JsonProperty("subscriptionId") String subscriptionId,
         @JsonProperty("paymentTransactionId") String paymentTransactionId,
+        @JsonProperty("provider") PaymentProvider provider,
         @JsonProperty("grossAmount") Double grossAmount,
         @JsonProperty("currency") String currency,
         @JsonProperty("orgNetAmount") Double orgNetAmount,
