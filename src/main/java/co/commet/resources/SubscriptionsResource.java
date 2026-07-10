@@ -64,6 +64,7 @@ public class SubscriptionsResource {
                 "billing_interval", params.getBillingInterval(),
                 "initial_seats", params.getInitialSeats(),
                 "skip_trial", params.getSkipTrial(),
+                "custom_trial_days", params.getCustomTrialDays(),
                 "intro_offer", params.getIntroOffer(),
                 "name", params.getName(),
                 "start_date", params.getStartDate(),
