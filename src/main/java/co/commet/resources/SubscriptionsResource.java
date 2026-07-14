@@ -64,6 +64,7 @@ public class SubscriptionsResource {
                 "billing_interval", params.getBillingInterval(),
                 "initial_seats", params.getInitialSeats(),
                 "skip_trial", params.getSkipTrial(),
+                "custom_trial_days", params.getCustomTrialDays(),
                 "intro_offer", params.getIntroOffer(),
                 "name", params.getName(),
                 "start_date", params.getStartDate(),
@@ -139,7 +140,7 @@ public class SubscriptionsResource {
     }
 
     /**
-     * Preview proration details for an immediate plan change (an upgrade or a longer interval) without applying it. Returns credit, charge, and net amount. Downgrades — a cheaper plan in the same group, or a shorter interval — are scheduled for the end of the current period instead of being prorated, so they return a 400 with code `plan_change_scheduled`; apply those via the change-plan endpoint.
+     * Preview proration details for an immediate plan change (an upgrade or a longer interval) without applying it. Returns credit, charge, and net amount. The target plan must belong to the same plan group as the current plan, otherwise a 400 with code `plans_not_in_same_group` is returned. A change between two free plans has nothing to prorate and returns a zero-amount estimate. Downgrades — a cheaper plan in the same group, or a shorter interval — are scheduled for the end of the current period instead of being prorated, so they return a 400 with code `plan_change_scheduled`; apply those via the change-plan endpoint.
      */
     public ApiResponse<PreviewChange> previewChange(String id, PreviewChangePlanParams params) {
         return http.post("/subscriptions/" + id + "/preview-change", buildBody(

@@ -12,6 +12,7 @@ public final class CreateSubscriptionParams {
     private final BillingInterval billingInterval;
     private final Map<String, Long> initialSeats;
     private final Boolean skipTrial;
+    private final Long customTrialDays;
     private final CreateSubscriptionParamsIntroOffer introOffer;
     private final String name;
     private final String startDate;
@@ -25,6 +26,7 @@ public final class CreateSubscriptionParams {
         this.billingInterval = builder.billingInterval;
         this.initialSeats = builder.initialSeats;
         this.skipTrial = builder.skipTrial;
+        this.customTrialDays = builder.customTrialDays;
         this.introOffer = builder.introOffer;
         this.name = builder.name;
         this.startDate = builder.startDate;
@@ -42,6 +44,7 @@ public final class CreateSubscriptionParams {
     public BillingInterval getBillingInterval() { return billingInterval; }
     public Map<String, Long> getInitialSeats() { return initialSeats; }
     public Boolean getSkipTrial() { return skipTrial; }
+    public Long getCustomTrialDays() { return customTrialDays; }
     public CreateSubscriptionParamsIntroOffer getIntroOffer() { return introOffer; }
     public String getName() { return name; }
     public String getStartDate() { return startDate; }
@@ -56,6 +59,7 @@ public final class CreateSubscriptionParams {
         private BillingInterval billingInterval;
         private Map<String, Long> initialSeats;
         private Boolean skipTrial;
+        private Long customTrialDays;
         private CreateSubscriptionParamsIntroOffer introOffer;
         private String name;
         private String startDate;
@@ -88,6 +92,11 @@ public final class CreateSubscriptionParams {
 
         public Builder skipTrial(Boolean skipTrial) {
             this.skipTrial = skipTrial;
+            return this;
+        }
+
+        public Builder customTrialDays(Long customTrialDays) {
+            this.customTrialDays = customTrialDays;
             return this;
         }
 

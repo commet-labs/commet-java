@@ -7,9 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record Transaction(
         @JsonProperty("id") String id,
         @JsonProperty("invoice_id") String invoiceId,
-        @JsonProperty("gross_amount") long grossAmount,
-        @JsonProperty("subtotal") long subtotal,
+        @JsonProperty("gross_amount") Long grossAmount,
+        @JsonProperty("subtotal") Long subtotal,
         @JsonProperty("tax_amount") Long taxAmount,
+        @JsonProperty("presentment_amount") Long presentmentAmount,
         @JsonProperty("currency") String currency,
         @JsonProperty("provider") PaymentProvider provider,
         @JsonProperty("status") TransactionStatus status,

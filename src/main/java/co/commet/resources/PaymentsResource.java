@@ -47,7 +47,7 @@ public class PaymentsResource {
     }
 
     /**
-     * Charge a customer's vaulted payment method off-session. Calculates tax, generates an invoice, and sends a receipt. No subscription or plan required.
+     * Charge a customer's vaulted payment method off-session. Calculates tax, generates an invoice, and sends a receipt. Requires the customer to have a subscription in active, trialing, or past_due state.
      */
     public ApiResponse<Payment> charge(ChargePaymentParams params) {
         return http.post("/payments/charge", buildBody(
