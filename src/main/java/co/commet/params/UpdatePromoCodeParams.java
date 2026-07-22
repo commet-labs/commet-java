@@ -1,9 +1,11 @@
 package co.commet.params;
 
+import co.commet.models.BillingInterval;
 import java.util.List;
 
 public final class UpdatePromoCodeParams {
 
+    private final BillingInterval billingInterval;
     private final Long maxRedemptions;
     private final String expiresAt;
     private final Boolean active;
@@ -11,6 +13,7 @@ public final class UpdatePromoCodeParams {
     private final String idempotencyKey;
 
     private UpdatePromoCodeParams(Builder builder) {
+        this.billingInterval = builder.billingInterval;
         this.maxRedemptions = builder.maxRedemptions;
         this.expiresAt = builder.expiresAt;
         this.active = builder.active;
@@ -22,6 +25,7 @@ public final class UpdatePromoCodeParams {
         return new Builder();
     }
 
+    public BillingInterval getBillingInterval() { return billingInterval; }
     public Long getMaxRedemptions() { return maxRedemptions; }
     public String getExpiresAt() { return expiresAt; }
     public Boolean getActive() { return active; }
@@ -30,6 +34,7 @@ public final class UpdatePromoCodeParams {
 
     public static final class Builder {
 
+        private BillingInterval billingInterval;
         private Long maxRedemptions;
         private String expiresAt;
         private Boolean active;
@@ -37,6 +42,11 @@ public final class UpdatePromoCodeParams {
         private String idempotencyKey;
 
         private Builder() {
+        }
+
+        public Builder billingInterval(BillingInterval billingInterval) {
+            this.billingInterval = billingInterval;
+            return this;
         }
 
         public Builder maxRedemptions(Long maxRedemptions) {

@@ -10,6 +10,7 @@ public record PromoCode(
         @JsonProperty("discount_type") DiscountType discountType,
         @JsonProperty("discount_value") long discountValue,
         @JsonProperty("duration_cycles") Long durationCycles,
+        @JsonProperty("billing_interval") BillingInterval billingInterval,
         @JsonProperty("max_redemptions") Long maxRedemptions,
         @JsonProperty("expires_at") String expiresAt,
         @JsonProperty("is_active") boolean isActive,

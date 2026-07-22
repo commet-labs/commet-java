@@ -13,6 +13,7 @@ import co.commet.resources.PlanGroupsResource;
 import co.commet.resources.PlansResource;
 import co.commet.resources.PortalResource;
 import co.commet.resources.PromoCodesResource;
+import co.commet.resources.ProvisioningResource;
 import co.commet.resources.QuotaResource;
 import co.commet.resources.SeatsResource;
 import co.commet.resources.SubscriptionsResource;
@@ -36,6 +37,7 @@ public abstract class GeneratedResources {
     protected final PlansResource plans;
     protected final PortalResource portal;
     protected final PromoCodesResource promoCodes;
+    protected final ProvisioningResource provisioning;
     protected final QuotaResource quota;
     protected final SeatsResource seats;
     protected final SubscriptionsResource subscriptions;
@@ -57,6 +59,7 @@ public abstract class GeneratedResources {
         this.plans = new PlansResource(httpClient);
         this.portal = new PortalResource(httpClient);
         this.promoCodes = new PromoCodesResource(httpClient);
+        this.provisioning = new ProvisioningResource(httpClient);
         this.quota = new QuotaResource(httpClient);
         this.seats = new SeatsResource(httpClient);
         this.subscriptions = new SubscriptionsResource(httpClient);
@@ -77,6 +80,7 @@ public abstract class GeneratedResources {
     public PlansResource plans() { return plans; }
     public PortalResource portal() { return portal; }
     public PromoCodesResource promoCodes() { return promoCodes; }
+    public ProvisioningResource provisioning() { return provisioning; }
     public QuotaResource quota() { return quota; }
     public SeatsResource seats() { return seats; }
     public SubscriptionsResource subscriptions() { return subscriptions; }

@@ -3,8 +3,10 @@ package co.commet.resources;
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.CheckUsageResult;
+import co.commet.models.UsageAdjustment;
 import co.commet.models.UsageEvent;
 import co.commet.params.CheckUsageParams;
+import co.commet.params.SetUsageParams;
 import co.commet.params.TrackParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -86,6 +88,16 @@ public class UsageResource {
                 "customer_id", params.getCustomerId(),
                 "feature_code", params.getFeatureCode(),
                 "quantity", params.getQuantity()
+        ), params.getIdempotencyKey(), new TypeReference<>() {});
+    }
+
+    public ApiResponse<UsageAdjustment> set(SetUsageParams params) {
+        return http.put("/usage", buildBody(
+                "customer_id", params.getCustomerId(),
+                "feature", params.getFeature(),
+                "value", params.getValue(),
+                "idempotency_key", params.getIdempotencyKey(),
+                "reason", params.getReason()
         ), params.getIdempotencyKey(), new TypeReference<>() {});
     }
 }

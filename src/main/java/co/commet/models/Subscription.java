@@ -28,6 +28,7 @@ public record Subscription(
         @JsonProperty("billing_day_of_month") Long billingDayOfMonth,
         @JsonProperty("next_billing_date") String nextBillingDate,
         @JsonProperty("checkout_url") String checkoutUrl,
+        @JsonProperty("checkout_provider") PaymentProvider checkoutProvider,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,

@@ -37,7 +37,7 @@ public class PromoCodesResource {
     }
 
     /**
-     * Create a new promo code. Optionally restrict to specific plans.
+     * Create a new promo code. Optionally restrict it to specific plans and a billing interval.
      * 
      * **100% discounts are not supported.** Percentage codes must be strictly less than 100% (`discountValue` &lt; 10000 basis points). For full waivers, use an introductory offer on the plan instead. At checkout, any code — percentage or fixed amount — that would reduce the total below the currency's minimum charge ($0.50 USD equivalent) is silently dropped.
      */
@@ -47,6 +47,7 @@ public class PromoCodesResource {
                 "discount_type", params.getDiscountType(),
                 "discount_value", params.getDiscountValue(),
                 "duration_cycles", params.getDurationCycles(),
+                "billing_interval", params.getBillingInterval(),
                 "max_redemptions", params.getMaxRedemptions(),
                 "expires_at", params.getExpiresAt(),
                 "plan_ids", params.getPlanIds()
@@ -54,10 +55,11 @@ public class PromoCodesResource {
     }
 
     /**
-     * Update a promo code's redemption limits, expiration, active status, or plan restrictions.
+     * Update a promo code's billing interval, redemption limits, expiration, active status, or plan restrictions.
      */
     public ApiResponse<PromoCode> update(String id, UpdatePromoCodeParams params) {
         return http.put("/promo-codes/" + id, buildBody(
+                "billing_interval", params.getBillingInterval(),
                 "max_redemptions", params.getMaxRedemptions(),
                 "expires_at", params.getExpiresAt(),
                 "active", params.getActive(),

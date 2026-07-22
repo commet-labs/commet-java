@@ -187,7 +187,7 @@ public class PlansResource {
     }
 
     /**
-     * Configure a plan's regional pricing for one currency. Sending only currency and exchangeRate derives every regional value (base price, included balance, feature overage, intro offer) from the USD value at that rate. Optional per-price and per-feature overrides are stored as manual values.
+     * Configure a plan's regional pricing for one currency. USD configures the United States variant; exchangeRate acts as its price multiplier. Sending only currency and exchangeRate derives every regional value (base price, included balance, feature overage, intro offer) from the default USD value. Optional per-price and per-feature overrides are stored as manual values.
      */
     public ApiResponse<PlanRegionalPricingResult> setRegionalPricing(String id, SetPlanRegionalPricingParams params) {
         return http.put("/plans/" + id + "/regional", buildBody(

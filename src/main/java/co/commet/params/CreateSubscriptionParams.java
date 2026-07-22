@@ -14,6 +14,7 @@ public final class CreateSubscriptionParams {
     private final Boolean skipTrial;
     private final Long customTrialDays;
     private final CreateSubscriptionParamsIntroOffer introOffer;
+    private final String promoCode;
     private final String name;
     private final String startDate;
     private final String successUrl;
@@ -28,6 +29,7 @@ public final class CreateSubscriptionParams {
         this.skipTrial = builder.skipTrial;
         this.customTrialDays = builder.customTrialDays;
         this.introOffer = builder.introOffer;
+        this.promoCode = builder.promoCode;
         this.name = builder.name;
         this.startDate = builder.startDate;
         this.successUrl = builder.successUrl;
@@ -46,6 +48,7 @@ public final class CreateSubscriptionParams {
     public Boolean getSkipTrial() { return skipTrial; }
     public Long getCustomTrialDays() { return customTrialDays; }
     public CreateSubscriptionParamsIntroOffer getIntroOffer() { return introOffer; }
+    public String getPromoCode() { return promoCode; }
     public String getName() { return name; }
     public String getStartDate() { return startDate; }
     public String getSuccessUrl() { return successUrl; }
@@ -61,6 +64,7 @@ public final class CreateSubscriptionParams {
         private Boolean skipTrial;
         private Long customTrialDays;
         private CreateSubscriptionParamsIntroOffer introOffer;
+        private String promoCode;
         private String name;
         private String startDate;
         private String successUrl;
@@ -102,6 +106,11 @@ public final class CreateSubscriptionParams {
 
         public Builder introOffer(CreateSubscriptionParamsIntroOffer introOffer) {
             this.introOffer = introOffer;
+            return this;
+        }
+
+        public Builder promoCode(String promoCode) {
+            this.promoCode = promoCode;
             return this;
         }
 

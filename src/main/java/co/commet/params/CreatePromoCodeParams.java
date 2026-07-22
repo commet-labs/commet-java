@@ -1,5 +1,6 @@
 package co.commet.params;
 
+import co.commet.models.BillingInterval;
 import co.commet.models.DiscountType;
 import java.util.List;
 
@@ -9,6 +10,7 @@ public final class CreatePromoCodeParams {
     private final DiscountType discountType;
     private final long discountValue;
     private final Long durationCycles;
+    private final BillingInterval billingInterval;
     private final Long maxRedemptions;
     private final String expiresAt;
     private final List<String> planIds;
@@ -19,6 +21,7 @@ public final class CreatePromoCodeParams {
         this.discountType = builder.discountType;
         this.discountValue = builder.discountValue;
         this.durationCycles = builder.durationCycles;
+        this.billingInterval = builder.billingInterval;
         this.maxRedemptions = builder.maxRedemptions;
         this.expiresAt = builder.expiresAt;
         this.planIds = builder.planIds;
@@ -33,6 +36,7 @@ public final class CreatePromoCodeParams {
     public DiscountType getDiscountType() { return discountType; }
     public long getDiscountValue() { return discountValue; }
     public Long getDurationCycles() { return durationCycles; }
+    public BillingInterval getBillingInterval() { return billingInterval; }
     public Long getMaxRedemptions() { return maxRedemptions; }
     public String getExpiresAt() { return expiresAt; }
     public List<String> getPlanIds() { return planIds; }
@@ -44,6 +48,7 @@ public final class CreatePromoCodeParams {
         private final DiscountType discountType;
         private final long discountValue;
         private Long durationCycles;
+        private BillingInterval billingInterval;
         private Long maxRedemptions;
         private String expiresAt;
         private List<String> planIds;
@@ -57,6 +62,11 @@ public final class CreatePromoCodeParams {
 
         public Builder durationCycles(Long durationCycles) {
             this.durationCycles = durationCycles;
+            return this;
+        }
+
+        public Builder billingInterval(BillingInterval billingInterval) {
+            this.billingInterval = billingInterval;
             return this;
         }
 
