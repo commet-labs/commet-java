@@ -2,6 +2,7 @@ package co.commet.params;
 
 import co.commet.models.BillingInterval;
 import co.commet.models.CreateSubscriptionParamsIntroOffer;
+import co.commet.models.PaymentProvider;
 import java.util.Map;
 
 public final class CreateSubscriptionParams {
@@ -15,6 +16,7 @@ public final class CreateSubscriptionParams {
     private final Long customTrialDays;
     private final CreateSubscriptionParamsIntroOffer introOffer;
     private final String promoCode;
+    private final PaymentProvider provider;
     private final String name;
     private final String startDate;
     private final String successUrl;
@@ -30,6 +32,7 @@ public final class CreateSubscriptionParams {
         this.customTrialDays = builder.customTrialDays;
         this.introOffer = builder.introOffer;
         this.promoCode = builder.promoCode;
+        this.provider = builder.provider;
         this.name = builder.name;
         this.startDate = builder.startDate;
         this.successUrl = builder.successUrl;
@@ -49,6 +52,7 @@ public final class CreateSubscriptionParams {
     public Long getCustomTrialDays() { return customTrialDays; }
     public CreateSubscriptionParamsIntroOffer getIntroOffer() { return introOffer; }
     public String getPromoCode() { return promoCode; }
+    public PaymentProvider getProvider() { return provider; }
     public String getName() { return name; }
     public String getStartDate() { return startDate; }
     public String getSuccessUrl() { return successUrl; }
@@ -65,6 +69,7 @@ public final class CreateSubscriptionParams {
         private Long customTrialDays;
         private CreateSubscriptionParamsIntroOffer introOffer;
         private String promoCode;
+        private PaymentProvider provider;
         private String name;
         private String startDate;
         private String successUrl;
@@ -111,6 +116,11 @@ public final class CreateSubscriptionParams {
 
         public Builder promoCode(String promoCode) {
             this.promoCode = promoCode;
+            return this;
+        }
+
+        public Builder provider(PaymentProvider provider) {
+            this.provider = provider;
             return this;
         }
 

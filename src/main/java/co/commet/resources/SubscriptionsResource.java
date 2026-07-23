@@ -67,6 +67,7 @@ public class SubscriptionsResource {
                 "custom_trial_days", params.getCustomTrialDays(),
                 "intro_offer", params.getIntroOffer(),
                 "promo_code", params.getPromoCode(),
+                "provider", params.getProvider(),
                 "name", params.getName(),
                 "start_date", params.getStartDate(),
                 "success_url", params.getSuccessUrl()
