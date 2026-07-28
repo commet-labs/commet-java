@@ -3,12 +3,10 @@ package co.commet.resources;
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.FeatureAccess;
-import co.commet.models.FeatureLookup;
-import co.commet.params.CanUseFeatureParams;
+import co.commet.models.FeatureAccessListResult;
 import co.commet.params.GetFeatureAccessParams;
 import co.commet.params.ListFeatureAccessParams;
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.List;
 
 import static co.commet.CommetHttpClient.buildBody;
 
@@ -21,31 +19,20 @@ public class FeatureAccessResource {
     }
 
     /**
-     * List all features for a customer's active subscription, scoped by the customerId query parameter.
+     * Get one feature's access and current usage for a customer. To evaluate a prospective consumption, use POST /usage/check.
      */
-    public ApiResponse<List<FeatureAccess>> list(ListFeatureAccessParams params) {
+    public FeatureAccess get(String code, GetFeatureAccessParams params) {
+        return http.get("/feature-access/" + code, buildBody(
+                "customer_id", params.getCustomerId()
+        ), new TypeReference<FeatureAccess>() {}).getData();
+    }
+
+    /**
+     * List a customer's feature access and current usage.
+     */
+    public FeatureAccessListResult list(ListFeatureAccessParams params) {
         return http.get("/feature-access", buildBody(
                 "customer_id", params.getCustomerId()
-        ), new TypeReference<>() {});
-    }
-
-    /**
-     * Get feature access details for a customer. Use action=canUse to check if the customer can consume one more unit.
-     */
-    public ApiResponse<FeatureLookup> get(String code, GetFeatureAccessParams params) {
-        return http.get("/feature-access/" + code, buildBody(
-                "customer_id", params.getCustomerId(),
-                "action", params.getAction()
-        ), new TypeReference<>() {});
-    }
-
-    /**
-     * Get feature access details for a customer. Use action=canUse to check if the customer can consume one more unit.
-     */
-    public ApiResponse<FeatureLookup> canUse(String code, CanUseFeatureParams params) {
-        return http.get("/feature-access/" + code, buildBody(
-                "customer_id", params.getCustomerId(),
-                "action", "canUse"
-        ), new TypeReference<>() {});
+        ), new TypeReference<FeatureAccessListResult>() {}).getData();
     }
 }

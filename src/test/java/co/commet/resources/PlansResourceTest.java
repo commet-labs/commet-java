@@ -1,15 +1,12 @@
 package co.commet.resources;
 
-import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.BillingInterval;
 import co.commet.models.ConsumptionModel;
-import co.commet.models.DiscountType;
 import co.commet.models.FeatureType;
 import co.commet.models.Plan;
 import co.commet.models.PlanFeaturesItem;
 import co.commet.models.PlanPricesItem;
-import co.commet.models.PlanPricesItemIntroOffer;
 import co.commet.models.PlanPricesItemRegionalPricesItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
@@ -50,12 +47,6 @@ class PlansResourceTest {
 
     @Test
     void getDeserializesNestedPricesIntroOfferRegionalAndFeatureEnums() throws Exception {
-        Map<String, Object> introOffer = mapOf(
-                "enabled", true,
-                "discountType", "percentage",
-                "discountValue", 2500,
-                "durationCycles", 3
-        );
         Map<String, Object> regionalPrice = mapOf(
                 "currency", "eur",
                 "price", 9000,
@@ -69,7 +60,7 @@ class PlansResourceTest {
                 "trialDays", 14,
                 "includedBalance", null,
                 "includedCredits", 1000,
-                "introOffer", introOffer,
+                "offerId", "offer_1",
                 "regionalPrices", List.of(regionalPrice)
         );
         Map<String, Object> feature = mapOf(
@@ -110,14 +101,13 @@ class PlansResourceTest {
                 .setHeader("Content-Type", "application/json")
                 .setBody(mapper.writeValueAsString(Map.of("success", true, "data", planData))));
 
-        ApiResponse<Plan> response = plans.get("plan_pro");
+        Plan response = plans.get("plan_pro");
 
         RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
         assertEquals("/api/plans/plan_pro", request.getPath());
 
-        assertTrue(response.isSuccess());
-        Plan plan = response.getData();
+        Plan plan = response;
         assertEquals("plan_pro", plan.id());
         // Enum mapping: wire "metered" -> ConsumptionModel.METERED via @JsonCreator.
         assertEquals(ConsumptionModel.METERED, plan.consumptionModel());
@@ -135,13 +125,7 @@ class PlansResourceTest {
         assertNull(price.includedBalance());
         assertEquals(1000L, price.includedCredits());
 
-        // Doubly-nested intro offer with its own enum.
-        PlanPricesItemIntroOffer offer = price.introOffer();
-        assertNotNull(offer);
-        assertTrue(offer.enabled());
-        assertEquals(DiscountType.PERCENTAGE, offer.discountType());
-        assertEquals(2500L, offer.discountValue());
-        assertEquals(3L, offer.durationCycles());
+        assertEquals("offer_1", price.offerId());
 
         // Doubly-nested regional price list.
         PlanPricesItemRegionalPricesItem regional = price.regionalPrices().get(0);

@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record AddPlanFeatureParamsOverage(
-        @JsonProperty("enabled") boolean enabled,
-        @JsonProperty("unit_price") long unitPrice
+        @JsonProperty("enabled") Boolean enabled,
+        @JsonProperty("unit_price") Long unitPrice
 ) {}

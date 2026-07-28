@@ -1,6 +1,5 @@
 package co.commet;
 
-import co.commet.resources.UsageResource;
 import co.commet.resources.Webhooks;
 
 import java.time.Duration;
@@ -10,14 +9,12 @@ public class Commet extends GeneratedResources implements AutoCloseable {
 
     private static final Logger logger = Logger.getLogger("co.commet");
 
-    private final UsageResource usage;
     private final Webhooks webhooks;
 
     private Commet(String apiKey, Duration timeout, int retries, boolean telemetry, String apiVersion,
                    boolean debug) {
         super(buildHttpClient(apiKey, timeout, retries, telemetry, apiVersion, debug));
 
-        this.usage = new UsageResource(httpClient);
         this.webhooks = new Webhooks(httpClient);
 
         logger.fine("Commet client initialized");
@@ -41,10 +38,6 @@ public class Commet extends GeneratedResources implements AutoCloseable {
     @Override
     public void close() {
         httpClient.close();
-    }
-
-    public UsageResource usage() {
-        return usage;
     }
 
     public Webhooks webhooks() {

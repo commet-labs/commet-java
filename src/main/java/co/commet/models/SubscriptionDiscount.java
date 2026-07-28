@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SubscriptionDiscount(
-        @JsonProperty("type") DiscountType type,
+        @JsonProperty("type") String type,
         @JsonProperty("value") double value,
         @JsonProperty("name") String name,
         @JsonProperty("ends_at") String endsAt

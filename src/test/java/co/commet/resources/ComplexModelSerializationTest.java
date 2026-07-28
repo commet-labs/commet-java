@@ -1,9 +1,9 @@
 package co.commet.resources;
 
-import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.Addon;
 import co.commet.models.CreditPack;
+import co.commet.models.CreditPacksListResult;
 import co.commet.models.Feature;
 import co.commet.models.FeatureType;
 import co.commet.models.Invoice;
@@ -55,7 +55,7 @@ class ComplexModelSerializationTest {
     }
 
     @Test
-    void invoiceGetDeserializesEnumLineItemsAndBoxedNullableTotals() throws Exception {
+    void invoiceGetDeserializesEnumLineItemsAndTotals() throws Exception {
         Map<String, Object> lineItem = mapOf(
                 "lineType", "subscription",
                 "featureName", "API Calls",
@@ -81,7 +81,7 @@ class ComplexModelSerializationTest {
                 "currency", "usd",
                 "subtotal", 10000,
                 "discountAmount", 1000,
-                "creditApplied", null,
+                "creditApplied", 0,
                 "taxAmount", 900,
                 "total", 9900,
                 "periodStart", "2026-06-01T00:00:00.000Z",
@@ -101,20 +101,19 @@ class ComplexModelSerializationTest {
         );
         server.enqueue(jsonData(data));
 
-        ApiResponse<Invoice> response = new InvoicesResource(http).get("inv_1");
+        Invoice response = new InvoicesResource(http).get("inv_1");
 
         RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
         assertEquals("/api/invoices/inv_1", request.getPath());
 
-        Invoice invoice = response.getData();
+        Invoice invoice = response;
         assertEquals("inv_1", invoice.id());
         // status is a free-form String, invoice_type is the typed enum.
         assertEquals("paid", invoice.status());
         assertEquals(InvoiceType.RECURRING, invoice.invoiceType());
         assertEquals(9900L, invoice.total());
-        // creditApplied null on the wire -> boxed Long stays null, not 0.
-        assertNull(invoice.creditApplied());
+        assertEquals(0L, invoice.creditApplied());
         assertEquals("api", invoice.metadata().get("source"));
         // Nested line item list with mixed boxed nullability.
         assertEquals(1, invoice.lineItems().size());
@@ -146,12 +145,12 @@ class ComplexModelSerializationTest {
         );
         server.enqueue(jsonData(data));
 
-        ApiResponse<Transaction> response = new TransactionsResource(http).get("txn_1");
+        Transaction response = new TransactionsResource(http).get("txn_1");
 
         RecordedRequest request = server.takeRequest();
         assertEquals("/api/transactions/txn_1", request.getPath());
 
-        Transaction txn = response.getData();
+        Transaction txn = response;
         assertEquals(TransactionStatus.SUCCEEDED, txn.status());
         assertEquals(9900L, txn.grossAmount());
         assertEquals("ada@acme.test", txn.customerEmail());
@@ -172,7 +171,7 @@ class ComplexModelSerializationTest {
         );
         server.enqueue(jsonData(data));
 
-        ApiResponse<SeatEvent> response = new SeatsResource(http).add(
+        SeatEvent response = new SeatsResource(http).add(
                 AddSeatsParams.builder("cus_1", "seats", 2L).idempotencyKey("idem_seat").build());
 
         RecordedRequest request = server.takeRequest();
@@ -187,7 +186,7 @@ class ComplexModelSerializationTest {
         assertFalse(body.has("customer_id"), "no snake_case key may leak onto the wire");
         assertFalse(body.has("feature_code"), "no snake_case key may leak onto the wire");
 
-        SeatEvent event = response.getData();
+        SeatEvent event = response;
         assertEquals(3L, event.previousBalance());
         assertEquals(5L, event.newBalance());
     }
@@ -213,12 +212,12 @@ class ComplexModelSerializationTest {
         );
         server.enqueue(jsonData(data));
 
-        ApiResponse<Addon> response = new AddonsResource(http).get("addon_1");
+        Addon response = new AddonsResource(http).get("addon_1");
 
         RecordedRequest request = server.takeRequest();
         assertEquals("/api/addons/addon_1", request.getPath());
 
-        Addon addon = response.getData();
+        Addon addon = response;
         assertEquals("extra-storage", addon.slug());
         assertEquals(500L, addon.basePrice());
         assertEquals(100L, addon.includedUnits());
@@ -228,28 +227,31 @@ class ComplexModelSerializationTest {
     }
 
     @Test
-    void creditPackListMapsBoxedIsActiveTrueAndFalse() throws Exception {
-        server.enqueue(jsonData(List.of(
+    void creditPackListMapsListItems() throws Exception {
+        server.enqueue(jsonData(mapOf(
+                "object", "list",
+                "data", List.of(
                 mapOf("id", "cp_1", "name", "Starter", "description", "100 credits",
-                        "credits", 100, "price", 1000, "currency", "usd", "isActive", true,
+                        "credits", 100, "price", 1000, "currency", "usd",
                         "createdAt", "2026-06-01T00:00:00.000Z", "updatedAt", "2026-06-01T00:00:00.000Z",
                         "object", "credit_pack", "livemode", true),
                 mapOf("id", "cp_2", "name", "Legacy", "description", "retired",
-                        "credits", 500, "price", 4000, "currency", "usd", "isActive", false,
+                        "credits", 500, "price", 4000, "currency", "usd",
                         "createdAt", "2026-06-01T00:00:00.000Z", "updatedAt", "2026-06-01T00:00:00.000Z",
-                        "object", "credit_pack", "livemode", true)
+                        "object", "credit_pack", "livemode", true)),
+                "hasMore", false
         )));
 
-        ApiResponse<List<CreditPack>> response = new CreditPacksResource(http).list();
+        CreditPacksListResult response = new CreditPacksResource(http).list();
 
         RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
         assertEquals("/api/credit-packs", request.getPath());
 
-        assertEquals(2, response.getData().size());
-        assertEquals(Boolean.TRUE, response.getData().get(0).isActive());
-        assertEquals(Boolean.FALSE, response.getData().get(1).isActive());
-        assertEquals(100L, response.getData().get(0).credits());
+        assertEquals(2, response.data().size());
+        assertEquals("usd", response.data().get(0).currency());
+        assertEquals("usd", response.data().get(1).currency());
+        assertEquals(100L, response.data().get(0).credits());
     }
 
     @Test
@@ -267,15 +269,15 @@ class ComplexModelSerializationTest {
                 "livemode", true
         )));
 
-        ApiResponse<Feature> response = new FeaturesResource(http).create(
-                CreateFeatureParams.builder("API Calls", "api_calls", FeatureType.USAGE)
+        Feature response = new FeaturesResource(http).create(
+                CreateFeatureParams.builder("API Calls", "api_calls", "usage")
                         .unitName("call")
                         .description("Metered API calls")
                         .build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
-        assertEquals("/api/features/manage", request.getPath());
+        assertEquals("/api/features", request.getPath());
 
         JsonNode body = mapper.readTree(request.getBody().readUtf8());
         // FeatureType enum must serialize via @JsonValue to the wire string, never the Java name USAGE.
@@ -284,19 +286,16 @@ class ComplexModelSerializationTest {
         assertEquals("call", body.get("unitName").asText());
         assertFalse(body.has("unit_name"), "no snake_case key may leak onto the wire");
 
-        Feature feature = response.getData();
+        Feature feature = response;
         assertEquals(FeatureType.USAGE, feature.type());
         assertEquals("call", feature.unitName());
     }
 
     private MockResponse jsonData(Object data) throws IOException {
-        Map<String, Object> envelope = new LinkedHashMap<>();
-        envelope.put("success", true);
-        envelope.put("data", data);
         return new MockResponse()
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
-                .setBody(mapper.writeValueAsString(envelope));
+                .setBody(mapper.writeValueAsString(data));
     }
 
     private static Map<String, Object> mapOf(Object... kv) {

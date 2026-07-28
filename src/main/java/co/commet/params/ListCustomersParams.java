@@ -2,35 +2,35 @@ package co.commet.params;
 
 public final class ListCustomersParams {
 
-    private final String externalId;
-    private final Long limit;
     private final String cursor;
+    private final Long limit;
+    private final String externalId;
 
     private ListCustomersParams(Builder builder) {
-        this.externalId = builder.externalId;
-        this.limit = builder.limit;
         this.cursor = builder.cursor;
+        this.limit = builder.limit;
+        this.externalId = builder.externalId;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public String getExternalId() { return externalId; }
-    public Long getLimit() { return limit; }
     public String getCursor() { return cursor; }
+    public Long getLimit() { return limit; }
+    public String getExternalId() { return externalId; }
 
     public static final class Builder {
 
-        private String externalId;
-        private Long limit;
         private String cursor;
+        private Long limit;
+        private String externalId;
 
         private Builder() {
         }
 
-        public Builder externalId(String externalId) {
-            this.externalId = externalId;
+        public Builder cursor(String cursor) {
+            this.cursor = cursor;
             return this;
         }
 
@@ -39,8 +39,8 @@ public final class ListCustomersParams {
             return this;
         }
 
-        public Builder cursor(String cursor) {
-            this.cursor = cursor;
+        public Builder externalId(String externalId) {
+            this.externalId = externalId;
             return this;
         }
 

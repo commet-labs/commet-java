@@ -31,7 +31,7 @@ public class CommetHttpClient implements AutoCloseable {
 
     private static final String BASE_URL = "https://commet.co";
 
-    public static final String API_VERSION = "2026-07-11";
+    public static final String API_VERSION = "2026-07-24";
 
     private static final int[] RETRYABLE_STATUS_CODES = {408, 429, 500, 502, 503, 504};
 
@@ -202,6 +202,23 @@ public class CommetHttpClient implements AutoCloseable {
     public <T> ApiResponse<T> put(String endpoint, Map<String, Object> body, RequestOptions options,
                                   TypeReference<T> typeRef) {
         return request("PUT", endpoint, body, null, options, typeRef);
+    }
+
+    public <T> ApiResponse<T> patch(String endpoint, Map<String, Object> body, TypeReference<T> typeRef) {
+        return request("PATCH", endpoint, body, null, null, typeRef);
+    }
+
+    public <T> ApiResponse<T> patch(String endpoint, Map<String, Object> body, String idempotencyKey,
+                                    TypeReference<T> typeRef) {
+        RequestOptions options = idempotencyKey != null
+                ? RequestOptions.builder().idempotencyKey(idempotencyKey).build()
+                : null;
+        return request("PATCH", endpoint, body, null, options, typeRef);
+    }
+
+    public <T> ApiResponse<T> patch(String endpoint, Map<String, Object> body, RequestOptions options,
+                                    TypeReference<T> typeRef) {
+        return request("PATCH", endpoint, body, null, options, typeRef);
     }
 
     public <T> ApiResponse<T> delete(String endpoint, Map<String, Object> body, TypeReference<T> typeRef) {
@@ -392,8 +409,10 @@ public class CommetHttpClient implements AutoCloseable {
                 handleError(response.code(), rawData);
             }
 
+            boolean isEnvelope = rawData.get("success") instanceof Boolean
+                    && rawData.containsKey("data");
             T typedData = null;
-            Object dataField = rawData.get("data");
+            Object dataField = isEnvelope ? rawData.get("data") : rawData;
             if (dataField != null && typeRef != null) {
                 JavaType javaType = objectMapper.getTypeFactory().constructType(typeRef.getType());
                 Object snakeData = convertKeys(dataField, false);
@@ -413,12 +432,12 @@ public class CommetHttpClient implements AutoCloseable {
             }
 
             return new ApiResponse<>(
-                    rawData.containsKey("success") ? (Boolean) rawData.get("success") : true,
+                    isEnvelope ? (Boolean) rawData.get("success") : true,
                     typedData,
-                    (String) rawData.get("code"),
-                    (String) rawData.get("message"),
-                    (Boolean) rawData.get("has_more"),
-                    (String) rawData.get("next_cursor")
+                    isEnvelope ? (String) rawData.get("code") : null,
+                    isEnvelope ? (String) rawData.get("message") : null,
+                    isEnvelope ? (Boolean) rawData.get("has_more") : null,
+                    isEnvelope ? (String) rawData.get("next_cursor") : null
             );
         } catch (CommetException e) {
             throw e;

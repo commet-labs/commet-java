@@ -46,7 +46,7 @@ class SubscriptionsChangePlanSuccessUrlTest {
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":{\"id\":\"sub_1\",\"scheduled\":false}}"));
 
-        ApiResponse<PlanChange> response = subscriptions.changePlan(
+        PlanChange response = subscriptions.changePlan(
                 "sub_1",
                 ChangePlanParams.builder()
                         .newPlanId("plan_pro")
@@ -63,6 +63,6 @@ class SubscriptionsChangePlanSuccessUrlTest {
         assertFalse(body.has("success_url"), "body must not carry the snake_case key on the wire");
         assertEquals("plan_pro", body.get("newPlanId").asText());
 
-        assertTrue(response.isSuccess());
+        assertNotNull(response);
     }
 }

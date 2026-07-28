@@ -1,6 +1,5 @@
 package co.commet.resources;
 
-import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.Subscription;
 import co.commet.models.SubscriptionStatus;
@@ -50,7 +49,7 @@ class SubscriptionsGetActiveTest {
                         + "\"cancelAtPeriodEnd\":false,"
                         + "\"startDate\":\"2026-01-01\"}}"));
 
-        ApiResponse<Subscription> response = subscriptions.getActive(
+        Subscription response = subscriptions.getActive(
                 GetActiveSubscriptionParams.builder("cus_456").build());
 
         RecordedRequest request = server.takeRequest();
@@ -58,8 +57,7 @@ class SubscriptionsGetActiveTest {
         assertTrue(request.getPath().startsWith("/api/subscriptions/active"),
                 "unexpected path: " + request.getPath());
 
-        assertTrue(response.isSuccess());
-        Subscription subscription = response.getData();
+        Subscription subscription = response;
         assertNotNull(subscription, "a raw subscription object under data must hydrate, not deserialize to null");
         assertEquals("sub_123", subscription.id());
         assertEquals("cus_456", subscription.customerId());
@@ -74,10 +72,9 @@ class SubscriptionsGetActiveTest {
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":null}"));
 
-        ApiResponse<Subscription> response = subscriptions.getActive(
+        Subscription response = subscriptions.getActive(
                 GetActiveSubscriptionParams.builder("cus_456").build());
 
-        assertTrue(response.isSuccess());
-        assertNull(response.getData(), "data: null (no active subscription) must parse to null data");
+        assertNull(response, "data: null (no active subscription) must parse to null data");
     }
 }

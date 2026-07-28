@@ -1,10 +1,7 @@
 package co.commet.resources;
 
-import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
-import co.commet.models.CreateSubscriptionParamsIntroOffer;
-import co.commet.models.DiscountType;
-import co.commet.models.Subscription;
+import co.commet.models.CreatedSubscription;
 import co.commet.params.CreateSubscriptionParams;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,16 +39,16 @@ class SubscriptionsCreateCustomIntroOfferTest {
     }
 
     @Test
-    void createSendsIntroOfferAsNestedObjectInRequestBody() throws Exception {
+    void createSendsOfferIdFromContract() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":{\"id\":\"sub_1\"}}"));
 
-        ApiResponse<Subscription> response = subscriptions.create(
+        CreatedSubscription response = subscriptions.create(
                 CreateSubscriptionParams.builder("cus_1")
                         .planId("plan_pro")
-                        .introOffer(new CreateSubscriptionParamsIntroOffer(DiscountType.PERCENTAGE, 2500, 3))
+                        .offerId("offer_1")
                         .build());
 
         RecordedRequest request = server.takeRequest();
@@ -60,17 +57,8 @@ class SubscriptionsCreateCustomIntroOfferTest {
                 "unexpected path: " + request.getPath());
 
         JsonNode body = mapper.readTree(request.getBody().readUtf8());
-        assertFalse(body.has("intro_offer"), "body must not carry the snake_case key on the wire");
-
-        JsonNode offer = body.get("introOffer");
-        assertNotNull(offer, "body must carry the nested introOffer object");
-        assertEquals("percentage", offer.get("discountType").asText());
-        assertEquals(2500, offer.get("discountValue").asLong());
-        assertEquals(3, offer.get("durationCycles").asInt());
-        assertFalse(offer.has("discount_type"), "nested object must not carry snake_case keys");
-        assertFalse(offer.has("discount_value"), "nested object must not carry snake_case keys");
-        assertFalse(offer.has("duration_cycles"), "nested object must not carry snake_case keys");
-
-        assertTrue(response.isSuccess());
+        assertEquals("offer_1", body.get("offerId").asText());
+        assertFalse(body.has("introOffer"));
+        assertNotNull(response);
     }
 }

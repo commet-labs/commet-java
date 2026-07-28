@@ -3,14 +3,14 @@ package co.commet.params;
 public final class RequestPortalAccessParams {
 
     private final String email;
-    private final String customerId;
     private final String returnUrl;
+    private final String customerId;
     private final String idempotencyKey;
 
     private RequestPortalAccessParams(Builder builder) {
         this.email = builder.email;
-        this.customerId = builder.customerId;
         this.returnUrl = builder.returnUrl;
+        this.customerId = builder.customerId;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -19,15 +19,15 @@ public final class RequestPortalAccessParams {
     }
 
     public String getEmail() { return email; }
-    public String getCustomerId() { return customerId; }
     public String getReturnUrl() { return returnUrl; }
+    public String getCustomerId() { return customerId; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
 
         private String email;
-        private String customerId;
         private String returnUrl;
+        private String customerId;
         private String idempotencyKey;
 
         private Builder() {
@@ -38,13 +38,13 @@ public final class RequestPortalAccessParams {
             return this;
         }
 
-        public Builder customerId(String customerId) {
-            this.customerId = customerId;
+        public Builder returnUrl(String returnUrl) {
+            this.returnUrl = returnUrl;
             return this;
         }
 
-        public Builder returnUrl(String returnUrl) {
-            this.returnUrl = returnUrl;
+        public Builder customerId(String customerId) {
+            this.customerId = customerId;
             return this;
         }
 

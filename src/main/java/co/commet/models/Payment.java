@@ -10,7 +10,7 @@ public record Payment(
         @JsonProperty("customer_id") String customerId,
         @JsonProperty("kind") String kind,
         @JsonProperty("status") String status,
-        @JsonProperty("provider") PaymentProvider provider,
+        @JsonProperty("provider") String provider,
         @JsonProperty("amount_subtotal") long amountSubtotal,
         @JsonProperty("tax_amount") long taxAmount,
         @JsonProperty("amount_total") long amountTotal,

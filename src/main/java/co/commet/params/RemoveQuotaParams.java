@@ -3,16 +3,16 @@ package co.commet.params;
 public final class RemoveQuotaParams {
 
     private final String featureCode;
+    private final Long count;
     private final String customerId;
     private final String externalId;
-    private final Long count;
     private final String idempotencyKey;
 
     private RemoveQuotaParams(Builder builder) {
         this.featureCode = builder.featureCode;
+        this.count = builder.count;
         this.customerId = builder.customerId;
         this.externalId = builder.externalId;
-        this.count = builder.count;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -21,21 +21,26 @@ public final class RemoveQuotaParams {
     }
 
     public String getFeatureCode() { return featureCode; }
+    public Long getCount() { return count; }
     public String getCustomerId() { return customerId; }
     public String getExternalId() { return externalId; }
-    public Long getCount() { return count; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
 
         private final String featureCode;
+        private Long count;
         private String customerId;
         private String externalId;
-        private Long count;
         private String idempotencyKey;
 
         private Builder(String featureCode) {
             this.featureCode = featureCode;
+        }
+
+        public Builder count(Long count) {
+            this.count = count;
+            return this;
         }
 
         public Builder customerId(String customerId) {
@@ -45,11 +50,6 @@ public final class RemoveQuotaParams {
 
         public Builder externalId(String externalId) {
             this.externalId = externalId;
-            return this;
-        }
-
-        public Builder count(Long count) {
-            this.count = count;
             return this;
         }
 

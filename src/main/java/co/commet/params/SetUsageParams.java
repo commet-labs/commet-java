@@ -3,25 +3,25 @@ package co.commet.params;
 public final class SetUsageParams {
 
     private final String customerId;
-    private final String feature;
+    private final String featureCode;
     private final long value;
     private final String reason;
     private final String idempotencyKey;
 
     private SetUsageParams(Builder builder) {
         this.customerId = builder.customerId;
-        this.feature = builder.feature;
+        this.featureCode = builder.featureCode;
         this.value = builder.value;
         this.reason = builder.reason;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
-    public static Builder builder(String customerId, String feature, long value) {
-        return new Builder(customerId, feature, value);
+    public static Builder builder(String customerId, String featureCode, long value) {
+        return new Builder(customerId, featureCode, value);
     }
 
     public String getCustomerId() { return customerId; }
-    public String getFeature() { return feature; }
+    public String getFeatureCode() { return featureCode; }
     public long getValue() { return value; }
     public String getReason() { return reason; }
     public String getIdempotencyKey() { return idempotencyKey; }
@@ -29,14 +29,14 @@ public final class SetUsageParams {
     public static final class Builder {
 
         private final String customerId;
-        private final String feature;
+        private final String featureCode;
         private final long value;
         private String reason;
         private String idempotencyKey;
 
-        private Builder(String customerId, String feature, long value) {
+        private Builder(String customerId, String featureCode, long value) {
             this.customerId = customerId;
-            this.feature = feature;
+            this.featureCode = featureCode;
             this.value = value;
         }
 

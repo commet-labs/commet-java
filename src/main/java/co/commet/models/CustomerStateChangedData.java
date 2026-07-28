@@ -13,7 +13,7 @@ public record CustomerStateChangedData(
         @JsonProperty("plan") WebhookPlanRef plan,
         @JsonProperty("billingInterval") String billingInterval,
         @JsonProperty("consumptionModel") String consumptionModel,
-        @JsonProperty("features") List<WebhookFeatureAccess> features,
+        @JsonProperty("features") List<Object> features,
         @JsonProperty("seats") List<WebhookSeatSummary> seats,
         @JsonProperty("credits") WebhookCreditsBalance credits,
         @JsonProperty("balance") WebhookBalance balance

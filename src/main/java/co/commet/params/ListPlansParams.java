@@ -2,7 +2,7 @@ package co.commet.params;
 
 public final class ListPlansParams {
 
-    private final String includePrivate;
+    private final Boolean includePrivate;
 
     private ListPlansParams(Builder builder) {
         this.includePrivate = builder.includePrivate;
@@ -12,16 +12,16 @@ public final class ListPlansParams {
         return new Builder();
     }
 
-    public String getIncludePrivate() { return includePrivate; }
+    public Boolean getIncludePrivate() { return includePrivate; }
 
     public static final class Builder {
 
-        private String includePrivate;
+        private Boolean includePrivate;
 
         private Builder() {
         }
 
-        public Builder includePrivate(String includePrivate) {
+        public Builder includePrivate(Boolean includePrivate) {
             this.includePrivate = includePrivate;
             return this;
         }

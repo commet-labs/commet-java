@@ -1,16 +1,12 @@
 package co.commet.params;
 
-import co.commet.models.BillingInterval;
-import co.commet.models.DiscountType;
 import java.util.List;
 
 public final class CreatePromoCodeParams {
 
     private final String code;
-    private final DiscountType discountType;
-    private final long discountValue;
-    private final Long durationCycles;
-    private final BillingInterval billingInterval;
+    private final String offerId;
+    private final String billingInterval;
     private final Long maxRedemptions;
     private final String expiresAt;
     private final List<String> planIds;
@@ -18,9 +14,7 @@ public final class CreatePromoCodeParams {
 
     private CreatePromoCodeParams(Builder builder) {
         this.code = builder.code;
-        this.discountType = builder.discountType;
-        this.discountValue = builder.discountValue;
-        this.durationCycles = builder.durationCycles;
+        this.offerId = builder.offerId;
         this.billingInterval = builder.billingInterval;
         this.maxRedemptions = builder.maxRedemptions;
         this.expiresAt = builder.expiresAt;
@@ -28,15 +22,13 @@ public final class CreatePromoCodeParams {
         this.idempotencyKey = builder.idempotencyKey;
     }
 
-    public static Builder builder(String code, DiscountType discountType, long discountValue) {
-        return new Builder(code, discountType, discountValue);
+    public static Builder builder(String code, String offerId) {
+        return new Builder(code, offerId);
     }
 
     public String getCode() { return code; }
-    public DiscountType getDiscountType() { return discountType; }
-    public long getDiscountValue() { return discountValue; }
-    public Long getDurationCycles() { return durationCycles; }
-    public BillingInterval getBillingInterval() { return billingInterval; }
+    public String getOfferId() { return offerId; }
+    public String getBillingInterval() { return billingInterval; }
     public Long getMaxRedemptions() { return maxRedemptions; }
     public String getExpiresAt() { return expiresAt; }
     public List<String> getPlanIds() { return planIds; }
@@ -45,27 +37,19 @@ public final class CreatePromoCodeParams {
     public static final class Builder {
 
         private final String code;
-        private final DiscountType discountType;
-        private final long discountValue;
-        private Long durationCycles;
-        private BillingInterval billingInterval;
+        private final String offerId;
+        private String billingInterval;
         private Long maxRedemptions;
         private String expiresAt;
         private List<String> planIds;
         private String idempotencyKey;
 
-        private Builder(String code, DiscountType discountType, long discountValue) {
+        private Builder(String code, String offerId) {
             this.code = code;
-            this.discountType = discountType;
-            this.discountValue = discountValue;
+            this.offerId = offerId;
         }
 
-        public Builder durationCycles(Long durationCycles) {
-            this.durationCycles = durationCycles;
-            return this;
-        }
-
-        public Builder billingInterval(BillingInterval billingInterval) {
+        public Builder billingInterval(String billingInterval) {
             this.billingInterval = billingInterval;
             return this;
         }

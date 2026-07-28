@@ -7,5 +7,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record SubscriptionPlan(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
-        @JsonProperty("base_price") Double basePrice
+        @JsonProperty("base_price") double basePrice
 ) {}

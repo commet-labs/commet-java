@@ -1,7 +1,7 @@
 package co.commet.resources;
 
-import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
+import co.commet.models.QuotaGetAllResult;
 import co.commet.models.UsageQuota;
 import co.commet.models.UsageQuotaEvent;
 import co.commet.params.AddQuotaParams;
@@ -50,7 +50,7 @@ class QuotaResourceTest {
     void addPostsToUsageQuotaWithoutClientSideCountDefault() throws Exception {
         server.enqueue(quotaEventResponse());
 
-        ApiResponse<UsageQuotaEvent> response = quota.add(AddQuotaParams.builder("projects").build());
+        UsageQuotaEvent response = quota.add(AddQuotaParams.builder("projects").build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
@@ -61,9 +61,8 @@ class QuotaResourceTest {
         assertFalse(body.has("count"));
         assertFalse(body.has("customerId"));
 
-        assertTrue(response.isSuccess());
-        assertEquals("qe_1", response.getData().id());
-        assertEquals(11, response.getData().newBalance());
+        assertEquals("qe_1", response.id());
+        assertEquals(11, response.newBalance());
     }
 
     @Test
@@ -109,8 +108,8 @@ class QuotaResourceTest {
         quota.remove(RemoveQuotaParams.builder("projects").build());
 
         RecordedRequest request = server.takeRequest();
-        assertEquals("DELETE", request.getMethod());
-        assertEquals("/api/usage/quota", request.getPath());
+        assertEquals("POST", request.getMethod());
+        assertEquals("/api/usage/quota/remove", request.getPath());
 
         JsonNode body = mapper.readTree(request.getBody().readUtf8());
         assertEquals("projects", body.get("featureCode").asText());
@@ -136,14 +135,13 @@ class QuotaResourceTest {
                         )
                 ))));
 
-        ApiResponse<UsageQuota> response = quota.get(GetQuotaAllowanceParams.builder("cus_1", "projects").build());
+        UsageQuota response = quota.get(GetQuotaAllowanceParams.builder("cus_1", "projects").build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
         assertEquals("/api/usage/quota?customerId=cus_1&featureCode=projects", request.getPath());
 
-        assertTrue(response.isSuccess());
-        UsageQuota allowance = response.getData();
+        UsageQuota allowance = response;
         assertEquals("projects", allowance.featureCode());
         assertEquals(5, allowance.current());
         assertEquals(100, allowance.included());
@@ -160,7 +158,7 @@ class QuotaResourceTest {
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
                 .setBody(mapper.writeValueAsString(Map.of(
-                        "success", true,
+                        "object", "list",
                         "data", List.of(
                                 Map.of(
                                         "feature_code", "projects",
@@ -175,18 +173,17 @@ class QuotaResourceTest {
                         )
                 ))));
 
-        ApiResponse<List<UsageQuota>> response = quota.getAll(GetAllQuotaAllowancesParams.builder("cus_1").build());
+        QuotaGetAllResult response = quota.getAll(GetAllQuotaAllowancesParams.builder("cus_1").build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
         assertEquals("/api/usage/quota/all?customerId=cus_1", request.getPath());
 
-        assertTrue(response.isSuccess());
-        assertEquals(1, response.getData().size());
-        assertEquals("projects", response.getData().get(0).featureCode());
-        assertEquals(42, response.getData().get(0).current());
-        assertEquals(958, response.getData().get(0).remaining());
-        assertEquals(1000, response.getData().get(0).billedQuantity());
+        assertEquals(1, response.data().size());
+        assertEquals("projects", response.data().get(0).featureCode());
+        assertEquals(42, response.data().get(0).current());
+        assertEquals(958, response.data().get(0).remaining());
+        assertEquals(1000, response.data().get(0).billedQuantity());
     }
 
     private MockResponse quotaEventResponse() throws Exception {

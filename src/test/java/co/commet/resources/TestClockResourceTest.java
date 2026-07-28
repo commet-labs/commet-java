@@ -58,14 +58,13 @@ class TestClockResourceTest {
                         )
                 ))));
 
-        ApiResponse<TestClock> response = testClock.get();
+        TestClock response = testClock.get();
 
         RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
         assertEquals("/api/test-clock", request.getPath());
 
-        assertTrue(response.isSuccess());
-        TestClock clock = response.getData();
+        TestClock clock = response;
         // camelCase wire keys deserialize into snake_case @JsonProperty record fields.
         assertEquals("2026-07-01T00:00:00.000Z", clock.simulatedTime());
         assertTrue(clock.isActive());
@@ -125,7 +124,7 @@ class TestClockResourceTest {
                         )
                 ))));
 
-        ApiResponse<TestClockBilling> response = testClock.processBilling();
+        TestClockBilling response = testClock.processBilling();
 
         RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
@@ -136,7 +135,7 @@ class TestClockResourceTest {
         assertTrue(body.isObject());
         assertEquals(0, body.size(), "no-param POST must send an empty object, not stray keys");
 
-        TestClockBilling billing = response.getData();
+        TestClockBilling billing = response;
         assertEquals(12L, billing.customersFound());
         assertEquals(11L, billing.enqueued());
         assertEquals(1L, billing.failed());

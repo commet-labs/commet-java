@@ -2,6 +2,8 @@ package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PlanPrice(
@@ -13,7 +15,10 @@ public record PlanPrice(
         @JsonProperty("trial_days") long trialDays,
         @JsonProperty("included_balance") Long includedBalance,
         @JsonProperty("included_credits") Long includedCredits,
-        @JsonProperty("intro_offer") PlanPriceIntroOffer introOffer,
+        @JsonProperty("offer_id") String offerId,
+        @JsonProperty("inherits_from_price_id") String inheritsFromPriceId,
+        @JsonProperty("metadata") Map<String, Object> metadata,
+        @JsonProperty("market_prices") List<PlanPriceMarketPricesItem> marketPrices,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,

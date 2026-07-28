@@ -19,11 +19,11 @@ public class PortalResource {
     /**
      * Generate a customer portal URL. Exactly one identifier (email or customerId) is required.
      */
-    public ApiResponse<PortalAccess> getUrl(RequestPortalAccessParams params) {
-        return http.post("/portal/request-access", buildBody(
+    public PortalAccess getUrl(RequestPortalAccessParams params) {
+        return http.post("/portal/sessions", buildBody(
                 "email", params.getEmail(),
-                "customer_id", params.getCustomerId(),
-                "return_url", params.getReturnUrl()
-        ), params.getIdempotencyKey(), new TypeReference<>() {});
+                "return_url", params.getReturnUrl(),
+                "customer_id", params.getCustomerId()
+        ), params.getIdempotencyKey(), new TypeReference<PortalAccess>() {}).getData();
     }
 }

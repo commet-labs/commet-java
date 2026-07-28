@@ -2,36 +2,36 @@ package co.commet.params;
 
 public final class ListAddonsParams {
 
-    private final Long limit;
     private final String cursor;
+    private final Long limit;
 
     private ListAddonsParams(Builder builder) {
-        this.limit = builder.limit;
         this.cursor = builder.cursor;
+        this.limit = builder.limit;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public Long getLimit() { return limit; }
     public String getCursor() { return cursor; }
+    public Long getLimit() { return limit; }
 
     public static final class Builder {
 
-        private Long limit;
         private String cursor;
+        private Long limit;
 
         private Builder() {
         }
 
-        public Builder limit(Long limit) {
-            this.limit = limit;
+        public Builder cursor(String cursor) {
+            this.cursor = cursor;
             return this;
         }
 
-        public Builder cursor(String cursor) {
-            this.cursor = cursor;
+        public Builder limit(Long limit) {
+            this.limit = limit;
             return this;
         }
 

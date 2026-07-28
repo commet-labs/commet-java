@@ -13,6 +13,7 @@ public record PreviewChange(
         @JsonProperty("days_remaining") long daysRemaining,
         @JsonProperty("total_days") long totalDays,
         @JsonProperty("is_upgrade") boolean isUpgrade,
+        @JsonProperty("offer_application") PreviewChangeOfferApplication offerApplication,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) {}

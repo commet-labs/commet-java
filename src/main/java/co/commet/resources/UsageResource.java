@@ -2,18 +2,13 @@ package co.commet.resources;
 
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
-import co.commet.models.CheckUsageResult;
 import co.commet.models.UsageAdjustment;
+import co.commet.models.UsageCheck;
 import co.commet.models.UsageEvent;
-import co.commet.params.CheckUsageParams;
+import co.commet.params.CheckUsageAvailabilityParams;
 import co.commet.params.SetUsageParams;
-import co.commet.params.TrackParams;
+import co.commet.params.TrackUsageParams;
 import com.fasterxml.jackson.core.type.TypeReference;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static co.commet.CommetHttpClient.buildBody;
 
@@ -25,79 +20,45 @@ public class UsageResource {
         this.http = http;
     }
 
-    public ApiResponse<UsageEvent> track(String feature, String customerId) {
-        return track(TrackParams.builder(feature).customerId(customerId).build());
-    }
-
-    public ApiResponse<UsageEvent> track(TrackParams params) {
-        List<Map<String, Object>> formattedProperties = null;
-        if (params.getProperties() != null) {
-            formattedProperties = new ArrayList<>();
-            for (Map.Entry<String, String> entry : params.getProperties().entrySet()) {
-                formattedProperties.add(Map.of("property", entry.getKey(), "value", entry.getValue()));
-            }
-        }
-
-        Map<String, Object> body = buildBody(
-                "feature", params.getFeature(),
-                "customer_id", params.getCustomerId(),
-                "idempotency_key", params.getIdempotencyKey(),
-                "timestamp", params.getTimestamp() != null ? params.getTimestamp() : Instant.now().toString(),
-                "properties", formattedProperties
-        );
-
-        if (params.getModel() != null) {
-            body.putAll(buildBody(
-                    "model", params.getModel(),
-                    "input_tokens", params.getInputTokens(),
-                    "output_tokens", params.getOutputTokens(),
-                    "cache_read_tokens", params.getCacheReadTokens(),
-                    "cache_write_tokens", params.getCacheWriteTokens()
-            ));
-        } else if (params.getValue() != null) {
-            body.put("value", params.getValue());
-        }
-
-        return http.post("/usage/events", body, params.getIdempotencyKey(), new TypeReference<>() {});
-    }
-
-    public ApiResponse<UsageEvent> trackModelTokens(String feature, String customerId, String model,
-                                                     int inputTokens, int outputTokens) {
-        return trackModelTokens(feature, customerId, model, inputTokens, outputTokens, null, null);
-    }
-
-    public ApiResponse<UsageEvent> trackModelTokens(String feature, String customerId, String model,
-                                                     int inputTokens, int outputTokens,
-                                                     Integer cacheReadTokens, Integer cacheWriteTokens) {
-        return track(TrackParams.builder(feature)
-                .customerId(customerId)
-                .model(model)
-                .inputTokens(inputTokens)
-                .outputTokens(outputTokens)
-                .cacheReadTokens(cacheReadTokens)
-                .cacheWriteTokens(cacheWriteTokens)
-                .build());
-    }
-
-    public ApiResponse<CheckUsageResult> check(String customerId, String featureCode) {
-        return check(CheckUsageParams.builder(customerId, featureCode).build());
-    }
-
-    public ApiResponse<CheckUsageResult> check(CheckUsageParams params) {
+    /**
+     * Check if a customer can consume a feature before actual consumption. Returns availability and cost estimates based on the plan's consumption model.
+     */
+    public UsageCheck check(CheckUsageAvailabilityParams params) {
         return http.post("/usage/check", buildBody(
                 "customer_id", params.getCustomerId(),
                 "feature_code", params.getFeatureCode(),
                 "quantity", params.getQuantity()
-        ), params.getIdempotencyKey(), new TypeReference<>() {});
+        ), params.getIdempotencyKey(), new TypeReference<UsageCheck>() {}).getData();
     }
 
-    public ApiResponse<UsageAdjustment> set(SetUsageParams params) {
+    /**
+     * Track a usage event for a metered feature. Deducts from balance/credits if applicable.
+     */
+    public UsageEvent track(TrackUsageParams params) {
+        return http.post("/usage/events", buildBody(
+                "feature_code", params.getFeatureCode(),
+                "customer_id", params.getCustomerId(),
+                "event_id", params.getEventId(),
+                "timestamp", params.getTimestamp(),
+                "properties", params.getProperties(),
+                "model", params.getModel(),
+                "input_tokens", params.getInputTokens(),
+                "output_tokens", params.getOutputTokens(),
+                "value", params.getValue(),
+                "cache_read_tokens", params.getCacheReadTokens(),
+                "cache_write_tokens", params.getCacheWriteTokens()
+        ), params.getIdempotencyKey(), new TypeReference<UsageEvent>() {}).getData();
+    }
+
+    /**
+     * Set a metered feature's usage to an exact value for the current period. Use the Idempotency-Key header to make retries safe.
+     */
+    public UsageAdjustment set(SetUsageParams params) {
         return http.put("/usage", buildBody(
                 "customer_id", params.getCustomerId(),
-                "feature", params.getFeature(),
+                "feature_code", params.getFeatureCode(),
                 "value", params.getValue(),
-                "idempotency_key", params.getIdempotencyKey(),
                 "reason", params.getReason()
-        ), params.getIdempotencyKey(), new TypeReference<>() {});
+        ), params.getIdempotencyKey(), new TypeReference<UsageAdjustment>() {}).getData();
     }
 }

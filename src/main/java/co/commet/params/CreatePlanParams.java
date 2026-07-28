@@ -1,6 +1,5 @@
 package co.commet.params;
 
-import co.commet.models.ConsumptionModel;
 import java.util.Map;
 
 public final class CreatePlanParams {
@@ -8,7 +7,7 @@ public final class CreatePlanParams {
     private final String name;
     private final String code;
     private final String description;
-    private final ConsumptionModel consumptionModel;
+    private final String consumptionModel;
     private final Boolean isPublic;
     private final Boolean isFree;
     private final Boolean blockOnExhaustion;
@@ -36,7 +35,7 @@ public final class CreatePlanParams {
     public String getName() { return name; }
     public String getCode() { return code; }
     public String getDescription() { return description; }
-    public ConsumptionModel getConsumptionModel() { return consumptionModel; }
+    public String getConsumptionModel() { return consumptionModel; }
     public Boolean getIsPublic() { return isPublic; }
     public Boolean getIsFree() { return isFree; }
     public Boolean getBlockOnExhaustion() { return blockOnExhaustion; }
@@ -49,7 +48,7 @@ public final class CreatePlanParams {
         private final String name;
         private final String code;
         private String description;
-        private ConsumptionModel consumptionModel;
+        private String consumptionModel;
         private Boolean isPublic;
         private Boolean isFree;
         private Boolean blockOnExhaustion;
@@ -67,7 +66,7 @@ public final class CreatePlanParams {
             return this;
         }
 
-        public Builder consumptionModel(ConsumptionModel consumptionModel) {
+        public Builder consumptionModel(String consumptionModel) {
             this.consumptionModel = consumptionModel;
             return this;
         }

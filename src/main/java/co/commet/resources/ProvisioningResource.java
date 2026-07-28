@@ -19,7 +19,7 @@ public class ProvisioningResource {
     /**
      * Issue a fresh claim link for an organization that was provisioned headlessly and has not been claimed yet. Any previously issued link stops working.
      */
-    public ApiResponse<ClaimLink> createClaimLink() {
-        return http.post("/claim-link", Map.of(), new TypeReference<>() {});
+    public ClaimLink createClaimLink() {
+        return http.post("/claim-link", Map.of(), new TypeReference<ClaimLink>() {}).getData();
     }
 }

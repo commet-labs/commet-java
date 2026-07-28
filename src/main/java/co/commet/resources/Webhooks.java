@@ -1,10 +1,6 @@
 package co.commet.resources;
 
-import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
-import co.commet.models.DeleteResult;
-import co.commet.models.WebhookEndpoint;
-import co.commet.models.WebhookTestResult;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,23 +9,19 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.Map;
 
-import static co.commet.CommetHttpClient.buildBody;
-
-public class Webhooks {
+public class Webhooks extends GeneratedWebhooksResource {
 
     private static final String HMAC_SHA256 = "HmacSHA256";
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final CommetHttpClient http;
 
     public Webhooks() {
-        this.http = null;
+        super(null);
     }
 
     public Webhooks(CommetHttpClient http) {
-        this.http = http;
+        super(http);
     }
 
     public boolean verify(String payload, String signature, String secret) {
@@ -53,52 +45,6 @@ public class Webhooks {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public ApiResponse<List<WebhookEndpoint>> list() {
-        return list(null, null);
-    }
-
-    public ApiResponse<List<WebhookEndpoint>> list(Integer limit, String cursor) {
-        return http.get("/webhooks", buildBody(
-                "limit", limit,
-                "cursor", cursor
-        ), new TypeReference<>() {});
-    }
-
-    public ApiResponse<WebhookEndpoint> create(String url, List<String> events) {
-        return create(url, events, null);
-    }
-
-    public ApiResponse<WebhookEndpoint> create(String url, List<String> events, String description) {
-        return http.post("/webhooks", buildBody(
-                "url", url,
-                "events", events,
-                "description", description
-        ), new TypeReference<>() {});
-    }
-
-    public ApiResponse<WebhookEndpoint> get(String id) {
-        return http.get("/webhooks/" + id, new TypeReference<>() {});
-    }
-
-    public ApiResponse<WebhookEndpoint> update(String id, String url, List<String> events,
-                                               String description, Boolean isActive, String apiVersion) {
-        return http.put("/webhooks/" + id, buildBody(
-                "url", url,
-                "events", events,
-                "description", description,
-                "isActive", isActive,
-                "apiVersion", apiVersion
-        ), new TypeReference<>() {});
-    }
-
-    public ApiResponse<DeleteResult> delete(String id) {
-        return http.delete("/webhooks/" + id, null, new TypeReference<>() {});
-    }
-
-    public ApiResponse<WebhookTestResult> test(String id) {
-        return http.post("/webhooks/" + id + "/test", Map.of(), new TypeReference<>() {});
     }
 
     private String sign(String payload, String secret) {

@@ -7,7 +7,7 @@ Billing and usage tracking for SaaS applications.
 ### Gradle
 
 ```kotlin
-implementation("co.commet:commet-java:0.1.0")
+implementation("co.commet:commet-java:8.0.0")
 ```
 
 ### Maven
@@ -16,7 +16,7 @@ implementation("co.commet:commet-java:0.1.0")
 <dependency>
     <groupId>co.commet</groupId>
     <artifactId>commet-java</artifactId>
-    <version>0.1.0</version>
+    <version>8.0.0</version>
 </dependency>
 ```
 
@@ -24,24 +24,44 @@ implementation("co.commet:commet-java:0.1.0")
 
 ```java
 import co.commet.Commet;
+import co.commet.params.CreateCustomerParams;
+import co.commet.params.CreateSubscriptionParams;
+import co.commet.params.AddQuotaParams;
+import co.commet.params.GetAllQuotaAllowancesParams;
+import co.commet.params.GetQuotaAllowanceParams;
+import co.commet.params.RemoveQuotaParams;
+import co.commet.params.SetQuotaParams;
+import co.commet.params.TrackUsageParams;
 
 Commet commet = Commet.builder()
     .apiKey("ck_xxx")
     .build();
 
 // Create a customer
-commet.customers().create("user@example.com", "user_123");
+var customer = commet.customers().create(
+    CreateCustomerParams.builder("user@example.com").build()
+);
 
 // Create a subscription
-commet.subscriptions().create("user_123", "pro");
+commet.subscriptions().create(
+    CreateSubscriptionParams.builder(customer.id()).planCode("pro").build()
+);
 
 // Track usage
-commet.usage().track("api_calls", "user_123");
+commet.usage().track(
+    TrackUsageParams.builder("api_calls", customer.id())
+        .value(1.0)
+        .build()
+);
 
 // Track AI token usage
-commet.usage().track("ai_generation", null, "user_123",
-    null, "claude-sonnet-4-20250514", 1000, 500,
-    null, null, null, null, null);
+commet.usage().track(
+    TrackUsageParams.builder("ai_generation", customer.id())
+        .model("claude-sonnet-4-20250514")
+        .inputTokens(1000L)
+        .outputTokens(500L)
+        .build()
+);
 ```
 
 ## Quota
@@ -49,25 +69,21 @@ commet.usage().track("ai_generation", null, "user_123",
 Add to, set, or remove from a customer's quota balance, and read allowances. `count` defaults to `1` for `add` and `remove`.
 
 ```java
-commet.quota().add("projects");
-commet.quota().add("projects", 5, "user_123", null);
-commet.quota().set("projects", 100, "user_123", null);
-commet.quota().remove("projects", 2, "user_123", null);
-commet.quota().get("projects", "user_123");
-commet.quota().getAll("user_123");
-```
-
-## Customer context
-
-Scope all operations to a customer to avoid repeating `externalId`:
-
-```java
-CustomerContext customer = commet.customer("user_123");
-
-customer.usage().track("api_calls");
-customer.features().check("custom_branding");
-customer.seats().add("editor", 3);
-customer.portal().getUrl();
+commet.quota().add(
+    AddQuotaParams.builder("projects").customerId(customer.id()).count(5L).build()
+);
+commet.quota().set(
+    SetQuotaParams.builder("projects", 100).customerId(customer.id()).build()
+);
+commet.quota().remove(
+    RemoveQuotaParams.builder("projects").customerId(customer.id()).count(2L).build()
+);
+commet.quota().get(
+    GetQuotaAllowanceParams.builder(customer.id(), "projects").build()
+);
+commet.quota().getAll(
+    GetAllQuotaAllowancesParams.builder(customer.id()).build()
+);
 ```
 
 ## Webhook verification
@@ -96,7 +112,11 @@ if ("subscription.activated".equals(payload.get("event"))) {
 
 ```java
 try (Commet commet = Commet.builder().apiKey("ck_xxx").build()) {
-    commet.usage().track("api_calls", "user_123");
+    commet.usage().track(
+        TrackUsageParams.builder("api_calls", "cus_123")
+            .value(1.0)
+            .build()
+    );
 }
 // HTTP client is automatically closed
 ```

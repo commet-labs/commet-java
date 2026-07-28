@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record TransactionRetry(
-        @JsonProperty("id") String id,
+        @JsonProperty("original_transaction_id") String originalTransactionId,
+        @JsonProperty("invoice_id") String invoiceId,
         @JsonProperty("status") String status,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode

@@ -19,26 +19,26 @@ public class TestClockResource {
     }
 
     /**
+     * Discovers customers due for billing at the org's current (simulated) time and enqueues a billing cycle for each — renewals, expired trials, pending cancellations. Also fires any dunning retry whose scheduled time has passed. Enqueueing is asynchronous. Sandbox only.
+     */
+    public TestClockBilling processBilling() {
+        return http.post("/test-clock/process-billing", Map.of(), new TypeReference<TestClockBilling>() {}).getData();
+    }
+
+    /**
      * Returns the organization's current test clock state. Sandbox only.
      */
-    public ApiResponse<TestClock> get() {
-        return http.get("/test-clock", new TypeReference<>() {});
+    public TestClock get() {
+        return http.get("/test-clock", new TypeReference<TestClock>() {}).getData();
     }
 
     /**
      * Moves the test clock forward, by a number of days (advanceDays) or to an absolute instant (frozenTime). The clock can only move forward. Sandbox only.
      */
-    public ApiResponse<TestClock> advance(AdvanceTestClockParams params) {
+    public TestClock advance(AdvanceTestClockParams params) {
         return http.post("/test-clock", buildBody(
                 "advance_days", params.getAdvanceDays(),
                 "frozen_time", params.getFrozenTime()
-        ), params.getIdempotencyKey(), new TypeReference<>() {});
-    }
-
-    /**
-     * Discovers customers due for billing at the org's current (simulated) time and enqueues a billing cycle for each — renewals, expired trials, pending cancellations. Also fires any dunning retry whose scheduled time has passed. Enqueueing is asynchronous. Sandbox only.
-     */
-    public ApiResponse<TestClockBilling> processBilling() {
-        return http.post("/test-clock/process-billing", Map.of(), new TypeReference<>() {});
+        ), params.getIdempotencyKey(), new TypeReference<TestClock>() {}).getData();
     }
 }

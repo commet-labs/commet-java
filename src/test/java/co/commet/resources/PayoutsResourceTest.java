@@ -1,6 +1,5 @@
 package co.commet.resources;
 
-import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.CompletePayoutVerificationParamsBank;
 import co.commet.models.CompletePayoutVerificationParamsCompany;
@@ -11,6 +10,8 @@ import co.commet.models.CompletePayoutVerificationParamsIndividualAddress;
 import co.commet.models.Payout;
 import co.commet.models.PayoutBankAccount;
 import co.commet.models.PayoutVerification;
+import co.commet.models.PayoutVerificationVariant1;
+import co.commet.models.PayoutVerificationVariant2;
 import co.commet.params.AddPayoutBankAccountParams;
 import co.commet.params.CompletePayoutVerificationParams;
 import co.commet.params.RequestPayoutParams;
@@ -55,7 +56,7 @@ class PayoutsResourceTest {
     void addBankAccountSendsCamelCaseWireKeysAndOmitsUnsetOptional() throws Exception {
         server.enqueue(bankAccountResponse());
 
-        ApiResponse<PayoutBankAccount> response = payouts.addBankAccount(
+        PayoutBankAccount response = payouts.addBankAccount(
                 AddPayoutBankAccountParams.builder("000123456789", "Acme Inc")
                         .routingNumber("110000000")
                         .accountType("checking")
@@ -80,8 +81,7 @@ class PayoutsResourceTest {
         assertFalse(body.has("set_default"), "unset optional must not be sent");
 
         // The full account number is never returned, only last4 — verify deserialization.
-        assertTrue(response.isSuccess());
-        PayoutBankAccount account = response.getData();
+        PayoutBankAccount account = response;
         assertEquals("ba_1", account.id());
         assertEquals("6789", account.last4());
         assertEquals("Acme Inc", account.holderName());
@@ -112,7 +112,7 @@ class PayoutsResourceTest {
                         )
                 ))));
 
-        ApiResponse<Payout> response = payouts.request(
+        Payout response = payouts.request(
                 RequestPayoutParams.builder(50000L)
                         .description("Weekly payout")
                         .idempotencyKey("idem_po")
@@ -127,7 +127,7 @@ class PayoutsResourceTest {
         assertEquals("Weekly payout", body.get("description").asText());
 
         // camelCase wire field net_amount@JsonProperty must map onto the long.
-        Payout payout = response.getData();
+        Payout payout = response;
         assertEquals("po_1", payout.id());
         assertEquals(50000L, payout.amount());
         assertEquals(250L, payout.fee());
@@ -147,7 +147,7 @@ class PayoutsResourceTest {
                                 "providerAccountId", "acct_1",
                                 "status", "pending_verification",
                                 "transfersEnabled", false,
-                                "alreadyExists", false,
+                                "outcome", "created",
                                 "businessType", "company",
                                 "country", "US",
                                 "object", "payout_verification",
@@ -168,9 +168,9 @@ class PayoutsResourceTest {
                 new CompletePayoutVerificationParamsCompanyRepresentative(
                         "Grace", "Hopper", "+15555550124", "grace@acme.test"));
 
-        ApiResponse<PayoutVerification> response = payouts.completeVerification(
+        PayoutVerification response = payouts.completeVerification(
                 CompletePayoutVerificationParams.builder(
-                                "ops@acme.test", "company", "https://acme.test", "https://files/doc.pdf", bank)
+                                "ops@acme.test", "https://acme.test", "https://files/doc.pdf", bank, "company")
                         .individual(individual)
                         .company(company)
                         .build());
@@ -215,11 +215,11 @@ class PayoutsResourceTest {
         assertEquals("grace@acme.test", wireCompany.get("representative").get("email").asText());
         assertEquals("Hopper", wireCompany.get("representative").get("lastName").asText());
 
-        // alreadyExists is a boxed Boolean — wire false must deserialize to Boolean.FALSE, not null.
-        PayoutVerification verification = response.getData();
+        assertInstanceOf(PayoutVerificationVariant2.class, response);
+        PayoutVerificationVariant2 verification = (PayoutVerificationVariant2) response;
         assertEquals("acct_1", verification.providerAccountId());
         assertFalse(verification.transfersEnabled());
-        assertEquals(Boolean.FALSE, verification.alreadyExists());
+        assertEquals("created", verification.outcome());
         assertEquals("company", verification.businessType());
     }
 
@@ -229,14 +229,14 @@ class PayoutsResourceTest {
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":{\"providerAccountId\":\"acct_2\",\"status\":\"pending_verification\","
-                        + "\"transfersEnabled\":false,\"object\":\"payout_verification\",\"livemode\":false}}"));
+                        + "\"transfersEnabled\":false,\"outcome\":\"existing\",\"object\":\"payout_account\",\"livemode\":false}}"));
 
         CompletePayoutVerificationParamsBank bank = new CompletePayoutVerificationParamsBank(
                 "000999", "Solo Dev", null, null);
 
-        ApiResponse<PayoutVerification> response = payouts.completeVerification(
+        PayoutVerification response = payouts.completeVerification(
                 CompletePayoutVerificationParams.builder(
-                                "solo@dev.test", "individual", "https://solo.dev", "https://files/id.pdf", bank)
+                                "solo@dev.test", "https://solo.dev", "https://files/id.pdf", bank, "individual")
                         .build());
 
         RecordedRequest request = server.takeRequest();
@@ -248,8 +248,8 @@ class PayoutsResourceTest {
         assertFalse(body.get("bank").has("routingNumber"));
         assertFalse(body.get("bank").has("accountType"));
 
-        // alreadyExists absent from wire -> boxed Boolean stays null (no silent false).
-        assertNull(response.getData().alreadyExists());
+        assertInstanceOf(PayoutVerificationVariant1.class, response);
+        assertEquals("existing", ((PayoutVerificationVariant1) response).outcome());
     }
 
     private MockResponse bankAccountResponse() throws Exception {

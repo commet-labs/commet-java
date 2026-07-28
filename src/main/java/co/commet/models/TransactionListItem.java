@@ -1,0 +1,24 @@
+package co.commet.models;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record TransactionListItem(
+        @JsonProperty("id") String id,
+        @JsonProperty("invoice_id") String invoiceId,
+        @JsonProperty("gross_amount") Long grossAmount,
+        @JsonProperty("subtotal") Long subtotal,
+        @JsonProperty("tax_amount") Long taxAmount,
+        @JsonProperty("presentment_amount") Long presentmentAmount,
+        @JsonProperty("currency") String currency,
+        @JsonProperty("provider") PaymentProvider provider,
+        @JsonProperty("status") TransactionStatus status,
+        @JsonProperty("customer_email") String customerEmail,
+        @JsonProperty("customer_name") String customerName,
+        @JsonProperty("paid_at") String paidAt,
+        @JsonProperty("created_at") String createdAt,
+        @JsonProperty("updated_at") String updatedAt,
+        @JsonProperty("object") String object,
+        @JsonProperty("livemode") boolean livemode
+) {}

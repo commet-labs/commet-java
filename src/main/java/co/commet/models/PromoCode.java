@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record PromoCode(
         @JsonProperty("id") String id,
         @JsonProperty("code") String code,
-        @JsonProperty("discount_type") DiscountType discountType,
-        @JsonProperty("discount_value") long discountValue,
-        @JsonProperty("duration_cycles") Long durationCycles,
+        @JsonProperty("offer_id") String offerId,
         @JsonProperty("billing_interval") BillingInterval billingInterval,
         @JsonProperty("max_redemptions") Long maxRedemptions,
         @JsonProperty("expires_at") String expiresAt,

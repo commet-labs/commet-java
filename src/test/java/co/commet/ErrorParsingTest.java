@@ -1,6 +1,7 @@
 package co.commet;
 
 import co.commet.models.Customer;
+import co.commet.models.CustomersListResult;
 import co.commet.params.CreateCustomerParams;
 import co.commet.params.ListCustomersParams;
 import co.commet.resources.CustomersResource;
@@ -143,12 +144,11 @@ class ErrorParsingTest {
                         )
                 ))));
 
-        ApiResponse<Customer> response = customers.get("cus_abc123");
+        Customer response = customers.get("cus_abc123");
 
-        assertTrue(response.isSuccess());
-        assertNotNull(response.getData());
-        assertEquals("cus_abc123", response.getData().id());
-        assertEquals("user@example.com", response.getData().email());
+        assertNotNull(response);
+        assertEquals("cus_abc123", response.id());
+        assertEquals("user@example.com", response.email());
     }
 
     @Test
@@ -157,7 +157,7 @@ class ErrorParsingTest {
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
                 .setBody(mapper.writeValueAsString(Map.of(
-                        "success", true,
+                        "object", "list",
                         "data", List.of(
                                 Map.of("id", "cus_1", "email", "a@test.com",
                                         "created_at", "2024-01-01T00:00:00Z",
@@ -170,14 +170,13 @@ class ErrorParsingTest {
                         "next_cursor", "cursor_abc"
                 ))));
 
-        ApiResponse<List<Customer>> response = customers.list(ListCustomersParams.builder().build());
+        CustomersListResult response = customers.list(ListCustomersParams.builder().build());
 
-        assertTrue(response.isSuccess());
-        assertEquals(2, response.getData().size());
-        assertEquals("cus_1", response.getData().get(0).id());
-        assertEquals("cus_2", response.getData().get(1).id());
-        assertTrue(response.getHasMore());
-        assertEquals("cursor_abc", response.getNextCursor());
+        assertEquals(2, response.data().size());
+        assertEquals("cus_1", response.data().get(0).id());
+        assertEquals("cus_2", response.data().get(1).id());
+        assertTrue(response.hasMore());
+        assertEquals("cursor_abc", response.nextCursor());
     }
 
     static class TestableHttpClient extends CommetHttpClient {
