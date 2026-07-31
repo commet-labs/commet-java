@@ -7,8 +7,6 @@ import java.util.Map;
 public final class CreateOfferParams {
 
     private final String name;
-    private final String purpose;
-    private final List<String> planPriceIds;
     private final List<CreateOfferParamsPhasesItem> phases;
     private final Map<String, Object> metadata;
     private final String startsAt;
@@ -18,8 +16,6 @@ public final class CreateOfferParams {
 
     private CreateOfferParams(Builder builder) {
         this.name = builder.name;
-        this.purpose = builder.purpose;
-        this.planPriceIds = builder.planPriceIds;
         this.phases = builder.phases;
         this.metadata = builder.metadata;
         this.startsAt = builder.startsAt;
@@ -28,13 +24,11 @@ public final class CreateOfferParams {
         this.idempotencyKey = builder.idempotencyKey;
     }
 
-    public static Builder builder(String name, String purpose, List<String> planPriceIds, List<CreateOfferParamsPhasesItem> phases) {
-        return new Builder(name, purpose, planPriceIds, phases);
+    public static Builder builder(String name, List<CreateOfferParamsPhasesItem> phases) {
+        return new Builder(name, phases);
     }
 
     public String getName() { return name; }
-    public String getPurpose() { return purpose; }
-    public List<String> getPlanPriceIds() { return planPriceIds; }
     public List<CreateOfferParamsPhasesItem> getPhases() { return phases; }
     public Map<String, Object> getMetadata() { return metadata; }
     public String getStartsAt() { return startsAt; }
@@ -45,8 +39,6 @@ public final class CreateOfferParams {
     public static final class Builder {
 
         private final String name;
-        private final String purpose;
-        private final List<String> planPriceIds;
         private final List<CreateOfferParamsPhasesItem> phases;
         private Map<String, Object> metadata;
         private String startsAt;
@@ -54,10 +46,8 @@ public final class CreateOfferParams {
         private Boolean active;
         private String idempotencyKey;
 
-        private Builder(String name, String purpose, List<String> planPriceIds, List<CreateOfferParamsPhasesItem> phases) {
+        private Builder(String name, List<CreateOfferParamsPhasesItem> phases) {
             this.name = name;
-            this.purpose = purpose;
-            this.planPriceIds = planPriceIds;
             this.phases = phases;
         }
 

@@ -2,6 +2,7 @@ package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CreatedSubscription(
@@ -17,7 +18,6 @@ public record CreatedSubscription(
         @JsonProperty("cancellation") CreatedSubscriptionCancellation cancellation,
         @JsonProperty("cancel_at_period_end") boolean cancelAtPeriodEnd,
         @JsonProperty("scheduled_plan_change") CreatedSubscriptionScheduledPlanChange scheduledPlanChange,
-        @JsonProperty("discount") CreatedSubscriptionDiscount discount,
         @JsonProperty("start_date") String startDate,
         @JsonProperty("end_date") String endDate,
         @JsonProperty("billing_day_of_month") Long billingDayOfMonth,
@@ -25,6 +25,7 @@ public record CreatedSubscription(
         @JsonProperty("checkout_url") String checkoutUrl,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
+        @JsonProperty("offer_applications") List<SubscriptionOfferApplication> offerApplications,
         @JsonProperty("checkout_provider") PaymentProvider checkoutProvider,
         @JsonProperty("price_id") String priceId,
         @JsonProperty("object") String object,

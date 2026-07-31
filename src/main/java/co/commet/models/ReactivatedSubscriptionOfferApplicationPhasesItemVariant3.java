@@ -9,8 +9,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ReactivatedSubscriptionOfferApplicationPhasesItemVariant3(
         @JsonProperty("type") String type,
-        @JsonProperty("duration_cycles") long durationCycles,
+        @JsonProperty("duration_cycles") Long durationCycles,
         @JsonProperty("starts_at") String startsAt,
         @JsonProperty("ends_at") String endsAt,
-        @JsonProperty("price") long price
+        @JsonProperty("amount") long amount
 ) implements ReactivatedSubscriptionOfferApplicationPhasesItem {}

@@ -9,8 +9,6 @@ import java.util.Map;
 public record Offer(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
-        @JsonProperty("purpose") String purpose,
-        @JsonProperty("plan_price_ids") List<String> planPriceIds,
         @JsonProperty("phases") List<OfferPhasesItem> phases,
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("starts_at") String startsAt,

@@ -18,12 +18,14 @@ public interface ReactivatedSubscriptionOfferApplicationPhasesItem {
             JsonNode discriminator = node.get("type");
             if (discriminator != null) {
                 switch (discriminator.asText()) {
-                    case "percentage":
+                    case "free_trial":
                         return mapper.treeToValue(node, ReactivatedSubscriptionOfferApplicationPhasesItemVariant1.class);
-                    case "amount_off":
+                    case "percentage":
                         return mapper.treeToValue(node, ReactivatedSubscriptionOfferApplicationPhasesItemVariant2.class);
-                    case "fixed_price":
+                    case "amount_off":
                         return mapper.treeToValue(node, ReactivatedSubscriptionOfferApplicationPhasesItemVariant3.class);
+                    case "fixed_price":
+                        return mapper.treeToValue(node, ReactivatedSubscriptionOfferApplicationPhasesItemVariant4.class);
                     default:
                         break;
                 }

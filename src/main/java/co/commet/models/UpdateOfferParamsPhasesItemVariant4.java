@@ -10,6 +10,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UpdateOfferParamsPhasesItemVariant4(
         @JsonProperty("type") String type,
-        @JsonProperty("duration_cycles") long durationCycles,
+        @JsonProperty("duration_cycles") Long durationCycles,
         @JsonProperty("prices") List<UpdateOfferParamsPhasesItemVariant4PricesItem> prices
 ) implements UpdateOfferParamsPhasesItem {}

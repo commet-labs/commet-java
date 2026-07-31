@@ -13,5 +13,6 @@ public record ReactivatedSubscriptionOfferApplication(
         @JsonProperty("subtotal") long subtotal,
         @JsonProperty("discount_amount") long discountAmount,
         @JsonProperty("total") long total,
-        @JsonProperty("phases") List<ReactivatedSubscriptionOfferApplicationPhasesItem> phases
+        @JsonProperty("phases") List<ReactivatedSubscriptionOfferApplicationPhasesItem> phases,
+        @JsonProperty("applies_to") ReactivatedSubscriptionOfferApplicationAppliesTo appliesTo
 ) {}

@@ -3,14 +3,14 @@ package co.commet.params;
 import java.util.List;
 import java.util.Map;
 
-public final class UpdateMarketGroupParams {
+public final class UpdateMarketParams {
 
     private final String name;
     private final List<String> countryCodes;
     private final Map<String, Object> metadata;
     private final String idempotencyKey;
 
-    private UpdateMarketGroupParams(Builder builder) {
+    private UpdateMarketParams(Builder builder) {
         this.name = builder.name;
         this.countryCodes = builder.countryCodes;
         this.metadata = builder.metadata;
@@ -48,8 +48,8 @@ public final class UpdateMarketGroupParams {
             return this;
         }
 
-        public UpdateMarketGroupParams build() {
-            return new UpdateMarketGroupParams(this);
+        public UpdateMarketParams build() {
+            return new UpdateMarketParams(this);
         }
     }
 }

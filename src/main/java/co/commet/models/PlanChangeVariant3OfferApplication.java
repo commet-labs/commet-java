@@ -13,5 +13,6 @@ public record PlanChangeVariant3OfferApplication(
         @JsonProperty("subtotal") long subtotal,
         @JsonProperty("discount_amount") long discountAmount,
         @JsonProperty("total") long total,
-        @JsonProperty("phases") List<PlanChangeVariant3OfferApplicationPhasesItem> phases
+        @JsonProperty("phases") List<PlanChangeVariant3OfferApplicationPhasesItem> phases,
+        @JsonProperty("applies_to") PlanChangeVariant3OfferApplicationAppliesTo appliesTo
 ) {}

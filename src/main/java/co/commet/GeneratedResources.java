@@ -7,13 +7,13 @@ import co.commet.resources.CustomersResource;
 import co.commet.resources.FeatureAccessResource;
 import co.commet.resources.FeaturesResource;
 import co.commet.resources.InvoicesResource;
+import co.commet.resources.MarketsResource;
 import co.commet.resources.OffersResource;
 import co.commet.resources.PaymentsResource;
 import co.commet.resources.PayoutsResource;
 import co.commet.resources.PlanGroupsResource;
 import co.commet.resources.PlansResource;
 import co.commet.resources.PortalResource;
-import co.commet.resources.PricingResource;
 import co.commet.resources.PromoCodesResource;
 import co.commet.resources.ProvisioningResource;
 import co.commet.resources.QuotaResource;
@@ -34,13 +34,13 @@ public abstract class GeneratedResources {
     protected final FeatureAccessResource featureAccess;
     protected final FeaturesResource features;
     protected final InvoicesResource invoices;
+    protected final MarketsResource markets;
     protected final OffersResource offers;
     protected final PaymentsResource payments;
     protected final PayoutsResource payouts;
     protected final PlanGroupsResource planGroups;
     protected final PlansResource plans;
     protected final PortalResource portal;
-    protected final PricingResource pricing;
     protected final PromoCodesResource promoCodes;
     protected final ProvisioningResource provisioning;
     protected final QuotaResource quota;
@@ -59,13 +59,13 @@ public abstract class GeneratedResources {
         this.featureAccess = new FeatureAccessResource(httpClient);
         this.features = new FeaturesResource(httpClient);
         this.invoices = new InvoicesResource(httpClient);
+        this.markets = new MarketsResource(httpClient);
         this.offers = new OffersResource(httpClient);
         this.payments = new PaymentsResource(httpClient);
         this.payouts = new PayoutsResource(httpClient);
         this.planGroups = new PlanGroupsResource(httpClient);
         this.plans = new PlansResource(httpClient);
         this.portal = new PortalResource(httpClient);
-        this.pricing = new PricingResource(httpClient);
         this.promoCodes = new PromoCodesResource(httpClient);
         this.provisioning = new ProvisioningResource(httpClient);
         this.quota = new QuotaResource(httpClient);
@@ -83,13 +83,13 @@ public abstract class GeneratedResources {
     public FeatureAccessResource featureAccess() { return featureAccess; }
     public FeaturesResource features() { return features; }
     public InvoicesResource invoices() { return invoices; }
+    public MarketsResource markets() { return markets; }
     public OffersResource offers() { return offers; }
     public PaymentsResource payments() { return payments; }
     public PayoutsResource payouts() { return payouts; }
     public PlanGroupsResource planGroups() { return planGroups; }
     public PlansResource plans() { return plans; }
     public PortalResource portal() { return portal; }
-    public PricingResource pricing() { return pricing; }
     public PromoCodesResource promoCodes() { return promoCodes; }
     public ProvisioningResource provisioning() { return provisioning; }
     public QuotaResource quota() { return quota; }

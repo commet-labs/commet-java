@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record PricingListMarketGroupsResult(
+public record MarketsListResult(
         @JsonProperty("object") String object,
-        @JsonProperty("data") List<MarketGroup> data,
+        @JsonProperty("data") List<Market> data,
         @JsonProperty("has_more") boolean hasMore,
         @JsonProperty("next_cursor") String nextCursor
 ) {}

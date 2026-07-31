@@ -13,5 +13,6 @@ public record PreviewChangeOfferApplication(
         @JsonProperty("subtotal") long subtotal,
         @JsonProperty("discount_amount") long discountAmount,
         @JsonProperty("total") long total,
-        @JsonProperty("phases") List<PreviewChangeOfferApplicationPhasesItem> phases
+        @JsonProperty("phases") List<PreviewChangeOfferApplicationPhasesItem> phases,
+        @JsonProperty("applies_to") PreviewChangeOfferApplicationAppliesTo appliesTo
 ) {}

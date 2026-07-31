@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record MarketGroup(
+public record Market(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
         @JsonProperty("country_codes") List<String> countryCodes,

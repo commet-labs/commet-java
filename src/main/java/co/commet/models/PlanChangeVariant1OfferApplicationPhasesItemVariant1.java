@@ -9,8 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PlanChangeVariant1OfferApplicationPhasesItemVariant1(
         @JsonProperty("type") String type,
-        @JsonProperty("duration_cycles") long durationCycles,
+        @JsonProperty("duration_days") long durationDays,
         @JsonProperty("starts_at") String startsAt,
-        @JsonProperty("ends_at") String endsAt,
-        @JsonProperty("percentage") long percentage
+        @JsonProperty("ends_at") String endsAt
 ) implements PlanChangeVariant1OfferApplicationPhasesItem {}

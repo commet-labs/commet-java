@@ -7,7 +7,7 @@ Billing and usage tracking for SaaS applications.
 ### Gradle
 
 ```kotlin
-implementation("co.commet:commet-java:8.0.1")
+implementation("co.commet:commet-java:9.0.0")
 ```
 
 ### Maven
@@ -16,7 +16,7 @@ implementation("co.commet:commet-java:8.0.1")
 <dependency>
     <groupId>co.commet</groupId>
     <artifactId>commet-java</artifactId>
-    <version>8.0.1</version>
+    <version>9.0.0</version>
 </dependency>
 ```
 
@@ -66,29 +66,27 @@ commet.usage().track(
 
 ## Offers and pricing Markets
 
-SDK v8 exposes reusable Offers, country Market Groups, and selectable `priceId` variants:
+SDK v9 exposes independent Offers, top-level Markets, and selectable `priceId` variants:
 
 ```java
 import co.commet.models.CreateOfferParamsPhasesItemVariant1;
-import co.commet.params.CreateMarketGroupParams;
+import co.commet.params.CreateMarketParams;
 import co.commet.params.CreateOfferParams;
 import java.util.List;
 
-var market = commet.pricing().createMarketGroup(
-    CreateMarketGroupParams.builder("Argentina", List.of("AR")).build()
+var market = commet.markets().create(
+    CreateMarketParams.builder("Argentina", List.of("AR")).build()
 );
 
 var offer = commet.offers().create(
     CreateOfferParams.builder(
         "30-day trial",
-        "introductory",
-        List.of("pp_monthly"),
         List.of(new CreateOfferParamsPhasesItemVariant1("free_trial", 30L))
     ).build()
 );
 ```
 
-Promo Codes reference Promotional Offers. Omitting `priceId` during subscription creation keeps normal default-price resolution.
+Promo Codes reference compatible Offers. Omitting `priceId` during subscription creation keeps normal default-price resolution.
 
 ## Quota
 

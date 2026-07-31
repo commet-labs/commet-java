@@ -21,20 +21,18 @@ public class OffersResource {
     }
 
     /**
-     * Retrieve a canonical offer by its public ID.
+     * Retrieve reusable offer terms by public ID.
      */
     public Offer get(String id) {
         return http.get("/offers/" + id, new TypeReference<Offer>() {}).getData();
     }
 
     /**
-     * Replace an offer's catalog definition. Existing offer applications keep their immutable accepted terms.
+     * Replace reusable offer terms. Existing applications keep their immutable accepted terms.
      */
     public Offer update(String id, UpdateOfferParams params) {
         return http.patch("/offers/" + id, buildBody(
                 "name", params.getName(),
-                "purpose", params.getPurpose(),
-                "plan_price_ids", params.getPlanPriceIds(),
                 "phases", params.getPhases(),
                 "metadata", params.getMetadata(),
                 "starts_at", params.getStartsAt(),
@@ -44,33 +42,29 @@ public class OffersResource {
     }
 
     /**
-     * Soft-delete an offer. Existing applications and their accepted terms remain available for billing and audit.
+     * Soft-delete an Offer. Existing applications and their accepted terms remain available for billing and audit.
      */
     public DeletedOffer delete(String id) {
         return http.delete("/offers/" + id, null, new TypeReference<DeletedOffer>() {}).getData();
     }
 
     /**
-     * List the organization's canonical introductory and promotional offers.
+     * List reusable offer terms. Offers are independent from plans, prices, eligibility, and distribution channels.
      */
     public OffersListResult list(ListOffersParams params) {
         return http.get("/offers", buildBody(
                 "cursor", params.getCursor(),
                 "limit", params.getLimit(),
-                "plan_price_id", params.getPlanPriceId(),
-                "purpose", params.getPurpose(),
                 "active", params.getActive()
         ), new TypeReference<OffersListResult>() {}).getData();
     }
 
     /**
-     * Create a canonical offer scoped to one or more plan prices. Currency-specific phases require an explicit USD value and never fall back across currencies.
+     * Create reusable offer terms without assigning a plan, price, eligibility rule, or distribution channel.
      */
     public Offer create(CreateOfferParams params) {
         return http.post("/offers", buildBody(
                 "name", params.getName(),
-                "purpose", params.getPurpose(),
-                "plan_price_ids", params.getPlanPriceIds(),
                 "phases", params.getPhases(),
                 "metadata", params.getMetadata(),
                 "starts_at", params.getStartsAt(),
