@@ -87,6 +87,7 @@ class ErrorParsingTest {
         assertEquals(2, errors.size());
         assertEquals(List.of("Email is required", "Must be a valid email"), errors.get("email"));
         assertEquals(List.of("Name is too short"), errors.get("name"));
+        assertEquals(errors, exception.toMap().get("validationErrors"));
     }
 
     @Test

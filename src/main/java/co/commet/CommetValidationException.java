@@ -23,4 +23,11 @@ public class CommetValidationException extends CommetException {
     public Map<String, List<String>> getValidationErrors() {
         return validationErrors;
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        Map<String, Object> fields = super.toMap();
+        fields.put("validationErrors", validationErrors);
+        return fields;
+    }
 }
