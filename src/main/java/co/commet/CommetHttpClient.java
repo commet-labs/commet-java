@@ -424,10 +424,15 @@ public class CommetHttpClient implements AutoCloseable {
                 long durationMs = System.currentTimeMillis() - requestStart;
                 String requestId = response.header("x-request-id");
                 if (requestId != null) {
-                    lastTelemetryHeader = String.format(
-                        "{\"last_request_metrics\":{\"request_id\":\"%s\",\"duration_ms\":%d}}",
-                        requestId, durationMs
-                    );
+                    try {
+                        lastTelemetryHeader = objectMapper.writeValueAsString(Map.of(
+                                "last_request_metrics",
+                                Map.of("request_id", requestId, "duration_ms", durationMs)
+                        ));
+                    } catch (IOException e) {
+                        throw new CommetException(
+                                "Failed to serialize client telemetry: " + e.getMessage());
+                    }
                 } else {
                     lastTelemetryHeader = null;
                 }

@@ -167,6 +167,43 @@ class ErrorParsingTest {
     }
 
     @Test
+    void telemetrySafelySerializesExactServerRequestId() throws Exception {
+        String requestId = "req_\"quoted\\id";
+        String responseBody = mapper.writeValueAsString(Map.of(
+                "success", true,
+                "data", Map.of(
+                        "id", "cus_abc123",
+                        "email", "user@example.com",
+                        "created_at", "2024-01-01T00:00:00Z",
+                        "updated_at", "2024-01-01T00:00:00Z"
+                )
+        ));
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("x-request-id", requestId)
+                .setBody(responseBody));
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setHeader("Content-Type", "application/json")
+                .setBody(responseBody));
+
+        customers.get("cus_abc123");
+        customers.get("cus_abc123");
+
+        server.takeRequest();
+        String telemetryHeader = server.takeRequest().getHeader("commet-client-telemetry");
+        assertNotNull(telemetryHeader);
+        assertEquals(
+                requestId,
+                mapper.readTree(telemetryHeader)
+                        .path("last_request_metrics")
+                        .path("request_id")
+                        .asText()
+        );
+    }
+
+    @Test
     void listResponseReturnsTypedList() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
