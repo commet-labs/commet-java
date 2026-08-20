@@ -10,7 +10,13 @@ public class CommetValidationException extends CommetException {
     private final transient Map<String, List<String>> validationErrors;
 
     public CommetValidationException(String message, Map<String, List<String>> validationErrors) {
-        super(message);
+        this(message, validationErrors, null, null, null, null, null);
+    }
+
+    public CommetValidationException(String message, Map<String, List<String>> validationErrors,
+                                     Object details, String type, String param, String docUrl,
+                                     String requestId) {
+        super(message, type, "validation_error", 422, details, param, docUrl, requestId);
         this.validationErrors = validationErrors;
     }
 

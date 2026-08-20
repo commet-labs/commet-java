@@ -45,6 +45,7 @@ class ErrorParsingTest {
         server.enqueue(new MockResponse()
                 .setResponseCode(403)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("x-request-id", "req_server_123")
                 .setBody(mapper.writeValueAsString(Map.of(
                         "success", false,
                         "code", "forbidden",
@@ -57,6 +58,8 @@ class ErrorParsingTest {
         assertEquals("Access denied", exception.getMessage());
         assertEquals("forbidden", exception.getCode());
         assertEquals(403, exception.getStatusCode());
+        assertEquals("req_server_123", exception.getRequestId());
+        assertEquals("req_server_123", exception.toMap().get("requestId"));
     }
 
     @Test
