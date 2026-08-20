@@ -5,6 +5,7 @@ import co.commet.CommetHttpClient;
 import co.commet.models.Payout;
 import co.commet.models.PayoutBankAccount;
 import co.commet.params.AddPayoutBankAccountParams;
+import co.commet.params.CompletePayoutVerificationParams;
 import co.commet.params.RequestPayoutParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Map;
@@ -46,7 +47,8 @@ public class PayoutsResource {
      * Deprecated. Complete business and identity verification in the Commet dashboard. This endpoint no longer accepts or processes KYC data.
      * @deprecated
      */
-    public Void completeVerification() {
-        return http.post("/payouts/verification", Map.of(), new TypeReference<Void>() {}).getData();
+    @Deprecated
+    public Void completeVerification(CompletePayoutVerificationParams params) {
+        return http.post("/payouts/verification", null, params.getIdempotencyKey(), new TypeReference<Void>() {}).getData();
     }
 }

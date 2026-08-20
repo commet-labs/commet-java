@@ -4,6 +4,7 @@ import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.TestClock;
 import co.commet.params.AdvanceTestClockParams;
+import co.commet.params.ProcessTestClockBillingParams;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
@@ -115,15 +116,16 @@ class TestClockResourceTest {
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":null}"));
 
-        Void response = testClock.processBilling();
+        Void response = testClock.processBilling(
+                ProcessTestClockBillingParams.builder()
+                        .idempotencyKey("idem_process_billing")
+                        .build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
         assertEquals("/api/test-clock/process-billing", request.getPath());
-
-        JsonNode body = mapper.readTree(request.getBody().readUtf8());
-        assertTrue(body.isObject());
-        assertEquals(0, body.size(), "no-param POST must send an empty object, not stray keys");
+        assertEquals("idem_process_billing", request.getHeader("Idempotency-Key"));
+        assertEquals(0, request.getBodySize());
         assertNull(response);
     }
 

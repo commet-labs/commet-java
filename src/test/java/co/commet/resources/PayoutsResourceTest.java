@@ -4,6 +4,7 @@ import co.commet.CommetHttpClient;
 import co.commet.models.Payout;
 import co.commet.models.PayoutBankAccount;
 import co.commet.params.AddPayoutBankAccountParams;
+import co.commet.params.CompletePayoutVerificationParams;
 import co.commet.params.RequestPayoutParams;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -133,13 +134,16 @@ class PayoutsResourceTest {
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":null}"));
 
-        Void response = payouts.completeVerification();
+        Void response = payouts.completeVerification(
+                CompletePayoutVerificationParams.builder()
+                        .idempotencyKey("idem_payout_verification")
+                        .build());
 
         RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
         assertEquals("/api/payouts/verification", request.getPath());
-
-        assertEquals(0, mapper.readTree(request.getBody().readUtf8()).size());
+        assertEquals("idem_payout_verification", request.getHeader("Idempotency-Key"));
+        assertEquals(0, request.getBodySize());
         assertNull(response);
     }
 

@@ -5,6 +5,7 @@ import co.commet.CommetHttpClient;
 import co.commet.models.TestClock;
 import co.commet.models.TestClockRun;
 import co.commet.params.AdvanceTestClockParams;
+import co.commet.params.ProcessTestClockBillingParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Map;
 
@@ -22,8 +23,9 @@ public class TestClockResource {
      * Deprecated. POST /test-clock now advances time and processes every due billing deadline in one durable run.
      * @deprecated
      */
-    public Void processBilling() {
-        return http.post("/test-clock/process-billing", Map.of(), new TypeReference<Void>() {}).getData();
+    @Deprecated
+    public Void processBilling(ProcessTestClockBillingParams params) {
+        return http.post("/test-clock/process-billing", null, params.getIdempotencyKey(), new TypeReference<Void>() {}).getData();
     }
 
     /**
