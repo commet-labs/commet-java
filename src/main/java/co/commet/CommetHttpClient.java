@@ -475,7 +475,7 @@ public class CommetHttpClient implements AutoCloseable {
                         .add(detail.getOrDefault("message", "").toString());
             }
             throw new CommetValidationException(
-                    message, errors, details, type, param, docUrl, requestId);
+                    message, statusCode, errors, details, type, param, docUrl, requestId);
         }
 
         throw new CommetApiException(

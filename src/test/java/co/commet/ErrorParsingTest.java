@@ -91,6 +91,17 @@ class ErrorParsingTest {
     }
 
     @Test
+    void validationErrorSerializesActualStatusCodeAndFieldErrors() {
+        Map<String, List<String>> errors = Map.of("email", List.of("Email is required"));
+        CommetValidationException exception =
+                new CommetValidationException("Validation failed", 400, errors);
+
+        assertEquals(400, exception.getStatusCode());
+        assertEquals(400, exception.toMap().get("statusCode"));
+        assertEquals(errors, exception.toMap().get("validationErrors"));
+    }
+
+    @Test
     void notFoundWithJsonReturnsError() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(404)
