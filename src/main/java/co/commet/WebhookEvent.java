@@ -44,6 +44,10 @@ import co.commet.models.PaymentMethodUpdatedData;
 import co.commet.models.CustomerCreatedData;
 import co.commet.models.CustomerUpdatedData;
 import co.commet.models.CustomerStateChangedData;
+import co.commet.models.PlanGrantCreatedData;
+import co.commet.models.PlanGrantUpdatedData;
+import co.commet.models.PlanGrantExpiredData;
+import co.commet.models.PlanGrantRevokedData;
 import co.commet.models.CreditsGrantedData;
 import co.commet.models.CreditsPurchasedData;
 import co.commet.models.CreditsLowData;
@@ -231,6 +235,22 @@ public record WebhookEvent(
 
     public CustomerStateChangedData asCustomerStateChanged() {
         return convert(CustomerStateChangedData.class);
+    }
+
+    public PlanGrantCreatedData asPlanGrantCreated() {
+        return convert(PlanGrantCreatedData.class);
+    }
+
+    public PlanGrantUpdatedData asPlanGrantUpdated() {
+        return convert(PlanGrantUpdatedData.class);
+    }
+
+    public PlanGrantExpiredData asPlanGrantExpired() {
+        return convert(PlanGrantExpiredData.class);
+    }
+
+    public PlanGrantRevokedData asPlanGrantRevoked() {
+        return convert(PlanGrantRevokedData.class);
     }
 
     public CreditsGrantedData asCreditsGranted() {

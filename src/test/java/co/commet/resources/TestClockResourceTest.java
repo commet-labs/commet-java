@@ -3,7 +3,6 @@ package co.commet.resources;
 import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.TestClock;
-import co.commet.models.TestClockBilling;
 import co.commet.params.AdvanceTestClockParams;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,6 +52,7 @@ class TestClockResourceTest {
                                 "simulatedTime", "2026-07-01T00:00:00.000Z",
                                 "isActive", true,
                                 "now", "2026-06-08T00:00:00.000Z",
+                                "latestRun", null,
                                 "object", "test_clock",
                                 "livemode", false
                         )
@@ -109,36 +109,22 @@ class TestClockResourceTest {
     }
 
     @Test
-    void processBillingPostsEmptyBodyAndParsesCounts() throws Exception {
+    void processBillingPostsEmptyBodyAndReturnsNoResult() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
-                .setBody(mapper.writeValueAsString(Map.of(
-                        "success", true,
-                        "data", mapOf(
-                                "customersFound", 12,
-                                "enqueued", 11,
-                                "failed", 1,
-                                "object", "test_clock_billing",
-                                "livemode", false
-                        )
-                ))));
+                .setBody("{\"success\":true,\"data\":null}"));
 
-        TestClockBilling response = testClock.processBilling();
+        Void response = testClock.processBilling();
 
         RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
         assertEquals("/api/test-clock/process-billing", request.getPath());
 
-        // No-param POST: the empty Map.of() body must serialize to an empty JSON object.
         JsonNode body = mapper.readTree(request.getBody().readUtf8());
         assertTrue(body.isObject());
         assertEquals(0, body.size(), "no-param POST must send an empty object, not stray keys");
-
-        TestClockBilling billing = response;
-        assertEquals(12L, billing.customersFound());
-        assertEquals(11L, billing.enqueued());
-        assertEquals(1L, billing.failed());
+        assertNull(response);
     }
 
     private MockResponse clockResponse() throws Exception {
@@ -148,10 +134,16 @@ class TestClockResourceTest {
                 .setBody(mapper.writeValueAsString(Map.of(
                         "success", true,
                         "data", mapOf(
-                                "simulatedTime", "2026-07-08T00:00:00.000Z",
-                                "isActive", true,
-                                "now", "2026-06-08T00:00:00.000Z",
-                                "object", "test_clock",
+                                "id", "tcr_1",
+                                "status", "pending",
+                                "startedAtTime", "2026-06-08T00:00:00.000Z",
+                                "targetTime", "2026-07-08T00:00:00.000Z",
+                                "estimatedDeadlineCount", 0,
+                                "completedDeadlineCount", 0,
+                                "failedDeadlineCount", 0,
+                                "error", null,
+                                "items", java.util.List.of(),
+                                "object", "test_clock_run",
                                 "livemode", false
                         )
                 )));

@@ -11,5 +11,6 @@ public record SubscriptionFeaturesItemVariant3(
         @JsonProperty("code") String code,
         @JsonProperty("name") String name,
         @JsonProperty("type") String type,
-        @JsonProperty("usage") SubscriptionFeaturesItemVariant3Usage usage
+        @JsonProperty("usage") SubscriptionFeaturesItemVariant3Usage usage,
+        @JsonProperty("base_access") SubscriptionFeaturesItemVariant3BaseAccess baseAccess
 ) implements SubscriptionFeaturesItem {}

@@ -11,5 +11,6 @@ import java.util.List;
 public record OfferPhasesItemVariant3(
         @JsonProperty("type") String type,
         @JsonProperty("duration_cycles") Long durationCycles,
+        @JsonProperty("duration_interval") String durationInterval,
         @JsonProperty("amounts") List<OfferPhasesItemVariant3AmountsItem> amounts
 ) implements OfferPhasesItem {}

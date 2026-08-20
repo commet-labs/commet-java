@@ -11,5 +11,6 @@ public record SubscriptionFeaturesItemVariant1(
         @JsonProperty("code") String code,
         @JsonProperty("name") String name,
         @JsonProperty("type") String type,
-        @JsonProperty("enabled") boolean enabled
+        @JsonProperty("enabled") boolean enabled,
+        @JsonProperty("base_access") SubscriptionFeaturesItemVariant1BaseAccess baseAccess
 ) implements SubscriptionFeaturesItem {}

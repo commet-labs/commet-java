@@ -14,6 +14,7 @@ public record FeatureAccessVariant2(
         @JsonProperty("allowed") boolean allowed,
         @JsonProperty("type") String type,
         @JsonProperty("consumption") FeatureAccessVariant2Consumption consumption,
+        @JsonProperty("base_access") FeatureAccessVariant2BaseAccess baseAccess,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) implements FeatureAccess {}

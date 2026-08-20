@@ -11,5 +11,6 @@ import java.util.List;
 public record UpdateOfferParamsPhasesItemVariant4(
         @JsonProperty("type") String type,
         @JsonProperty("duration_cycles") Long durationCycles,
+        @JsonProperty("duration_interval") String durationInterval,
         @JsonProperty("prices") List<UpdateOfferParamsPhasesItemVariant4PricesItem> prices
 ) implements UpdateOfferParamsPhasesItem {}

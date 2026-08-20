@@ -10,5 +10,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public record CreateOfferParamsPhasesItemVariant2(
         @JsonProperty("type") String type,
         @JsonProperty("duration_cycles") Long durationCycles,
+        @JsonProperty("duration_interval") String durationInterval,
         @JsonProperty("percentage") long percentage
 ) implements CreateOfferParamsPhasesItem {}

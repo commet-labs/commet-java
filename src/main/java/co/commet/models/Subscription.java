@@ -26,6 +26,7 @@ public record Subscription(
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("offer_applications") List<SubscriptionOfferApplication> offerApplications,
+        @JsonProperty("plan_grant") SubscriptionPlanGrant planGrant,
         @JsonProperty("consumption_model") ConsumptionModel consumptionModel,
         @JsonProperty("features") List<SubscriptionFeaturesItem> features,
         @JsonProperty("credits") SubscriptionCredits credits,

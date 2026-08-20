@@ -10,5 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public record SubscriptionFeaturesItemVariant4(
         @JsonProperty("code") String code,
         @JsonProperty("name") String name,
-        @JsonProperty("type") String type
+        @JsonProperty("type") String type,
+        @JsonProperty("usage") SubscriptionFeaturesItemVariant4Usage usage,
+        @JsonProperty("base_access") SubscriptionFeaturesItemVariant4BaseAccess baseAccess
 ) implements SubscriptionFeaturesItem {}

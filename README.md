@@ -7,7 +7,7 @@ Billing and usage tracking for SaaS applications.
 ### Gradle
 
 ```kotlin
-implementation("co.commet:commet-java:9.0.0")
+implementation("co.commet:commet-java:9.2.0")
 ```
 
 ### Maven
@@ -16,7 +16,7 @@ implementation("co.commet:commet-java:9.0.0")
 <dependency>
     <groupId>co.commet</groupId>
     <artifactId>commet-java</artifactId>
-    <version>9.0.0</version>
+    <version>9.2.0</version>
 </dependency>
 ```
 
