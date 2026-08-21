@@ -402,11 +402,12 @@ public class CommetHttpClient implements AutoCloseable {
                 rawData = objectMapper.readValue(responseBody, new TypeReference<>() {});
             } catch (Exception e) {
                 throw new CommetApiException(
-                        "Invalid JSON response: " + response.code(), response.code(), "INVALID_JSON", null);
+                        "Invalid JSON response: " + response.code(), response.code(), "INVALID_JSON", null,
+                        null, null, null, response.header("x-request-id"));
             }
 
             if (!response.isSuccessful()) {
-                handleError(response.code(), rawData);
+                handleError(response.code(), rawData, response.header("x-request-id"));
             }
 
             boolean isEnvelope = rawData.get("success") instanceof Boolean
@@ -422,13 +423,19 @@ public class CommetHttpClient implements AutoCloseable {
             if (telemetryEnabled) {
                 long durationMs = System.currentTimeMillis() - requestStart;
                 String requestId = response.header("x-request-id");
-                if (requestId == null) {
-                    requestId = "req_" + System.currentTimeMillis();
+                if (requestId != null) {
+                    try {
+                        lastTelemetryHeader = objectMapper.writeValueAsString(Map.of(
+                                "last_request_metrics",
+                                Map.of("request_id", requestId, "duration_ms", durationMs)
+                        ));
+                    } catch (IOException e) {
+                        throw new CommetException(
+                                "Failed to serialize client telemetry: " + e.getMessage());
+                    }
+                } else {
+                    lastTelemetryHeader = null;
                 }
-                lastTelemetryHeader = String.format(
-                    "{\"last_request_metrics\":{\"request_id\":\"%s\",\"duration_ms\":%d}}",
-                    requestId, durationMs
-                );
             }
 
             return new ApiResponse<>(
@@ -449,7 +456,7 @@ public class CommetHttpClient implements AutoCloseable {
     }
 
     @SuppressWarnings("unchecked")
-    private void handleError(int statusCode, Map<String, Object> data) {
+    private void handleError(int statusCode, Map<String, Object> data, String requestId) {
         Map<String, Object> errorObj = data;
         if (data.get("error") instanceof Map) {
             errorObj = (Map<String, Object>) data.get("error");
@@ -472,10 +479,12 @@ public class CommetHttpClient implements AutoCloseable {
                 errors.computeIfAbsent(field, k -> new ArrayList<>())
                         .add(detail.getOrDefault("message", "").toString());
             }
-            throw new CommetValidationException(message, errors);
+            throw new CommetValidationException(
+                    message, statusCode, errors, details, type, param, docUrl, requestId);
         }
 
-        throw new CommetApiException(message, statusCode, code, details, type, param, docUrl);
+        throw new CommetApiException(
+                message, statusCode, code, details, type, param, docUrl, requestId);
     }
 
     private long retryDelay(int attempt) {

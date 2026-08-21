@@ -17,6 +17,7 @@ import co.commet.models.SubscriptionAddon;
 import co.commet.models.SubscriptionsListResult;
 import co.commet.params.ActivateAddonParams;
 import co.commet.params.AdjustBalanceParams;
+import co.commet.params.ApplySubscriptionOfferParams;
 import co.commet.params.CancelSubscriptionParams;
 import co.commet.params.ChangePlanParams;
 import co.commet.params.CreateSubscriptionParams;
@@ -110,6 +111,23 @@ public class SubscriptionsResource {
     }
 
     /**
+     * Apply or replace a direct Offer on a subscription's pending payment checkout. The existing checkout URL remains unchanged. Offers whose first phase is a free trial cannot be applied after checkout creation.
+     */
+    public Subscription applyOffer(String id, ApplySubscriptionOfferParams params) {
+        return http.put("/subscriptions/" + id + "/offer", buildBody(
+                "offer_id", params.getOfferId(),
+                "expires_at", params.getExpiresAt()
+        ), params.getIdempotencyKey(), new TypeReference<Subscription>() {}).getData();
+    }
+
+    /**
+     * Remove the quoted direct Offer from a subscription's pending payment checkout. The existing checkout URL remains unchanged and returns to its undiscounted price.
+     */
+    public Subscription removeOffer(String id) {
+        return http.delete("/subscriptions/" + id + "/offer", null, new TypeReference<Subscription>() {}).getData();
+    }
+
+    /**
      * Creates a hosted checkout session for the customer to update the subscription's default payment method.
      */
     public PaymentMethodUpdateCheckout updatePaymentMethod(String id, UpdatePaymentMethodParams params) {
@@ -119,7 +137,7 @@ public class SubscriptionsResource {
     }
 
     /**
-     * Preview proration details for an immediate plan change without applying it. Interval direction takes precedence: a longer interval is immediate and a shorter interval is scheduled. When the interval is unchanged, a higher-sort-order plan is immediate and a lower-sort-order plan is scheduled. A paid-to-free change is always scheduled. Returns credit, charge, and net amount. The target plan must belong to the same plan group as the current plan, otherwise a 400 with code `plans_not_in_same_group` is returned. A change between two free plans has nothing to prorate and returns a zero-amount estimate. Scheduled changes return a 400 with code `plan_change_scheduled`; apply those via the change-plan endpoint. Pass offerId to quote the destination plan with an Offer.
+     * Preview proration details for an immediate plan change without applying it. Free-to-paid changes are never scheduled and the change-plan endpoint always returns hosted checkout for them. For paid plans, interval direction takes precedence: a longer interval is immediate and a shorter interval is scheduled. When the interval is unchanged, a higher-sort-order plan is immediate and a lower-sort-order plan is scheduled. A paid-to-free change is always scheduled. Returns credit, charge, and net amount. The target plan must belong to the same plan group as the current plan, otherwise a 400 with code `plans_not_in_same_group` is returned. A change between two free plans has nothing to prorate and returns a zero-amount estimate. Scheduled changes return a 400 with code `plan_change_scheduled`; apply those via the change-plan endpoint. Pass offerId to quote the destination plan with an Offer.
      */
     public PreviewChange previewChange(String id, PreviewChangePlanParams params) {
         return http.post("/subscriptions/" + id + "/preview-change", buildBody(
@@ -179,7 +197,7 @@ public class SubscriptionsResource {
     }
 
     /**
-     * Create a subscription for a customer. Commet selects the default price when priceId is omitted and resolves its market from the customer's billing country. Without an offer override, Commet applies the price's automatic introductory Offer. Pass offerId to apply any active compatible Offer directly; the Offer does not need a prior plan-price association.
+     * Create a subscription for a customer. Commet selects the default price when priceId is omitted and resolves its market from the customer's billing country. Without an offer override, Commet applies the price's automatic introductory Offer. Pass offerId to apply an active compatible Offer directly, or cardPromotionId to preselect a card-eligible Promotional Offer for the initial checkout when card promotions are enabled for the organization. For the initial checkout, provider accepts either a processor name or an exact payment connection ID.
      */
     public CreatedSubscription create(CreateSubscriptionParams params) {
         return http.post("/subscriptions", buildBody(
@@ -196,7 +214,8 @@ public class SubscriptionsResource {
                 "custom_trial_days", params.getCustomTrialDays(),
                 "skip_trial", params.getSkipTrial(),
                 "plan_id", params.getPlanId(),
-                "plan_code", params.getPlanCode()
+                "plan_code", params.getPlanCode(),
+                "card_promotion_id", params.getCardPromotionId()
         ), params.getIdempotencyKey(), new TypeReference<CreatedSubscription>() {}).getData();
     }
 }

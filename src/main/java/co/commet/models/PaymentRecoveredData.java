@@ -9,5 +9,6 @@ public record PaymentRecoveredData(
         @JsonProperty("invoiceNumber") String invoiceNumber,
         @JsonProperty("invoiceTotal") double invoiceTotal,
         @JsonProperty("customerId") String customerId,
-        @JsonProperty("subscriptionId") String subscriptionId
+        @JsonProperty("subscriptionId") String subscriptionId,
+        @JsonProperty("provider") String provider
 ) {}

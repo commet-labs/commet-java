@@ -45,6 +45,7 @@ class ErrorParsingTest {
         server.enqueue(new MockResponse()
                 .setResponseCode(403)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("x-request-id", "req_server_123")
                 .setBody(mapper.writeValueAsString(Map.of(
                         "success", false,
                         "code", "forbidden",
@@ -57,6 +58,8 @@ class ErrorParsingTest {
         assertEquals("Access denied", exception.getMessage());
         assertEquals("forbidden", exception.getCode());
         assertEquals(403, exception.getStatusCode());
+        assertEquals("req_server_123", exception.getRequestId());
+        assertEquals("req_server_123", exception.toMap().get("requestId"));
     }
 
     @Test
@@ -84,6 +87,18 @@ class ErrorParsingTest {
         assertEquals(2, errors.size());
         assertEquals(List.of("Email is required", "Must be a valid email"), errors.get("email"));
         assertEquals(List.of("Name is too short"), errors.get("name"));
+        assertEquals(errors, exception.toMap().get("validationErrors"));
+    }
+
+    @Test
+    void validationErrorSerializesActualStatusCodeAndFieldErrors() {
+        Map<String, List<String>> errors = Map.of("email", List.of("Email is required"));
+        CommetValidationException exception =
+                new CommetValidationException("Validation failed", 400, errors);
+
+        assertEquals(400, exception.getStatusCode());
+        assertEquals(400, exception.toMap().get("statusCode"));
+        assertEquals(errors, exception.toMap().get("validationErrors"));
     }
 
     @Test
@@ -149,6 +164,43 @@ class ErrorParsingTest {
         assertNotNull(response);
         assertEquals("cus_abc123", response.id());
         assertEquals("user@example.com", response.email());
+    }
+
+    @Test
+    void telemetrySafelySerializesExactServerRequestId() throws Exception {
+        String requestId = "req_\"quoted\\id";
+        String responseBody = mapper.writeValueAsString(Map.of(
+                "success", true,
+                "data", Map.of(
+                        "id", "cus_abc123",
+                        "email", "user@example.com",
+                        "created_at", "2024-01-01T00:00:00Z",
+                        "updated_at", "2024-01-01T00:00:00Z"
+                )
+        ));
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("x-request-id", requestId)
+                .setBody(responseBody));
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setHeader("Content-Type", "application/json")
+                .setBody(responseBody));
+
+        customers.get("cus_abc123");
+        customers.get("cus_abc123");
+
+        server.takeRequest();
+        String telemetryHeader = server.takeRequest().getHeader("commet-client-telemetry");
+        assertNotNull(telemetryHeader);
+        assertEquals(
+                requestId,
+                mapper.readTree(telemetryHeader)
+                        .path("last_request_metrics")
+                        .path("request_id")
+                        .asText()
+        );
     }
 
     @Test

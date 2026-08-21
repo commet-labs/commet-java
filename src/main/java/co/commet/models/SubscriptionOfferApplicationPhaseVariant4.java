@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public record SubscriptionOfferApplicationPhaseVariant4(
         @JsonProperty("type") String type,
         @JsonProperty("duration_cycles") Long durationCycles,
+        @JsonProperty("duration_interval") String durationInterval,
         @JsonProperty("price") long price,
         @JsonProperty("starts_at") String startsAt,
         @JsonProperty("ends_at") String endsAt

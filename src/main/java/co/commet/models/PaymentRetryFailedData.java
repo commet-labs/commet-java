@@ -9,5 +9,6 @@ public record PaymentRetryFailedData(
         @JsonProperty("invoiceNumber") String invoiceNumber,
         @JsonProperty("customerId") String customerId,
         @JsonProperty("subscriptionId") String subscriptionId,
+        @JsonProperty("provider") String provider,
         @JsonProperty("reason") String reason
 ) {}

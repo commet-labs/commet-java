@@ -4,11 +4,11 @@ import co.commet.ApiResponse;
 import co.commet.CommetHttpClient;
 import co.commet.models.Payout;
 import co.commet.models.PayoutBankAccount;
-import co.commet.models.PayoutVerification;
 import co.commet.params.AddPayoutBankAccountParams;
 import co.commet.params.CompletePayoutVerificationParams;
 import co.commet.params.RequestPayoutParams;
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Map;
 
 import static co.commet.CommetHttpClient.buildBody;
 
@@ -44,17 +44,11 @@ public class PayoutsResource {
     }
 
     /**
-     * Provision the organization's payout account in a single call with the full KYC + bank payload. Uploads the identity document, persists the destination bank, and creates the connected account through the org's payout provider. The account starts `pending_verification` and flips to `verified` via the provider's webhook. Idempotent: returns the existing account if the org already has one.
+     * Deprecated. Complete business and identity verification in the Commet dashboard. This endpoint no longer accepts or processes KYC data.
+     * @deprecated
      */
-    public PayoutVerification completeVerification(CompletePayoutVerificationParams params) {
-        return http.post("/payouts/verification", buildBody(
-                "email", params.getEmail(),
-                "business_url", params.getBusinessUrl(),
-                "document_url", params.getDocumentUrl(),
-                "bank", params.getBank(),
-                "business_type", params.getBusinessType(),
-                "individual", params.getIndividual(),
-                "company", params.getCompany()
-        ), params.getIdempotencyKey(), new TypeReference<PayoutVerification>() {}).getData();
+    @Deprecated
+    public Void completeVerification(CompletePayoutVerificationParams params) {
+        return http.post("/payouts/verification", null, params.getIdempotencyKey(), new TypeReference<Void>() {}).getData();
     }
 }

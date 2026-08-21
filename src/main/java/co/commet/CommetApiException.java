@@ -14,6 +14,11 @@ public class CommetApiException extends CommetException {
 
     public CommetApiException(String message, int statusCode, String code, Object details,
                               String type, String param, String docUrl) {
-        super(message, type, code, statusCode, details, param, docUrl);
+        this(message, statusCode, code, details, type, param, docUrl, null);
+    }
+
+    public CommetApiException(String message, int statusCode, String code, Object details,
+                              String type, String param, String docUrl, String requestId) {
+        super(message, type, code, statusCode, details, param, docUrl, requestId);
     }
 }

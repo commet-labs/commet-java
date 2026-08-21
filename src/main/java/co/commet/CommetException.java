@@ -1,5 +1,8 @@
 package co.commet;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class CommetException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
@@ -10,6 +13,7 @@ public class CommetException extends RuntimeException {
     private final transient Object details;
     private final String param;
     private final String docUrl;
+    private final String requestId;
 
     public CommetException(String message) {
         this(message, null, null, null, null, null, null);
@@ -21,6 +25,11 @@ public class CommetException extends RuntimeException {
 
     public CommetException(String message, String type, String code, Integer statusCode,
                            Object details, String param, String docUrl) {
+        this(message, type, code, statusCode, details, param, docUrl, null);
+    }
+
+    public CommetException(String message, String type, String code, Integer statusCode,
+                           Object details, String param, String docUrl, String requestId) {
         super(message);
         this.type = type;
         this.code = code;
@@ -28,6 +37,7 @@ public class CommetException extends RuntimeException {
         this.details = details;
         this.param = param;
         this.docUrl = docUrl;
+        this.requestId = requestId;
     }
 
     public String getType() {
@@ -52,5 +62,22 @@ public class CommetException extends RuntimeException {
 
     public String getDocUrl() {
         return docUrl;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> fields = new LinkedHashMap<>();
+        fields.put("message", getMessage());
+        fields.put("type", type);
+        fields.put("code", code);
+        fields.put("statusCode", statusCode);
+        fields.put("param", param);
+        fields.put("details", details);
+        fields.put("requestId", requestId);
+        fields.put("docUrl", docUrl);
+        return fields;
     }
 }

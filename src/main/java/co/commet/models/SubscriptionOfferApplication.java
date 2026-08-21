@@ -18,5 +18,6 @@ public record SubscriptionOfferApplication(
         @JsonProperty("total") Long total,
         @JsonProperty("phases") List<SubscriptionOfferApplicationPhase> phases,
         @JsonProperty("quoted_at") String quotedAt,
+        @JsonProperty("expires_at") String expiresAt,
         @JsonProperty("applied_at") String appliedAt
 ) {}

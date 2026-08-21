@@ -8,5 +8,6 @@ public record SubscriptionFeaturesItemVariant3Usage(
         @JsonProperty("current") double current,
         @JsonProperty("included") double included,
         @JsonProperty("overage_quantity") double overageQuantity,
-        @JsonProperty("overage_unit_price") Double overageUnitPrice
+        @JsonProperty("overage_unit_price") Double overageUnitPrice,
+        @JsonProperty("unlimited") Boolean unlimited
 ) {}

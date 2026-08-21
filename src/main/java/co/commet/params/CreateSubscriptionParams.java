@@ -18,6 +18,7 @@ public final class CreateSubscriptionParams {
     private final Boolean skipTrial;
     private final String planId;
     private final String planCode;
+    private final String cardPromotionId;
     private final String idempotencyKey;
 
     private CreateSubscriptionParams(Builder builder) {
@@ -35,6 +36,7 @@ public final class CreateSubscriptionParams {
         this.skipTrial = builder.skipTrial;
         this.planId = builder.planId;
         this.planCode = builder.planCode;
+        this.cardPromotionId = builder.cardPromotionId;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -56,6 +58,7 @@ public final class CreateSubscriptionParams {
     public Boolean getSkipTrial() { return skipTrial; }
     public String getPlanId() { return planId; }
     public String getPlanCode() { return planCode; }
+    public String getCardPromotionId() { return cardPromotionId; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -74,6 +77,7 @@ public final class CreateSubscriptionParams {
         private Boolean skipTrial;
         private String planId;
         private String planCode;
+        private String cardPromotionId;
         private String idempotencyKey;
 
         private Builder(String customerId) {
@@ -142,6 +146,11 @@ public final class CreateSubscriptionParams {
 
         public Builder planCode(String planCode) {
             this.planCode = planCode;
+            return this;
+        }
+
+        public Builder cardPromotionId(String cardPromotionId) {
+            this.cardPromotionId = cardPromotionId;
             return this;
         }
 
