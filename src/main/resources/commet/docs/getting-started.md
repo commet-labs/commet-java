@@ -2,7 +2,7 @@
 
 Install the SDK:
 
-```bash
+```kotlin
 implementation("co.commet:commet-java:9.3.0")
 ```
 
