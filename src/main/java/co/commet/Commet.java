@@ -25,8 +25,8 @@ public class Commet extends GeneratedResources implements AutoCloseable {
         if (apiKey == null || apiKey.isEmpty()) {
             throw new IllegalArgumentException("Commet SDK: API key is required");
         }
-        if (!apiKey.startsWith("ck_")) {
-            throw new IllegalArgumentException("Commet SDK: Invalid API key format. Expected format: ck_xxx...");
+        if (!apiKey.startsWith("ck_") && !apiKey.startsWith("rk_")) {
+            throw new IllegalArgumentException("Commet SDK: Invalid API key format. Expected prefix ck_ or rk_");
         }
         return new CommetHttpClient(apiKey, timeout, retries, telemetry, apiVersion, debug);
     }

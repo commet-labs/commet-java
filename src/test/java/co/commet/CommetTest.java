@@ -14,6 +14,8 @@ class CommetTest {
 
         assertNotNull(commet);
         commet.close();
+        Commet restricted = Commet.builder().apiKey("rk_live_123456").build();
+        restricted.close();
     }
 
     @Test

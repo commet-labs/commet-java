@@ -580,7 +580,7 @@ public class CommetHttpClient implements AutoCloseable {
             Map<String, Object> result = new LinkedHashMap<>();
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = toCamelCase ? toCamel(entry.getKey()) : toSnake(entry.getKey());
-                result.put(key, convertKeys(entry.getValue(), toCamelCase));
+                result.put(key, entry.getKey().equals("permissions") ? entry.getValue() : convertKeys(entry.getValue(), toCamelCase));
             }
             return result;
         }
