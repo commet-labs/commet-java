@@ -42,7 +42,8 @@ public class ApiKeysResource {
     public CreatedApiKey create(CreateApiKeyParams params) {
         return http.post("/api-keys", buildBody(
                 "name", params.getName(),
-                "expires_in_days", params.getExpiresInDays()
+                "expires_in_days", params.getExpiresInDays(),
+                "permissions", params.getPermissions()
         ), params.getIdempotencyKey(), new TypeReference<CreatedApiKey>() {}).getData();
     }
 }
