@@ -11,6 +11,7 @@ public record PaymentFailedData(
         @JsonProperty("subscriptionId") String subscriptionId,
         @JsonProperty("provider") String provider,
         @JsonProperty("paymentMethod") PaymentMethod paymentMethod,
+        @JsonProperty("subPaymentMethod") SubPaymentMethod subPaymentMethod,
         @JsonProperty("failureCode") String failureCode,
         @JsonProperty("failureMessage") String failureMessage,
         @JsonProperty("recoveryUrl") String recoveryUrl
