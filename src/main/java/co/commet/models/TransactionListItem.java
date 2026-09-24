@@ -13,6 +13,7 @@ public record TransactionListItem(
         @JsonProperty("presentment_amount") Long presentmentAmount,
         @JsonProperty("currency") String currency,
         @JsonProperty("provider") PaymentProvider provider,
+        @JsonProperty("payment_method") PaymentMethod paymentMethod,
         @JsonProperty("status") TransactionStatus status,
         @JsonProperty("customer_email") String customerEmail,
         @JsonProperty("customer_name") String customerName,

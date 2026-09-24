@@ -7,5 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record PaymentMethodAttachedData(
         @JsonProperty("subscriptionId") String subscriptionId,
         @JsonProperty("customerId") String customerId,
-        @JsonProperty("card") WebhookCardInfo card
+        @JsonProperty("card") WebhookCardInfo card,
+        @JsonProperty("paymentMethod") PaymentMethod paymentMethod
 ) {}
