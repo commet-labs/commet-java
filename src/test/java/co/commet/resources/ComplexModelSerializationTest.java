@@ -1,6 +1,7 @@
 package co.commet.resources;
 
 import co.commet.CommetHttpClient;
+import co.commet.WebhookEvent;
 import co.commet.models.Addon;
 import co.commet.models.CreditPack;
 import co.commet.models.CreditPacksListResult;
@@ -10,6 +11,7 @@ import co.commet.models.Invoice;
 import co.commet.models.InvoiceType;
 import co.commet.models.PaymentMethod;
 import co.commet.models.SeatEvent;
+import co.commet.models.SubPaymentMethod;
 import co.commet.models.Transaction;
 import co.commet.models.TransactionStatus;
 import co.commet.params.AddSeatsParams;
@@ -136,6 +138,7 @@ class ComplexModelSerializationTest {
                 "currency", "usd",
                 "status", "succeeded",
                 "paymentMethod", "mercado_pago",
+                "subPaymentMethod", "account_money",
                 "customerEmail", "ada@acme.test",
                 "customerName", "Ada",
                 "paidAt", "2026-06-01T00:00:00.000Z",
@@ -155,8 +158,19 @@ class ComplexModelSerializationTest {
         Transaction txn = response;
         assertEquals(TransactionStatus.SUCCEEDED, txn.status());
         assertEquals(PaymentMethod.MERCADO_PAGO, txn.paymentMethod());
+        assertEquals(SubPaymentMethod.ACCOUNT_MONEY, txn.subPaymentMethod());
         assertEquals(9900L, txn.grossAmount());
         assertEquals("ada@acme.test", txn.customerEmail());
+    }
+
+    @Test
+    void paymentReceivedWebhookMapsSubPaymentMethodEnum() throws Exception {
+        WebhookEvent event = mapper.readValue(
+                "{\"event\":\"payment.received\",\"data\":{\"subPaymentMethod\":\"debit_card\"}}",
+                WebhookEvent.class
+        );
+
+        assertEquals(SubPaymentMethod.DEBIT_CARD, event.asPaymentReceived().subPaymentMethod());
     }
 
     @Test

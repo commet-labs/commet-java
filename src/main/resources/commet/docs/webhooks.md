@@ -213,6 +213,7 @@ Fired every time a payment settles successfully — the first payment and every 
 - `paymentTransactionId` (`String`)
 - `provider` (`String`)
 - `paymentMethod` (`PaymentMethod (nullable)`) — The method used for this charge: card, oxxo, or mercado_pago. Null when unknown.
+- `subPaymentMethod` (`SubPaymentMethod (nullable)`) — The source of funds for this charge, when reported by the provider. Null when unavailable or unknown.
 - `grossAmount` (`Double`)
 - `currency` (`String`)
 - `orgNetAmount` (`Double`)
@@ -229,6 +230,7 @@ Fired when a recurring charge fails. This event is for recurring charge failures
 - `subscriptionId` (`String`)
 - `provider` (`String`)
 - `paymentMethod` (`PaymentMethod (nullable)`) — The method used for this charge: card, oxxo, or mercado_pago. Null when unknown.
+- `subPaymentMethod` (`SubPaymentMethod (nullable)`) — The source of funds for this charge, when reported by the provider. Null when unavailable or unknown.
 - `failureCode` (`String`)
 - `failureMessage` (`String`)
 - `recoveryUrl` (`String`)
@@ -244,6 +246,7 @@ Fired when an outstanding invoice that previously failed is successfully paid �
 - `subscriptionId` (`String`)
 - `provider` (`String`)
 - `paymentMethod` (`PaymentMethod (nullable)`) — The method used for this charge: card, oxxo, or mercado_pago. Null when unknown.
+- `subPaymentMethod` (`SubPaymentMethod (nullable)`) — The source of funds for this charge, when reported by the provider. Null when unavailable or unknown.
 
 ## payment.retry_failed
 
@@ -326,6 +329,7 @@ Fired when a payment link is paid. The charge settled and a one-time invoice was
 - `invoiceNumber` (`String`)
 - `paymentTransactionId` (`String`)
 - `paymentMethod` (`PaymentMethod (nullable)`) — The method used for this charge: card, oxxo, or mercado_pago. Null when unknown.
+- `subPaymentMethod` (`SubPaymentMethod (nullable)`) — The source of funds for this charge, when reported by the provider. Null when unavailable or unknown.
 
 ## payment_link.failed
 
@@ -340,6 +344,7 @@ Fired when a payment link charge attempt is declined. The link stays open and ca
 - `failureCode` (`String`)
 - `failureMessage` (`String`)
 - `paymentMethod` (`PaymentMethod (nullable)`) — The method used for this charge: card, oxxo, or mercado_pago. Null when unknown.
+- `subPaymentMethod` (`SubPaymentMethod (nullable)`) — The source of funds for this charge, when reported by the provider. Null when unavailable or unknown.
 
 ## payment_link.canceled
 

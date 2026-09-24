@@ -13,6 +13,7 @@ public record PaymentReceivedData(
         @JsonProperty("paymentTransactionId") String paymentTransactionId,
         @JsonProperty("provider") String provider,
         @JsonProperty("paymentMethod") PaymentMethod paymentMethod,
+        @JsonProperty("subPaymentMethod") SubPaymentMethod subPaymentMethod,
         @JsonProperty("grossAmount") Double grossAmount,
         @JsonProperty("currency") String currency,
         @JsonProperty("orgNetAmount") Double orgNetAmount,

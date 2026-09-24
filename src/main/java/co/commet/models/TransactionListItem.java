@@ -14,6 +14,7 @@ public record TransactionListItem(
         @JsonProperty("currency") String currency,
         @JsonProperty("provider") PaymentProvider provider,
         @JsonProperty("payment_method") PaymentMethod paymentMethod,
+        @JsonProperty("sub_payment_method") SubPaymentMethod subPaymentMethod,
         @JsonProperty("status") TransactionStatus status,
         @JsonProperty("customer_email") String customerEmail,
         @JsonProperty("customer_name") String customerName,

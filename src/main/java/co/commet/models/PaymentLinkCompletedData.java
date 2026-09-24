@@ -14,5 +14,6 @@ public record PaymentLinkCompletedData(
         @JsonProperty("invoiceId") String invoiceId,
         @JsonProperty("invoiceNumber") String invoiceNumber,
         @JsonProperty("paymentTransactionId") String paymentTransactionId,
-        @JsonProperty("paymentMethod") PaymentMethod paymentMethod
+        @JsonProperty("paymentMethod") PaymentMethod paymentMethod,
+        @JsonProperty("subPaymentMethod") SubPaymentMethod subPaymentMethod
 ) {}

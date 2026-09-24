@@ -13,5 +13,6 @@ public record PaymentLinkFailedData(
         @JsonProperty("customerId") String customerId,
         @JsonProperty("failureCode") String failureCode,
         @JsonProperty("failureMessage") String failureMessage,
-        @JsonProperty("paymentMethod") PaymentMethod paymentMethod
+        @JsonProperty("paymentMethod") PaymentMethod paymentMethod,
+        @JsonProperty("subPaymentMethod") SubPaymentMethod subPaymentMethod
 ) {}
