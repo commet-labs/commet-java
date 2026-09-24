@@ -6,5 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PaymentMethodUpdatedData(
         @JsonProperty("customerId") String customerId,
-        @JsonProperty("card") WebhookCardInfo card
+        @JsonProperty("card") WebhookCardInfo card,
+        @JsonProperty("paymentMethod") PaymentMethod paymentMethod
 ) {}

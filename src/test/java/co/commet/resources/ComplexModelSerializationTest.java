@@ -8,6 +8,7 @@ import co.commet.models.Feature;
 import co.commet.models.FeatureType;
 import co.commet.models.Invoice;
 import co.commet.models.InvoiceType;
+import co.commet.models.PaymentMethod;
 import co.commet.models.SeatEvent;
 import co.commet.models.Transaction;
 import co.commet.models.TransactionStatus;
@@ -134,6 +135,7 @@ class ComplexModelSerializationTest {
                 "taxAmount", 900,
                 "currency", "usd",
                 "status", "succeeded",
+                "paymentMethod", "mercado_pago",
                 "customerEmail", "ada@acme.test",
                 "customerName", "Ada",
                 "paidAt", "2026-06-01T00:00:00.000Z",
@@ -152,6 +154,7 @@ class ComplexModelSerializationTest {
 
         Transaction txn = response;
         assertEquals(TransactionStatus.SUCCEEDED, txn.status());
+        assertEquals(PaymentMethod.MERCADO_PAGO, txn.paymentMethod());
         assertEquals(9900L, txn.grossAmount());
         assertEquals("ada@acme.test", txn.customerEmail());
     }

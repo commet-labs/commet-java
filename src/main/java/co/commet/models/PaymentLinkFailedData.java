@@ -12,5 +12,6 @@ public record PaymentLinkFailedData(
         @JsonProperty("description") String description,
         @JsonProperty("customerId") String customerId,
         @JsonProperty("failureCode") String failureCode,
-        @JsonProperty("failureMessage") String failureMessage
+        @JsonProperty("failureMessage") String failureMessage,
+        @JsonProperty("paymentMethod") PaymentMethod paymentMethod
 ) {}
