@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PaymentLinkCompletedData(
+        @JsonProperty("paymentContext") Object paymentContext,
         @JsonProperty("paymentId") String paymentId,
         @JsonProperty("status") String status,
         @JsonProperty("amount") double amount,
@@ -13,5 +14,7 @@ public record PaymentLinkCompletedData(
         @JsonProperty("customerId") String customerId,
         @JsonProperty("invoiceId") String invoiceId,
         @JsonProperty("invoiceNumber") String invoiceNumber,
-        @JsonProperty("paymentTransactionId") String paymentTransactionId
+        @JsonProperty("paymentTransactionId") String paymentTransactionId,
+        @JsonProperty("paymentMethod") PaymentMethod paymentMethod,
+        @JsonProperty("subPaymentMethod") SubPaymentMethod subPaymentMethod
 ) {}

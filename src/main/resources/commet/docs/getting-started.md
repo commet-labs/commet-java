@@ -3,7 +3,7 @@
 Install the SDK:
 
 ```kotlin
-implementation("co.commet:commet-java:9.3.0")
+implementation("co.commet:commet-java:9.4.0")
 ```
 
 Create one server-side client. Never expose an API key to browser code.

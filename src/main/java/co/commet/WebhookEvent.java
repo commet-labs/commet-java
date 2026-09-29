@@ -10,6 +10,12 @@ import co.commet.models.WebhookEventType;
 import co.commet.models.SubscriptionCreatedData;
 import co.commet.models.SubscriptionActivatedData;
 import co.commet.models.SubscriptionReactivatedData;
+import co.commet.models.SubscriptionPauseScheduledData;
+import co.commet.models.SubscriptionPauseUpdatedData;
+import co.commet.models.SubscriptionPauseRevokedData;
+import co.commet.models.SubscriptionPausedData;
+import co.commet.models.SubscriptionResumedData;
+import co.commet.models.SubscriptionResumeFailedData;
 import co.commet.models.SubscriptionCanceledData;
 import co.commet.models.SubscriptionUpdatedData;
 import co.commet.models.SubscriptionPlanChangedData;
@@ -99,6 +105,30 @@ public record WebhookEvent(
 
     public SubscriptionReactivatedData asSubscriptionReactivated() {
         return convert(SubscriptionReactivatedData.class);
+    }
+
+    public SubscriptionPauseScheduledData asSubscriptionPauseScheduled() {
+        return convert(SubscriptionPauseScheduledData.class);
+    }
+
+    public SubscriptionPauseUpdatedData asSubscriptionPauseUpdated() {
+        return convert(SubscriptionPauseUpdatedData.class);
+    }
+
+    public SubscriptionPauseRevokedData asSubscriptionPauseRevoked() {
+        return convert(SubscriptionPauseRevokedData.class);
+    }
+
+    public SubscriptionPausedData asSubscriptionPaused() {
+        return convert(SubscriptionPausedData.class);
+    }
+
+    public SubscriptionResumedData asSubscriptionResumed() {
+        return convert(SubscriptionResumedData.class);
+    }
+
+    public SubscriptionResumeFailedData asSubscriptionResumeFailed() {
+        return convert(SubscriptionResumeFailedData.class);
     }
 
     public SubscriptionCanceledData asSubscriptionCanceled() {

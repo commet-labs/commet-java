@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -20,6 +21,7 @@ public record UsageCheckVariant1(
         @JsonProperty("unlimited") boolean unlimited,
         @JsonProperty("included") double included,
         @JsonProperty("overage_enabled") boolean overageEnabled,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("overage_unit_price") Double overageUnitPrice,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode

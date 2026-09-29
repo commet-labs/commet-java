@@ -1,6 +1,6 @@
 # Schemas
 
-Generated from Commet API version `2026-07-31`.
+Generated from Commet API version `2026-08-27`.
 
 ## Enums
 
@@ -36,12 +36,27 @@ Generated from Commet API version `2026-07-31`.
 - `"addon_activation"`
 - `"one_time_payment"`
 - `"reactivation"`
+- `"resume"`
+
+### PaymentMethod
+
+- `"card"`
+- `"oxxo"`
+- `"mercado_pago"`
 
 ### PaymentProvider
 
 - `"stripe"`
 - `"commet"`
 - `"dlocal"`
+
+### SubPaymentMethod
+
+- `"credit_card"`
+- `"debit_card"`
+- `"prepaid_card"`
+- `"bank_transfer"`
+- `"account_money"`
 
 ### SubscriptionStatus
 
@@ -50,6 +65,7 @@ Generated from Commet API version `2026-07-31`.
 - `"trialing"`
 - `"active"`
 - `"past_due"`
+- `"paused"`
 - `"canceled"`
 
 ### Timezone
@@ -208,6 +224,28 @@ Generated from Commet API version `2026-07-31`.
 - `object` (`String`, required)
 - `livemode` (`Boolean`, required)
 
+### CreateApiKeyParamsPermissions
+
+- `customer` (`List<String>`, optional)
+- `subscription` (`List<String>`, optional)
+- `invoice` (`List<String>`, optional)
+- `usage` (`List<String>`, optional)
+- `seat` (`List<String>`, optional)
+- `plan` (`List<String>`, optional)
+- `plan_group` (`List<String>`, optional)
+- `feature` (`List<String>`, optional)
+- `addon` (`List<String>`, optional)
+- `credit_pack` (`List<String>`, optional)
+- `offer` (`List<String>`, optional)
+- `promo_code` (`List<String>`, optional)
+- `market_group` (`List<String>`, optional)
+- `payment` (`List<String>`, optional)
+- `transaction` (`List<String>`, optional)
+- `payout` (`List<String>`, optional)
+- `test_clock` (`List<String>`, optional)
+- `organization` (`List<String>`, optional)
+- `api_key` (`List<String>`, optional)
+
 ### CreateCustomerParamsAddress
 
 - `line1` (`String`, required)
@@ -251,6 +289,7 @@ Generated from Commet API version `2026-07-31`.
 - `createdAt` (`String`, required)
 - `updatedAt` (`String`, required)
 - `offerApplications` (`List<SubscriptionOfferApplication>`, required)
+- `pause` (`CreatedSubscriptionPause | null`, required)
 - `checkoutProvider` (`PaymentProvider | null`, required) — Payment provider resolved for this checkout when the subscription response was created. This is an informational snapshot and may differ when the checkout is loaded if its country or the organization's routing changes.
 - `priceId` (`String | null`, required)
 - `object` (`String`, required)
@@ -267,6 +306,34 @@ Generated from Commet API version `2026-07-31`.
 - `start` (`String`, required)
 - `end` (`String`, required)
 - `daysRemaining` (`Double`, required)
+
+### CreatedSubscriptionPause
+
+Variants:
+
+- `CreatedSubscriptionPauseVariant1`
+- `CreatedSubscriptionPauseVariant2`
+
+Discriminator: `status`
+
+- `"scheduled"` → `CreatedSubscriptionPauseVariant1`
+- `"active"` → `CreatedSubscriptionPauseVariant2`
+
+### CreatedSubscriptionPauseVariant1
+
+- `status` (`String`, required)
+- `mode` (`String`, required)
+- `requestedAt` (`String`, required)
+- `effectiveAt` (`String`, required)
+- `resumeAt` (`String | null`, required)
+
+### CreatedSubscriptionPauseVariant2
+
+- `status` (`String`, required)
+- `mode` (`String`, required)
+- `requestedAt` (`String`, required)
+- `effectiveAt` (`String`, required)
+- `resumeAt` (`String | null`, required)
 
 ### CreatedSubscriptionPlan
 
@@ -930,6 +997,7 @@ Discriminator: `type`
 
 ### Payment
 
+- `paymentContext` (`PaymentPaymentContext | null`, required) — Charge context captured for new payments. Null for historical payments with no captured context.
 - `id` (`String`, required)
 - `customerId` (`String | null`, required)
 - `kind` (`String`, required)
@@ -953,6 +1021,34 @@ Discriminator: `type`
 - `checkoutUrl` (`String`, required)
 - `object` (`String`, required)
 - `livemode` (`Boolean`, required)
+
+### PaymentPaymentContext
+
+- `reason` (`String`, required) — The original reason for the charge. Recovery never replaces this reason.
+- `paymentLinkId` (`String | null`, required) — The public payment link ID, independently of the reason, or null when no payment link originated the charge.
+- `recovery` (`PaymentPaymentContextRecovery | null`, required)
+
+### PaymentPaymentContextRecovery
+
+Variants:
+
+- `PaymentPaymentContextRecoveryVariant1`
+- `PaymentPaymentContextRecoveryVariant2`
+
+Discriminator: `type`
+
+- `"payment_recovery"` → `PaymentPaymentContextRecoveryVariant1`
+- `"dunning_retry"` → `PaymentPaymentContextRecoveryVariant2`
+
+### PaymentPaymentContextRecoveryVariant1
+
+- `type` (`String`, required)
+
+### PaymentPaymentContextRecoveryVariant2
+
+- `type` (`String`, required)
+- `attempt` (`Long`, required) — Current retry, starting at 1. The original decline is not a retry.
+- `maxAttempts` (`Long`, required) — Total retries applicable to this charge's dunning schedule.
 
 ### PaymentsListResult
 
@@ -1836,6 +1932,7 @@ Discriminator: `type`
 - `createdAt` (`String`, required)
 - `updatedAt` (`String`, required)
 - `offerApplications` (`List<SubscriptionOfferApplication>`, required)
+- `pause` (`SubscriptionPause | null`, required)
 - `planGrant` (`SubscriptionPlanGrant`, optional)
 - `consumptionModel` (`ConsumptionModel | null`, required)
 - `features` (`List<SubscriptionFeaturesItem>`, required)
@@ -2065,6 +2162,34 @@ Discriminator: `type`
 - `startsAt` (`String | null`, required)
 - `endsAt` (`String | null`, required)
 
+### SubscriptionPause
+
+Variants:
+
+- `SubscriptionPauseVariant1`
+- `SubscriptionPauseVariant2`
+
+Discriminator: `status`
+
+- `"scheduled"` → `SubscriptionPauseVariant1`
+- `"active"` → `SubscriptionPauseVariant2`
+
+### SubscriptionPauseVariant1
+
+- `status` (`String`, required)
+- `mode` (`String`, required)
+- `requestedAt` (`String`, required)
+- `effectiveAt` (`String`, required)
+- `resumeAt` (`String | null`, required)
+
+### SubscriptionPauseVariant2
+
+- `status` (`String`, required)
+- `mode` (`String`, required)
+- `requestedAt` (`String`, required)
+- `effectiveAt` (`String`, required)
+- `resumeAt` (`String | null`, required)
+
 ### SubscriptionPlan
 
 - `id` (`String`, required)
@@ -2081,6 +2206,14 @@ Discriminator: `type`
 
 - `id` (`String`, required)
 - `name` (`String`, required)
+
+### SubscriptionResume
+
+- `subscriptionId` (`String`, required)
+- `invoiceId` (`String | null`, required)
+- `status` (`String`, required)
+- `object` (`String`, required)
+- `livemode` (`Boolean`, required)
 
 ### SubscriptionScheduledPlanChange
 
@@ -2119,6 +2252,7 @@ Discriminator: `type`
 - `createdAt` (`String`, required)
 - `updatedAt` (`String`, required)
 - `offerApplications` (`List<SubscriptionOfferApplication>`, required)
+- `pause` (`SubscriptionSummaryPause | null`, required)
 - `priceId` (`String | null`, required)
 - `object` (`String`, required)
 - `livemode` (`Boolean`, required)
@@ -2134,6 +2268,34 @@ Discriminator: `type`
 - `start` (`String`, required)
 - `end` (`String`, required)
 - `daysRemaining` (`Double`, required)
+
+### SubscriptionSummaryPause
+
+Variants:
+
+- `SubscriptionSummaryPauseVariant1`
+- `SubscriptionSummaryPauseVariant2`
+
+Discriminator: `status`
+
+- `"scheduled"` → `SubscriptionSummaryPauseVariant1`
+- `"active"` → `SubscriptionSummaryPauseVariant2`
+
+### SubscriptionSummaryPauseVariant1
+
+- `status` (`String`, required)
+- `mode` (`String`, required)
+- `requestedAt` (`String`, required)
+- `effectiveAt` (`String`, required)
+- `resumeAt` (`String | null`, required)
+
+### SubscriptionSummaryPauseVariant2
+
+- `status` (`String`, required)
+- `mode` (`String`, required)
+- `requestedAt` (`String`, required)
+- `effectiveAt` (`String`, required)
+- `resumeAt` (`String | null`, required)
 
 ### SubscriptionSummaryPlan
 
@@ -2216,6 +2378,7 @@ Discriminator: `type`
 
 ### Transaction
 
+- `paymentContext` (`TransactionPaymentContext | null`, required) — Charge context captured for new payments. Null for historical payments with no captured context.
 - `id` (`String`, required)
 - `invoiceId` (`String | null`, required)
 - `grossAmount` (`Long | null`, required) — Gross amount in USD cents. Null when the provider has not reported an honest USD figure; see presentmentAmount.
@@ -2224,6 +2387,8 @@ Discriminator: `type`
 - `presentmentAmount` (`Long | null`, required) — Amount in the charge currency's smallest unit, as presented to the customer. Set for non-USD charges; null when the charge was made in USD.
 - `currency` (`String`, required)
 - `provider` (`PaymentProvider`, required) — The payment provider the charge was routed to: stripe, commet, or dlocal.
+- `paymentMethod` (`PaymentMethod | null`, required) — The method used for this charge: card, oxxo, or mercado_pago. Null when unknown.
+- `subPaymentMethod` (`SubPaymentMethod | null`, required) — The source of funds for this charge, when reported by the provider. Null when unavailable or unknown.
 - `status` (`TransactionStatus`, required)
 - `customerEmail` (`String | null`, required)
 - `customerName` (`String | null`, required)
@@ -2236,6 +2401,7 @@ Discriminator: `type`
 
 ### TransactionListItem
 
+- `paymentContext` (`TransactionListItemPaymentContext | null`, required) — Charge context captured for new payments. Null for historical payments with no captured context.
 - `id` (`String`, required)
 - `invoiceId` (`String | null`, required)
 - `grossAmount` (`Long | null`, required) — Gross amount in USD cents. Null when the provider has not reported an honest USD figure; see presentmentAmount.
@@ -2244,6 +2410,8 @@ Discriminator: `type`
 - `presentmentAmount` (`Long | null`, required) — Amount in the charge currency's smallest unit, as presented to the customer. Set for non-USD charges; null when the charge was made in USD.
 - `currency` (`String`, required)
 - `provider` (`PaymentProvider`, required) — The payment provider the charge was routed to: stripe, commet, or dlocal.
+- `paymentMethod` (`PaymentMethod | null`, required) — The method used for this charge: card, oxxo, or mercado_pago. Null when unknown.
+- `subPaymentMethod` (`SubPaymentMethod | null`, required) — The source of funds for this charge, when reported by the provider. Null when unavailable or unknown.
 - `status` (`TransactionStatus`, required)
 - `customerEmail` (`String | null`, required)
 - `customerName` (`String | null`, required)
@@ -2252,6 +2420,62 @@ Discriminator: `type`
 - `updatedAt` (`String`, required)
 - `object` (`String`, required)
 - `livemode` (`Boolean`, required)
+
+### TransactionListItemPaymentContext
+
+- `reason` (`String`, required) — The original reason for the charge. Recovery never replaces this reason.
+- `paymentLinkId` (`String | null`, required) — The public payment link ID, independently of the reason, or null when no payment link originated the charge.
+- `recovery` (`TransactionListItemPaymentContextRecovery | null`, required)
+
+### TransactionListItemPaymentContextRecovery
+
+Variants:
+
+- `TransactionListItemPaymentContextRecoveryVariant1`
+- `TransactionListItemPaymentContextRecoveryVariant2`
+
+Discriminator: `type`
+
+- `"payment_recovery"` → `TransactionListItemPaymentContextRecoveryVariant1`
+- `"dunning_retry"` → `TransactionListItemPaymentContextRecoveryVariant2`
+
+### TransactionListItemPaymentContextRecoveryVariant1
+
+- `type` (`String`, required)
+
+### TransactionListItemPaymentContextRecoveryVariant2
+
+- `type` (`String`, required)
+- `attempt` (`Long`, required) — Current retry, starting at 1. The original decline is not a retry.
+- `maxAttempts` (`Long`, required) — Total retries applicable to this charge's dunning schedule.
+
+### TransactionPaymentContext
+
+- `reason` (`String`, required) — The original reason for the charge. Recovery never replaces this reason.
+- `paymentLinkId` (`String | null`, required) — The public payment link ID, independently of the reason, or null when no payment link originated the charge.
+- `recovery` (`TransactionPaymentContextRecovery | null`, required)
+
+### TransactionPaymentContextRecovery
+
+Variants:
+
+- `TransactionPaymentContextRecoveryVariant1`
+- `TransactionPaymentContextRecoveryVariant2`
+
+Discriminator: `type`
+
+- `"payment_recovery"` → `TransactionPaymentContextRecoveryVariant1`
+- `"dunning_retry"` → `TransactionPaymentContextRecoveryVariant2`
+
+### TransactionPaymentContextRecoveryVariant1
+
+- `type` (`String`, required)
+
+### TransactionPaymentContextRecoveryVariant2
+
+- `type` (`String`, required)
+- `attempt` (`Long`, required) — Current retry, starting at 1. The original decline is not a retry.
+- `maxAttempts` (`Long`, required) — Total retries applicable to this charge's dunning schedule.
 
 ### TransactionRetry
 

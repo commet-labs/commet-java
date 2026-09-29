@@ -37,12 +37,13 @@ public class ApiKeysResource {
     }
 
     /**
-     * Create a new API key. The full key is only returned once in the response.
+     * Create a full-access or restricted API key. Provide permissions to restrict access; the full key is returned only once. A restricted key with api_key: write may only create restricted keys with the same or fewer permissions, and they expire no later than the key that creates them.
      */
     public CreatedApiKey create(CreateApiKeyParams params) {
         return http.post("/api-keys", buildBody(
                 "name", params.getName(),
-                "expires_in_days", params.getExpiresInDays()
+                "expires_in_days", params.getExpiresInDays(),
+                "permissions", params.getPermissions() == null ? null : http.getObjectMapper().valueToTree(params.getPermissions())
         ), params.getIdempotencyKey(), new TypeReference<CreatedApiKey>() {}).getData();
     }
 }

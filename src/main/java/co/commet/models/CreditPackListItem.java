@@ -1,12 +1,14 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CreditPackListItem(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("description") String description,
         @JsonProperty("credits") long credits,
         @JsonProperty("price") long price,
