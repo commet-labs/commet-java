@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -11,6 +12,7 @@ public record Payout(
         @JsonProperty("fee") long fee,
         @JsonProperty("net_amount") long netAmount,
         @JsonProperty("currency") String currency,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("description") String description,
         @JsonProperty("provider_transfer_id") String providerTransferId,
         @JsonProperty("created_at") String createdAt,

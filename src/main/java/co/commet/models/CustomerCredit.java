@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,6 +15,7 @@ public record CustomerCredit(
         @JsonProperty("currency") String currency,
         @JsonProperty("reason") String reason,
         @JsonProperty("source") String source,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("expires_at") String expiresAt,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("object") String object,

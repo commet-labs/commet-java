@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 public record Invoice(
         @JsonProperty("id") String id,
         @JsonProperty("customer_id") String customerId,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("subscription_id") String subscriptionId,
         @JsonProperty("invoice_number") String invoiceNumber,
         @JsonProperty("status") String status,
@@ -22,13 +24,17 @@ public record Invoice(
         @JsonProperty("period_end") String periodEnd,
         @JsonProperty("issue_date") String issueDate,
         @JsonProperty("due_date") String dueDate,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("memo") String memo,
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("credit_applied") long creditApplied,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("plan_name") String planName,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("po_number") String poNumber,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("reference") String reference,
         @JsonProperty("line_items") List<InvoiceLineItemsItem> lineItems,
         @JsonProperty("object") String object,

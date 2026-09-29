@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -14,11 +15,14 @@ public record PlanGrant(
         @JsonProperty("plan_release_id") String planReleaseId,
         @JsonProperty("status") String status,
         @JsonProperty("duration") String duration,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("duration_cycles") Long durationCycles,
         @JsonProperty("starts_at") String startsAt,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("expires_at") String expiresAt,
         @JsonProperty("reason") String reason,
         @JsonProperty("source") String source,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("revoked_at") String revokedAt,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,

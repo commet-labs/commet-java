@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,13 @@ public record PlanPricesItem(
         @JsonProperty("price") long price,
         @JsonProperty("is_default") boolean isDefault,
         @JsonProperty("trial_days") long trialDays,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("included_balance") Long includedBalance,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("included_credits") Long includedCredits,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("offer_id") String offerId,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("inherits_from_price_id") String inheritsFromPriceId,
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("market_prices") List<PlanPricesItemMarketPricesItem> marketPrices,

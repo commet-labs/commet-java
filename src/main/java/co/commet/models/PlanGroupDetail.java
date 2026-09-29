@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import java.util.List;
 public record PlanGroupDetail(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("description") String description,
         @JsonProperty("is_public") boolean isPublic,
         @JsonProperty("created_at") String createdAt,

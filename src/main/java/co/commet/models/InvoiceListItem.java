@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import java.util.Map;
 public record InvoiceListItem(
         @JsonProperty("id") String id,
         @JsonProperty("customer_id") String customerId,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("subscription_id") String subscriptionId,
         @JsonProperty("invoice_number") String invoiceNumber,
         @JsonProperty("status") String status,
@@ -21,6 +23,7 @@ public record InvoiceListItem(
         @JsonProperty("period_end") String periodEnd,
         @JsonProperty("issue_date") String issueDate,
         @JsonProperty("due_date") String dueDate,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("memo") String memo,
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("created_at") String createdAt,

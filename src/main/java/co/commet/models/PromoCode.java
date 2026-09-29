@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -8,8 +9,11 @@ public record PromoCode(
         @JsonProperty("id") String id,
         @JsonProperty("code") String code,
         @JsonProperty("offer_id") String offerId,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("billing_interval") BillingInterval billingInterval,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("max_redemptions") Long maxRedemptions,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("expires_at") String expiresAt,
         @JsonProperty("is_active") boolean isActive,
         @JsonProperty("redemption_count") long redemptionCount,

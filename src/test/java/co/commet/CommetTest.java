@@ -8,12 +8,11 @@ class CommetTest {
 
     @Test
     void validKeyBuilds() {
-        Commet commet = Commet.builder()
-                .apiKey("ck_test_123456")
-                .build();
-
-        assertNotNull(commet);
-        commet.close();
+        for (String prefix : new String[]{"ck_", "ck_live_", "ck_sandbox_", "rk_", "rk_live_", "rk_sandbox_"}) {
+            Commet commet = Commet.builder().apiKey(prefix + "test_123456").build();
+            assertNotNull(commet);
+            commet.close();
+        }
     }
 
     @Test

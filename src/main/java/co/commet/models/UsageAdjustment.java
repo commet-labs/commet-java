@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -10,6 +11,7 @@ public record UsageAdjustment(
         @JsonProperty("previous_value") long previousValue,
         @JsonProperty("adjustment") long adjustment,
         @JsonProperty("customer_id") String customerId,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("reason") String reason,
         @JsonProperty("ts") String ts,
         @JsonProperty("created_at") String createdAt,

@@ -14,6 +14,7 @@ import co.commet.models.ReactivatedSubscription;
 import co.commet.models.RecoveryLink;
 import co.commet.models.Subscription;
 import co.commet.models.SubscriptionAddon;
+import co.commet.models.SubscriptionResume;
 import co.commet.models.SubscriptionsListResult;
 import co.commet.params.ActivateAddonParams;
 import co.commet.params.AdjustBalanceParams;
@@ -24,12 +25,15 @@ import co.commet.params.CreateSubscriptionParams;
 import co.commet.params.CreateSubscriptionRecoveryLinkParams;
 import co.commet.params.GetActiveSubscriptionParams;
 import co.commet.params.ListSubscriptionsParams;
+import co.commet.params.PauseSubscriptionParams;
 import co.commet.params.PreviewChangePlanParams;
 import co.commet.params.PurchaseCreditsParams;
 import co.commet.params.ReactivateSubscriptionParams;
+import co.commet.params.ResumeSubscriptionParams;
 import co.commet.params.TopupBalanceParams;
 import co.commet.params.UncancelSubscriptionParams;
 import co.commet.params.UpdatePaymentMethodParams;
+import co.commet.params.UpdateSubscriptionPauseParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Map;
 
@@ -128,6 +132,35 @@ public class SubscriptionsResource {
     }
 
     /**
+     * Pause immediately or schedule a pause for the end of the current billing or trial period. Set durationDays to null for an indefinite pause.
+     */
+    public Subscription pause(String id, PauseSubscriptionParams params) {
+        Map<String, Object> body = buildBody(
+                "mode", params.getMode()
+        );
+        body.put("duration_days", params.getDurationDays());
+        return http.post("/subscriptions/" + id + "/pause", body, params.getIdempotencyKey(), new TypeReference<Subscription>() {}).getData();
+    }
+
+    /**
+     * Change the duration of a scheduled or active pause. Set durationDays to null to make it indefinite.
+     */
+    public Subscription updatePause(String id, UpdateSubscriptionPauseParams params) {
+        Map<String, Object> body = buildBody(
+
+        );
+        body.put("duration_days", params.getDurationDays());
+        return http.patch("/subscriptions/" + id + "/pause", body, params.getIdempotencyKey(), new TypeReference<Subscription>() {}).getData();
+    }
+
+    /**
+     * Revoke a pause before it becomes effective. Active pauses must be resumed instead.
+     */
+    public Subscription revokePause(String id) {
+        return http.delete("/subscriptions/" + id + "/pause", null, new TypeReference<Subscription>() {}).getData();
+    }
+
+    /**
      * Creates a hosted checkout session for the customer to update the subscription's default payment method.
      */
     public PaymentMethodUpdateCheckout updatePaymentMethod(String id, UpdatePaymentMethodParams params) {
@@ -161,6 +194,13 @@ public class SubscriptionsResource {
      */
     public RecoveryLink createRecoveryLink(String id, CreateSubscriptionRecoveryLinkParams params) {
         return http.post("/subscriptions/" + id + "/recovery-links", Map.of(), params.getIdempotencyKey(), new TypeReference<RecoveryLink>() {}).getData();
+    }
+
+    /**
+     * Resume a paused subscription. Immediate pauses continue the preserved period without a charge. Period-end pauses charge a new period before access is restored.
+     */
+    public SubscriptionResume resume(String id, ResumeSubscriptionParams params) {
+        return http.post("/subscriptions/" + id + "/resume", Map.of(), params.getIdempotencyKey(), new TypeReference<SubscriptionResume>() {}).getData();
     }
 
     /**

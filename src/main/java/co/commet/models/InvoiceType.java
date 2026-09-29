@@ -12,7 +12,8 @@ public enum InvoiceType {
     BALANCE_TOPUP("balance_topup"),
     ADDON_ACTIVATION("addon_activation"),
     ONE_TIME_PAYMENT("one_time_payment"),
-    REACTIVATION("reactivation");
+    REACTIVATION("reactivation"),
+    RESUME("resume");
 
     private final String value;
 

@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public record UsageEvent(
         @JsonProperty("feature_code") String featureCode,
         @JsonProperty("value") double value,
         @JsonProperty("customer_id") String customerId,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("event_id") String eventId,
         @JsonProperty("ts") String ts,
         @JsonProperty("created_at") String createdAt,
