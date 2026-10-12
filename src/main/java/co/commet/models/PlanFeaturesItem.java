@@ -9,7 +9,7 @@ import java.util.List;
 public record PlanFeaturesItem(
         @JsonProperty("code") String code,
         @JsonProperty("name") String name,
-        @JsonProperty("type") FeatureType type,
+        @JsonProperty("type") String typeAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("unit_name") String unitName,
         @JsonProperty("enabled") boolean enabled,
@@ -19,4 +19,9 @@ public record PlanFeaturesItem(
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("overage") PlanFeaturesItemOverage overage,
         @JsonProperty("regional_prices") List<PlanFeaturesItemRegionalPricesItem> regionalPrices
-) {}
+) {
+
+    public FeatureType type() {
+        return FeatureType.fromValue(typeAsString);
+    }
+}

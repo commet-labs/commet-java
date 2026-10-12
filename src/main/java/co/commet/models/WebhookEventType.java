@@ -69,7 +69,9 @@ public enum WebhookEventType {
     PAYOUT_AVAILABLE("payout.available"),
     PAYOUT_CREATED("payout.created"),
     PAYOUT_PAID("payout.paid"),
-    PAYOUT_FAILED("payout.failed");
+    PAYOUT_FAILED("payout.failed"),
+    /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
+    UNKNOWN_TO_SDK_VERSION(null);
 
     private final String value;
 
@@ -80,9 +82,10 @@ public enum WebhookEventType {
 
     @JsonCreator
     public static WebhookEventType fromValue(String value) {
+        if (value == null) return null;
         for (WebhookEventType type : values()) {
-            if (type.value.equals(value)) return type;
+            if (value.equals(type.value)) return type;
         }
-        throw new IllegalArgumentException("Unknown WebhookEventType: " + value);
+        return UNKNOWN_TO_SDK_VERSION;
     }
 }

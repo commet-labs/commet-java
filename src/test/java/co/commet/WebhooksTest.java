@@ -1,6 +1,10 @@
 package co.commet;
 
+import co.commet.models.PaymentMethod;
+import co.commet.models.PaymentReceivedData;
+import co.commet.models.WebhookEventType;
 import co.commet.resources.Webhooks;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -86,6 +90,29 @@ class WebhooksTest {
         assertFalse(webhooks.verify("", "sig", SECRET));
         assertFalse(webhooks.verify("payload", "", SECRET));
         assertFalse(webhooks.verify("payload", "sig", ""));
+    }
+
+    @Test
+    void typedEventKeepsAnEventTypeAddedAfterThisSdkVersionReadable() throws Exception {
+        WebhookEvent event = new ObjectMapper().readValue(
+                "{\"event\":\"invoice.disputed\",\"data\":{}}", WebhookEvent.class);
+
+        assertEquals(WebhookEventType.UNKNOWN_TO_SDK_VERSION, event.event());
+        assertEquals("invoice.disputed", event.eventAsString());
+    }
+
+    @Test
+    void paymentReceivedKeepsAPaymentMethodAddedAfterThisSdkVersionReadable() throws Exception {
+        WebhookEvent event = new ObjectMapper().readValue(
+                "{\"event\":\"payment.received\",\"data\":{\"invoiceId\":\"inv_123\","
+                        + "\"paymentMethod\":\"bank_transfer\"}}",
+                WebhookEvent.class);
+
+        PaymentReceivedData payment = event.asPaymentReceived();
+
+        assertEquals(WebhookEventType.PAYMENT_RECEIVED, event.event());
+        assertEquals(PaymentMethod.UNKNOWN_TO_SDK_VERSION, payment.paymentMethod());
+        assertEquals("bank_transfer", payment.paymentMethodAsString());
     }
 
     private static String computeHmac(String payload, String secret) {

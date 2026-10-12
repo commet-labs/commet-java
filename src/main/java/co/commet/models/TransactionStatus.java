@@ -8,7 +8,9 @@ public enum TransactionStatus {
     SUCCEEDED("succeeded"),
     FAILED("failed"),
     REFUNDED("refunded"),
-    DISPUTED("disputed");
+    DISPUTED("disputed"),
+    /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
+    UNKNOWN_TO_SDK_VERSION(null);
 
     private final String value;
 
@@ -19,9 +21,10 @@ public enum TransactionStatus {
 
     @JsonCreator
     public static TransactionStatus fromValue(String value) {
+        if (value == null) return null;
         for (TransactionStatus type : values()) {
-            if (type.value.equals(value)) return type;
+            if (value.equals(type.value)) return type;
         }
-        throw new IllegalArgumentException("Unknown TransactionStatus: " + value);
+        return UNKNOWN_TO_SDK_VERSION;
     }
 }

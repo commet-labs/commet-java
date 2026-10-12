@@ -13,11 +13,20 @@ public record PaymentReceivedData(
         @JsonProperty("subscriptionId") String subscriptionId,
         @JsonProperty("paymentTransactionId") String paymentTransactionId,
         @JsonProperty("provider") String provider,
-        @JsonProperty("paymentMethod") PaymentMethod paymentMethod,
-        @JsonProperty("subPaymentMethod") SubPaymentMethod subPaymentMethod,
+        @JsonProperty("paymentMethod") String paymentMethodAsString,
+        @JsonProperty("subPaymentMethod") String subPaymentMethodAsString,
         @JsonProperty("grossAmount") Double grossAmount,
         @JsonProperty("currency") String currency,
         @JsonProperty("orgNetAmount") Double orgNetAmount,
         @JsonProperty("customerEmail") String customerEmail,
         @JsonProperty("paidAt") String paidAt
-) {}
+) {
+
+    public PaymentMethod paymentMethod() {
+        return PaymentMethod.fromValue(paymentMethodAsString);
+    }
+
+    public SubPaymentMethod subPaymentMethod() {
+        return SubPaymentMethod.fromValue(subPaymentMethodAsString);
+    }
+}

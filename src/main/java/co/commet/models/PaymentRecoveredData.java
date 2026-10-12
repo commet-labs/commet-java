@@ -11,6 +11,15 @@ public record PaymentRecoveredData(
         @JsonProperty("customerId") String customerId,
         @JsonProperty("subscriptionId") String subscriptionId,
         @JsonProperty("provider") String provider,
-        @JsonProperty("paymentMethod") PaymentMethod paymentMethod,
-        @JsonProperty("subPaymentMethod") SubPaymentMethod subPaymentMethod
-) {}
+        @JsonProperty("paymentMethod") String paymentMethodAsString,
+        @JsonProperty("subPaymentMethod") String subPaymentMethodAsString
+) {
+
+    public PaymentMethod paymentMethod() {
+        return PaymentMethod.fromValue(paymentMethodAsString);
+    }
+
+    public SubPaymentMethod subPaymentMethod() {
+        return SubPaymentMethod.fromValue(subPaymentMethodAsString);
+    }
+}

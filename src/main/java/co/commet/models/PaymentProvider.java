@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum PaymentProvider {
     STRIPE("stripe"),
     COMMET("commet"),
-    DLOCAL("dlocal");
+    DLOCAL("dlocal"),
+    /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
+    UNKNOWN_TO_SDK_VERSION(null);
 
     private final String value;
 
@@ -17,9 +19,10 @@ public enum PaymentProvider {
 
     @JsonCreator
     public static PaymentProvider fromValue(String value) {
+        if (value == null) return null;
         for (PaymentProvider type : values()) {
-            if (type.value.equals(value)) return type;
+            if (value.equals(type.value)) return type;
         }
-        throw new IllegalArgumentException("Unknown PaymentProvider: " + value);
+        return UNKNOWN_TO_SDK_VERSION;
     }
 }

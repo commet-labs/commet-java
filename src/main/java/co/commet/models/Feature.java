@@ -9,7 +9,7 @@ public record Feature(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
         @JsonProperty("code") String code,
-        @JsonProperty("type") FeatureType type,
+        @JsonProperty("type") String typeAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("description") String description,
         @JsonInclude(JsonInclude.Include.ALWAYS)
@@ -18,4 +18,9 @@ public record Feature(
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
-) {}
+) {
+
+    public FeatureType type() {
+        return FeatureType.fromValue(typeAsString);
+    }
+}

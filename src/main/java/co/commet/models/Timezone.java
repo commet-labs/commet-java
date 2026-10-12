@@ -24,7 +24,9 @@ public enum Timezone {
     ASIA_SHANGHAI("Asia/Shanghai"),
     ASIA_SINGAPORE("Asia/Singapore"),
     ASIA_DUBAI("Asia/Dubai"),
-    AUSTRALIA_SYDNEY("Australia/Sydney");
+    AUSTRALIA_SYDNEY("Australia/Sydney"),
+    /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
+    UNKNOWN_TO_SDK_VERSION(null);
 
     private final String value;
 
@@ -35,9 +37,10 @@ public enum Timezone {
 
     @JsonCreator
     public static Timezone fromValue(String value) {
+        if (value == null) return null;
         for (Timezone type : values()) {
-            if (type.value.equals(value)) return type;
+            if (value.equals(type.value)) return type;
         }
-        throw new IllegalArgumentException("Unknown Timezone: " + value);
+        return UNKNOWN_TO_SDK_VERSION;
     }
 }

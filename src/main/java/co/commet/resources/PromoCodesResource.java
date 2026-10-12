@@ -50,7 +50,7 @@ public class PromoCodesResource {
     }
 
     /**
-     * Create a distribution code for an existing Offer. The referenced Offer owns the benefit and duration; the promo code owns redemption restrictions.
+     * Create a distribution code for an existing Offer with one or more sequential discount phases and an optional leading trial. The code owns redemption restrictions.
      */
     public PromoCode create(CreatePromoCodeParams params) {
         return http.post("/promo-codes", buildBody(

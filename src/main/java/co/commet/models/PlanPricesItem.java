@@ -9,7 +9,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PlanPricesItem(
         @JsonProperty("id") String id,
-        @JsonProperty("billing_interval") BillingInterval billingInterval,
+        @JsonProperty("billing_interval") String billingIntervalAsString,
         @JsonProperty("price") long price,
         @JsonProperty("is_default") boolean isDefault,
         @JsonProperty("trial_days") long trialDays,
@@ -24,4 +24,9 @@ public record PlanPricesItem(
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("market_prices") List<PlanPricesItemMarketPricesItem> marketPrices,
         @JsonProperty("regional_prices") List<PlanPricesItemRegionalPricesItem> regionalPrices
-) {}
+) {
+
+    public BillingInterval billingInterval() {
+        return BillingInterval.fromValue(billingIntervalAsString);
+    }
+}

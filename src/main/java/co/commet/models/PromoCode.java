@@ -10,7 +10,7 @@ public record PromoCode(
         @JsonProperty("code") String code,
         @JsonProperty("offer_id") String offerId,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("billing_interval") BillingInterval billingInterval,
+        @JsonProperty("billing_interval") String billingIntervalAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("max_redemptions") Long maxRedemptions,
         @JsonInclude(JsonInclude.Include.ALWAYS)
@@ -21,4 +21,9 @@ public record PromoCode(
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
-) {}
+) {
+
+    public BillingInterval billingInterval() {
+        return BillingInterval.fromValue(billingIntervalAsString);
+    }
+}

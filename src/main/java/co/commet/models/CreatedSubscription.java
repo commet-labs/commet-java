@@ -13,9 +13,9 @@ public record CreatedSubscription(
         @JsonProperty("name") String name,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("description") String description,
-        @JsonProperty("status") SubscriptionStatus status,
+        @JsonProperty("status") String statusAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("billing_interval") BillingInterval billingInterval,
+        @JsonProperty("billing_interval") String billingIntervalAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("trial_ends_at") String trialEndsAt,
         @JsonInclude(JsonInclude.Include.ALWAYS)
@@ -40,9 +40,22 @@ public record CreatedSubscription(
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("pause") CreatedSubscriptionPause pause,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("checkout_provider") PaymentProvider checkoutProvider,
+        @JsonProperty("checkout_provider") String checkoutProviderAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("price_id") String priceId,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
-) {}
+) {
+
+    public SubscriptionStatus status() {
+        return SubscriptionStatus.fromValue(statusAsString);
+    }
+
+    public BillingInterval billingInterval() {
+        return BillingInterval.fromValue(billingIntervalAsString);
+    }
+
+    public PaymentProvider checkoutProvider() {
+        return PaymentProvider.fromValue(checkoutProviderAsString);
+    }
+}

@@ -146,16 +146,21 @@ class PlansResourceTest {
     }
 
     @Test
-    void getThrowsOnUnknownEnumValueInsteadOfSilentlyAccepting() throws Exception {
-        // An unrecognized consumption_model from the wire must fail loudly (@JsonCreator throws),
-        // never default to a silent fallback enum.
+    void getKeepsEnumValuesAddedAfterThisSdkVersionReadable() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":{\"id\":\"plan_x\",\"consumptionModel\":\"telepathy\","
+                        + "\"prices\":[{\"id\":\"price_x\",\"billingInterval\":\"semiannual\",\"price\":10000}],"
                         + "\"object\":\"plan\",\"livemode\":true}}"));
 
-        assertThrows(Exception.class, () -> plans.get("plan_x"));
+        Plan plan = plans.get("plan_x");
+
+        assertEquals(ConsumptionModel.UNKNOWN_TO_SDK_VERSION, plan.consumptionModel());
+        assertEquals("telepathy", plan.consumptionModelAsString());
+        PlanPricesItem price = plan.prices().get(0);
+        assertEquals(BillingInterval.UNKNOWN_TO_SDK_VERSION, price.billingInterval());
+        assertEquals("semiannual", price.billingIntervalAsString());
     }
 
     private static Map<String, Object> mapOf(Object... kv) {
