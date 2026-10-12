@@ -1,5 +1,10 @@
 # Changelog
 
+## 9.5.0
+
+- Read responses and webhooks that contain enum values added after this SDK version instead of failing. Unknown values map to `UNKNOWN_TO_SDK_VERSION`, and `<field>AsString()` returns the raw value. Code that builds response records by hand now passes `String` for enum fields, and exhaustive `switch` statements without `default` must handle the new constant.
+- Install the webhooks contract (`webhooks.openapi.json`) with the SDK documentation in place of per-event pages, and refresh the documentation from commet.co/docs.
+
 ## 9.4.0
 
 - Add subscription pause, pause updates, pause revocation, resume, and their lifecycle webhooks, including indefinite pauses.
