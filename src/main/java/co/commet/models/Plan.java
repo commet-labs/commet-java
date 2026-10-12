@@ -14,7 +14,7 @@ public record Plan(
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("description") String description,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("consumption_model") ConsumptionModel consumptionModel,
+        @JsonProperty("consumption_model") String consumptionModelAsString,
         @JsonProperty("is_public") boolean isPublic,
         @JsonProperty("is_default") boolean isDefault,
         @JsonProperty("is_free") boolean isFree,
@@ -32,4 +32,9 @@ public record Plan(
         @JsonProperty("exchange_rates") List<PlanExchangeRatesItem> exchangeRates,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
-) {}
+) {
+
+    public ConsumptionModel consumptionModel() {
+        return ConsumptionModel.fromValue(consumptionModelAsString);
+    }
+}

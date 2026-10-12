@@ -8,7 +8,9 @@ public enum BillingInterval {
     MONTHLY("monthly"),
     QUARTERLY("quarterly"),
     YEARLY("yearly"),
-    ONE_TIME("one_time");
+    ONE_TIME("one_time"),
+    /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
+    UNKNOWN_TO_SDK_VERSION(null);
 
     private final String value;
 
@@ -19,9 +21,10 @@ public enum BillingInterval {
 
     @JsonCreator
     public static BillingInterval fromValue(String value) {
+        if (value == null) return null;
         for (BillingInterval type : values()) {
-            if (type.value.equals(value)) return type;
+            if (value.equals(type.value)) return type;
         }
-        throw new IllegalArgumentException("Unknown BillingInterval: " + value);
+        return UNKNOWN_TO_SDK_VERSION;
     }
 }

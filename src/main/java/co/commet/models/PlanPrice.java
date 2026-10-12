@@ -10,7 +10,7 @@ import java.util.Map;
 public record PlanPrice(
         @JsonProperty("id") String id,
         @JsonProperty("plan_id") String planId,
-        @JsonProperty("billing_interval") BillingInterval billingInterval,
+        @JsonProperty("billing_interval") String billingIntervalAsString,
         @JsonProperty("price") long price,
         @JsonProperty("is_default") boolean isDefault,
         @JsonProperty("trial_days") long trialDays,
@@ -28,4 +28,9 @@ public record PlanPrice(
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
-) {}
+) {
+
+    public BillingInterval billingInterval() {
+        return BillingInterval.fromValue(billingIntervalAsString);
+    }
+}

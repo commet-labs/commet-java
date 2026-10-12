@@ -13,7 +13,7 @@ public record InvoiceListItem(
         @JsonProperty("subscription_id") String subscriptionId,
         @JsonProperty("invoice_number") String invoiceNumber,
         @JsonProperty("status") String status,
-        @JsonProperty("invoice_type") InvoiceType invoiceType,
+        @JsonProperty("invoice_type") String invoiceTypeAsString,
         @JsonProperty("currency") String currency,
         @JsonProperty("subtotal") long subtotal,
         @JsonProperty("discount_amount") long discountAmount,
@@ -30,4 +30,9 @@ public record InvoiceListItem(
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
-) {}
+) {
+
+    public InvoiceType invoiceType() {
+        return InvoiceType.fromValue(invoiceTypeAsString);
+    }
+}

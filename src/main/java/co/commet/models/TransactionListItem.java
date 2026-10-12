@@ -20,12 +20,12 @@ public record TransactionListItem(
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("presentment_amount") Long presentmentAmount,
         @JsonProperty("currency") String currency,
-        @JsonProperty("provider") PaymentProvider provider,
+        @JsonProperty("provider") String providerAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("payment_method") PaymentMethod paymentMethod,
+        @JsonProperty("payment_method") String paymentMethodAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("sub_payment_method") SubPaymentMethod subPaymentMethod,
-        @JsonProperty("status") TransactionStatus status,
+        @JsonProperty("sub_payment_method") String subPaymentMethodAsString,
+        @JsonProperty("status") String statusAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("customer_email") String customerEmail,
         @JsonInclude(JsonInclude.Include.ALWAYS)
@@ -36,4 +36,21 @@ public record TransactionListItem(
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
-) {}
+) {
+
+    public PaymentProvider provider() {
+        return PaymentProvider.fromValue(providerAsString);
+    }
+
+    public PaymentMethod paymentMethod() {
+        return PaymentMethod.fromValue(paymentMethodAsString);
+    }
+
+    public SubPaymentMethod subPaymentMethod() {
+        return SubPaymentMethod.fromValue(subPaymentMethodAsString);
+    }
+
+    public TransactionStatus status() {
+        return TransactionStatus.fromValue(statusAsString);
+    }
+}

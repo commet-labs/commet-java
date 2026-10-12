@@ -13,7 +13,9 @@ public enum InvoiceType {
     ADDON_ACTIVATION("addon_activation"),
     ONE_TIME_PAYMENT("one_time_payment"),
     REACTIVATION("reactivation"),
-    RESUME("resume");
+    RESUME("resume"),
+    /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
+    UNKNOWN_TO_SDK_VERSION(null);
 
     private final String value;
 
@@ -24,9 +26,10 @@ public enum InvoiceType {
 
     @JsonCreator
     public static InvoiceType fromValue(String value) {
+        if (value == null) return null;
         for (InvoiceType type : values()) {
-            if (type.value.equals(value)) return type;
+            if (value.equals(type.value)) return type;
         }
-        throw new IllegalArgumentException("Unknown InvoiceType: " + value);
+        return UNKNOWN_TO_SDK_VERSION;
     }
 }

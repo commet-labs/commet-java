@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum PaymentMethod {
     CARD("card"),
     OXXO("oxxo"),
-    MERCADO_PAGO("mercado_pago");
+    MERCADO_PAGO("mercado_pago"),
+    /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
+    UNKNOWN_TO_SDK_VERSION(null);
 
     private final String value;
 
@@ -17,9 +19,10 @@ public enum PaymentMethod {
 
     @JsonCreator
     public static PaymentMethod fromValue(String value) {
+        if (value == null) return null;
         for (PaymentMethod type : values()) {
-            if (type.value.equals(value)) return type;
+            if (value.equals(type.value)) return type;
         }
-        throw new IllegalArgumentException("Unknown PaymentMethod: " + value);
+        return UNKNOWN_TO_SDK_VERSION;
     }
 }

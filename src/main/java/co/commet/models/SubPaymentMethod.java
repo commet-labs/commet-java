@@ -8,7 +8,9 @@ public enum SubPaymentMethod {
     DEBIT_CARD("debit_card"),
     PREPAID_CARD("prepaid_card"),
     BANK_TRANSFER("bank_transfer"),
-    ACCOUNT_MONEY("account_money");
+    ACCOUNT_MONEY("account_money"),
+    /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
+    UNKNOWN_TO_SDK_VERSION(null);
 
     private final String value;
 
@@ -19,9 +21,10 @@ public enum SubPaymentMethod {
 
     @JsonCreator
     public static SubPaymentMethod fromValue(String value) {
+        if (value == null) return null;
         for (SubPaymentMethod type : values()) {
-            if (type.value.equals(value)) return type;
+            if (value.equals(type.value)) return type;
         }
-        throw new IllegalArgumentException("Unknown SubPaymentMethod: " + value);
+        return UNKNOWN_TO_SDK_VERSION;
     }
 }

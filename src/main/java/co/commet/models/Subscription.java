@@ -13,9 +13,9 @@ public record Subscription(
         @JsonProperty("name") String name,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("description") String description,
-        @JsonProperty("status") SubscriptionStatus status,
+        @JsonProperty("status") String statusAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("billing_interval") BillingInterval billingInterval,
+        @JsonProperty("billing_interval") String billingIntervalAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("trial_ends_at") String trialEndsAt,
         @JsonInclude(JsonInclude.Include.ALWAYS)
@@ -41,7 +41,7 @@ public record Subscription(
         @JsonProperty("pause") SubscriptionPause pause,
         @JsonProperty("plan_grant") SubscriptionPlanGrant planGrant,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("consumption_model") ConsumptionModel consumptionModel,
+        @JsonProperty("consumption_model") String consumptionModelAsString,
         @JsonProperty("features") List<SubscriptionFeaturesItem> features,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("credits") SubscriptionCredits credits,
@@ -51,4 +51,17 @@ public record Subscription(
         @JsonProperty("price_id") String priceId,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
-) {}
+) {
+
+    public SubscriptionStatus status() {
+        return SubscriptionStatus.fromValue(statusAsString);
+    }
+
+    public BillingInterval billingInterval() {
+        return BillingInterval.fromValue(billingIntervalAsString);
+    }
+
+    public ConsumptionModel consumptionModel() {
+        return ConsumptionModel.fromValue(consumptionModelAsString);
+    }
+}

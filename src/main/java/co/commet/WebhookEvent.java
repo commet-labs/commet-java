@@ -76,7 +76,7 @@ import co.commet.models.PayoutFailedData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record WebhookEvent(
-        @JsonProperty("event") WebhookEventType event,
+        @JsonProperty("event") String eventAsString,
         @JsonProperty("timestamp") String timestamp,
         @JsonProperty("organizationId") String organizationId,
         @JsonProperty("mode") String mode,
@@ -86,6 +86,10 @@ public record WebhookEvent(
 
     private static final ObjectMapper MAPPER =
             new ObjectMapper().findAndRegisterModules();
+
+    public WebhookEventType event() {
+        return WebhookEventType.fromValue(eventAsString);
+    }
 
     private <T> T convert(Class<T> type) {
         try {
