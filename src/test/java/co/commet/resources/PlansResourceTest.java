@@ -151,7 +151,7 @@ class PlansResourceTest {
                 .setResponseCode(200)
                 .setHeader("Content-Type", "application/json")
                 .setBody("{\"success\":true,\"data\":{\"id\":\"plan_x\",\"consumptionModel\":\"telepathy\","
-                        + "\"prices\":[{\"id\":\"price_x\",\"billingInterval\":\"semiannual\",\"price\":10000}],"
+                        + "\"prices\":[{\"id\":\"price_x\",\"billingInterval\":\"lunar\",\"price\":10000}],"
                         + "\"object\":\"plan\",\"livemode\":true}}"));
 
         Plan plan = plans.get("plan_x");
@@ -160,7 +160,7 @@ class PlansResourceTest {
         assertEquals("telepathy", plan.consumptionModelAsString());
         PlanPricesItem price = plan.prices().get(0);
         assertEquals(BillingInterval.UNKNOWN_TO_SDK_VERSION, price.billingInterval());
-        assertEquals("semiannual", price.billingIntervalAsString());
+        assertEquals("lunar", price.billingIntervalAsString());
     }
 
     private static Map<String, Object> mapOf(Object... kv) {

@@ -7,6 +7,7 @@ public enum BillingInterval {
     WEEKLY("weekly"),
     MONTHLY("monthly"),
     QUARTERLY("quarterly"),
+    SEMIANNUAL("semiannual"),
     YEARLY("yearly"),
     ONE_TIME("one_time"),
     /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
