@@ -9,6 +9,7 @@ import co.commet.models.CreditGrant;
 import co.commet.models.DeletedSubscriptionAddon;
 import co.commet.models.PaymentMethodUpdateCheckout;
 import co.commet.models.PlanChange;
+import co.commet.models.PrepaidPeriodsCheckout;
 import co.commet.models.PreviewChange;
 import co.commet.models.ReactivatedSubscription;
 import co.commet.models.RecoveryLink;
@@ -21,6 +22,7 @@ import co.commet.params.AdjustBalanceParams;
 import co.commet.params.ApplySubscriptionOfferParams;
 import co.commet.params.CancelSubscriptionParams;
 import co.commet.params.ChangePlanParams;
+import co.commet.params.CreatePrepaidPeriodsCheckoutParams;
 import co.commet.params.CreateSubscriptionParams;
 import co.commet.params.CreateSubscriptionRecoveryLinkParams;
 import co.commet.params.GetActiveSubscriptionParams;
@@ -161,12 +163,23 @@ public class SubscriptionsResource {
     }
 
     /**
-     * Creates a hosted checkout session for the customer to update the subscription's default payment method.
+     * Creates a hosted checkout to update the payment method of an active, trialing or past_due subscription. Pending-payment subscriptions must use their payment checkout.
      */
     public PaymentMethodUpdateCheckout updatePaymentMethod(String id, UpdatePaymentMethodParams params) {
         return http.post("/subscriptions/" + id + "/payment-method/update", buildBody(
                 "success_url", params.getSuccessUrl()
         ), params.getIdempotencyKey(), new TypeReference<PaymentMethodUpdateCheckout>() {}).getData();
+    }
+
+    /**
+     * Creates a hosted checkout to pay billing periods of a recurring subscription in advance with any payment method. On an active subscription the paid periods start after the last paid period and replace any open prepaid-periods checkout. On a pending-payment subscription the first payment covers the requested periods and replaces its pending checkout. The billing interval does not change.
+     */
+    public PrepaidPeriodsCheckout createPrepaidPeriodsCheckout(String id, CreatePrepaidPeriodsCheckoutParams params) {
+        return http.post("/subscriptions/" + id + "/prepaid-periods", buildBody(
+                "periods", params.getPeriods(),
+                "offer_id", params.getOfferId(),
+                "success_url", params.getSuccessUrl()
+        ), params.getIdempotencyKey(), new TypeReference<PrepaidPeriodsCheckout>() {}).getData();
     }
 
     /**
@@ -249,6 +262,8 @@ public class SubscriptionsResource {
                 "name", params.getName(),
                 "start_date", params.getStartDate(),
                 "success_url", params.getSuccessUrl(),
+                "prepaid_periods", params.getPrepaidPeriods(),
+                "cancel_at_period_end", params.getCancelAtPeriodEnd(),
                 "offer_id", params.getOfferId(),
                 "promo_code", params.getPromoCode(),
                 "custom_trial_days", params.getCustomTrialDays(),
