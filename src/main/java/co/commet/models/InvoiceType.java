@@ -14,6 +14,7 @@ public enum InvoiceType {
     ONE_TIME_PAYMENT("one_time_payment"),
     REACTIVATION("reactivation"),
     RESUME("resume"),
+    PREPAYMENT("prepayment"),
     /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
     UNKNOWN_TO_SDK_VERSION(null);
 

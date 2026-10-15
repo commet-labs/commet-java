@@ -7,6 +7,8 @@ public enum PaymentMethod {
     CARD("card"),
     OXXO("oxxo"),
     MERCADO_PAGO("mercado_pago"),
+    GOOGLE_PAY("google_pay"),
+    SMARTPIX("smartpix"),
     /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
     UNKNOWN_TO_SDK_VERSION(null);
 
