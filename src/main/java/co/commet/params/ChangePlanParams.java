@@ -6,6 +6,7 @@ public final class ChangePlanParams {
     private final String newBillingInterval;
     private final String successUrl;
     private final String offerId;
+    private final String promoCode;
     private final String idempotencyKey;
 
     private ChangePlanParams(Builder builder) {
@@ -13,6 +14,7 @@ public final class ChangePlanParams {
         this.newBillingInterval = builder.newBillingInterval;
         this.successUrl = builder.successUrl;
         this.offerId = builder.offerId;
+        this.promoCode = builder.promoCode;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -24,6 +26,7 @@ public final class ChangePlanParams {
     public String getNewBillingInterval() { return newBillingInterval; }
     public String getSuccessUrl() { return successUrl; }
     public String getOfferId() { return offerId; }
+    public String getPromoCode() { return promoCode; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -32,6 +35,7 @@ public final class ChangePlanParams {
         private String newBillingInterval;
         private String successUrl;
         private String offerId;
+        private String promoCode;
         private String idempotencyKey;
 
         private Builder() {
@@ -54,6 +58,11 @@ public final class ChangePlanParams {
 
         public Builder offerId(String offerId) {
             this.offerId = offerId;
+            return this;
+        }
+
+        public Builder promoCode(String promoCode) {
+            this.promoCode = promoCode;
             return this;
         }
 

@@ -9,6 +9,7 @@ public final class UpdatePromoCodeParams {
     private final String expiresAt;
     private final Boolean active;
     private final List<String> planIds;
+    private final Boolean firstPurchaseOnly;
     private final String idempotencyKey;
 
     private UpdatePromoCodeParams(Builder builder) {
@@ -17,6 +18,7 @@ public final class UpdatePromoCodeParams {
         this.expiresAt = builder.expiresAt;
         this.active = builder.active;
         this.planIds = builder.planIds;
+        this.firstPurchaseOnly = builder.firstPurchaseOnly;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -29,6 +31,7 @@ public final class UpdatePromoCodeParams {
     public String getExpiresAt() { return expiresAt; }
     public Boolean getActive() { return active; }
     public List<String> getPlanIds() { return planIds; }
+    public Boolean getFirstPurchaseOnly() { return firstPurchaseOnly; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -38,6 +41,7 @@ public final class UpdatePromoCodeParams {
         private String expiresAt;
         private Boolean active;
         private List<String> planIds;
+        private Boolean firstPurchaseOnly;
         private String idempotencyKey;
 
         private Builder() {
@@ -65,6 +69,11 @@ public final class UpdatePromoCodeParams {
 
         public Builder planIds(List<String> planIds) {
             this.planIds = planIds;
+            return this;
+        }
+
+        public Builder firstPurchaseOnly(Boolean firstPurchaseOnly) {
+            this.firstPurchaseOnly = firstPurchaseOnly;
             return this;
         }
 

@@ -290,6 +290,7 @@ Generated from Commet API version `2026-08-27`.
 - `billingDayOfMonth` (`Long | null`, required)
 - `nextBillingDate` (`String | null`, required)
 - `checkoutUrl` (`String | null`, required)
+- `hasPaymentMethod` (`Boolean`, required) — Whether Commet can charge this subscription on its own at its next charge (the trial end or the renewal). A trial that started without a payment method reports false until the customer adds one for this subscription; a payment method saved for another subscription does not count. A subscription on a free plan reports false.
 - `createdAt` (`String`, required)
 - `updatedAt` (`String`, required)
 - `offerApplications` (`List<SubscriptionOfferApplication>`, required)
@@ -372,50 +373,69 @@ Variants:
 - `CreateOfferParamsPhasesItemVariant1`
 - `CreateOfferParamsPhasesItemVariant2`
 - `CreateOfferParamsPhasesItemVariant3`
-- `CreateOfferParamsPhasesItemVariant4`
 
 Discriminator: `type`
 
-- `"free_trial"` → `CreateOfferParamsPhasesItemVariant1`
-- `"percentage"` → `CreateOfferParamsPhasesItemVariant2`
-- `"amount_off"` → `CreateOfferParamsPhasesItemVariant3`
-- `"fixed_price"` → `CreateOfferParamsPhasesItemVariant4`
+- `"percentage"` → `CreateOfferParamsPhasesItemVariant1`
+- `"amount_off"` → `CreateOfferParamsPhasesItemVariant2`
+- `"fixed_price"` → `CreateOfferParamsPhasesItemVariant3`
 
 ### CreateOfferParamsPhasesItemVariant1
-
-- `type` (`String`, required)
-- `durationDays` (`Long`, required)
-
-### CreateOfferParamsPhasesItemVariant2
 
 - `type` (`String`, required)
 - `durationCycles` (`Long | null`, required)
 - `durationInterval` (`String | null`, optional) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
 - `percentage` (`Long`, required) — Discount in basis points. 5000 means 50%.
 
+### CreateOfferParamsPhasesItemVariant2
+
+- `type` (`String`, required)
+- `durationCycles` (`Long | null`, required)
+- `durationInterval` (`String | null`, optional) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
+- `amounts` (`List<CreateOfferParamsPhasesItemVariant2AmountsItem>`, required)
+
+### CreateOfferParamsPhasesItemVariant2AmountsItem
+
+- `currency` (`String`, required)
+- `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
+
 ### CreateOfferParamsPhasesItemVariant3
 
 - `type` (`String`, required)
 - `durationCycles` (`Long | null`, required)
 - `durationInterval` (`String | null`, optional) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
-- `amounts` (`List<CreateOfferParamsPhasesItemVariant3AmountsItem>`, required)
+- `prices` (`List<CreateOfferParamsPhasesItemVariant3PricesItem>`, required)
 
-### CreateOfferParamsPhasesItemVariant3AmountsItem
+### CreateOfferParamsPhasesItemVariant3PricesItem
 
 - `currency` (`String`, required)
 - `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
 
-### CreateOfferParamsPhasesItemVariant4
+### CreatePlanParamsPlanCreditLimit
+
+- `credits` (`Long`, required) — The most plan credits a subscription spends in one window.
+- `interval` (`String`, required) — The window length: `day` is 24 hours and `week` is 7 days, starting at the time of day of the subscription's billing anchor.
+
+### CreatePlanParamsUnusedPlanCredits
+
+Variants:
+
+- `CreatePlanParamsUnusedPlanCreditsVariant1`
+- `CreatePlanParamsUnusedPlanCreditsVariant2`
+
+Discriminator: `type`
+
+- `"expire"` → `CreatePlanParamsUnusedPlanCreditsVariant1`
+- `"roll_over"` → `CreatePlanParamsUnusedPlanCreditsVariant2`
+
+### CreatePlanParamsUnusedPlanCreditsVariant1
 
 - `type` (`String`, required)
-- `durationCycles` (`Long | null`, required)
-- `durationInterval` (`String | null`, optional) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
-- `prices` (`List<CreateOfferParamsPhasesItemVariant4PricesItem>`, required)
 
-### CreateOfferParamsPhasesItemVariant4PricesItem
+### CreatePlanParamsUnusedPlanCreditsVariant2
 
-- `currency` (`String`, required)
-- `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
+- `type` (`String`, required)
+- `maxPlanCredits` (`Long | null`, required) — The most plan credits a subscription holds after a reset, including the credits that reset grants; credits above it expire. At least the included credits of every price. null means no limit other than the largest storable balance, 2,147,483,647 plan credits.
 
 ### CreditGrant
 
@@ -908,6 +928,13 @@ Discriminator: `model`
 - `hasMore` (`Boolean`, required)
 - `nextCursor` (`String`, optional)
 
+### ManagedBy
+
+Variants:
+
+- `String`
+- `Object`
+
 ### Market
 
 - `id` (`String`, required)
@@ -935,6 +962,7 @@ Discriminator: `model`
 - `startsAt` (`String | null`, required)
 - `endsAt` (`String | null`, required)
 - `active` (`Boolean`, required)
+- `managedBy` (`ManagedBy`, required) — Integration that manages this record, or null when the merchant does. While an integration manages it, its terms change only in that integration and edits answer 409 managed_by_integration.
 - `createdAt` (`String`, required)
 - `updatedAt` (`String`, required)
 - `object` (`String`, required)
@@ -947,47 +975,40 @@ Variants:
 - `OfferPhasesItemVariant1`
 - `OfferPhasesItemVariant2`
 - `OfferPhasesItemVariant3`
-- `OfferPhasesItemVariant4`
 
 Discriminator: `type`
 
-- `"free_trial"` → `OfferPhasesItemVariant1`
-- `"percentage"` → `OfferPhasesItemVariant2`
-- `"amount_off"` → `OfferPhasesItemVariant3`
-- `"fixed_price"` → `OfferPhasesItemVariant4`
+- `"percentage"` → `OfferPhasesItemVariant1`
+- `"amount_off"` → `OfferPhasesItemVariant2`
+- `"fixed_price"` → `OfferPhasesItemVariant3`
 
 ### OfferPhasesItemVariant1
-
-- `type` (`String`, required)
-- `durationDays` (`Long`, required)
-
-### OfferPhasesItemVariant2
 
 - `type` (`String`, required)
 - `durationCycles` (`Long | null`, required)
 - `durationInterval` (`String | null`, required) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
 - `percentage` (`Long`, required) — Discount in basis points. 5000 means 50%.
 
+### OfferPhasesItemVariant2
+
+- `type` (`String`, required)
+- `durationCycles` (`Long | null`, required)
+- `durationInterval` (`String | null`, required) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
+- `amounts` (`List<OfferPhasesItemVariant2AmountsItem>`, required)
+
+### OfferPhasesItemVariant2AmountsItem
+
+- `currency` (`String`, required)
+- `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
+
 ### OfferPhasesItemVariant3
 
 - `type` (`String`, required)
 - `durationCycles` (`Long | null`, required)
 - `durationInterval` (`String | null`, required) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
-- `amounts` (`List<OfferPhasesItemVariant3AmountsItem>`, required)
+- `prices` (`List<OfferPhasesItemVariant3PricesItem>`, required)
 
-### OfferPhasesItemVariant3AmountsItem
-
-- `currency` (`String`, required)
-- `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
-
-### OfferPhasesItemVariant4
-
-- `type` (`String`, required)
-- `durationCycles` (`Long | null`, required)
-- `durationInterval` (`String | null`, required) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
-- `prices` (`List<OfferPhasesItemVariant4PricesItem>`, required)
-
-### OfferPhasesItemVariant4PricesItem
+### OfferPhasesItemVariant3PricesItem
 
 - `currency` (`String`, required)
 - `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
@@ -1102,6 +1123,8 @@ Discriminator: `type`
 - `isDefault` (`Boolean`, required)
 - `isFree` (`Boolean`, required)
 - `blockOnExhaustion` (`Boolean | null`, required)
+- `unusedPlanCredits` (`PlanUnusedPlanCredits | null`, required) — Credits plans only; null for other consumption models. What happens to unused plan credits at each reset. Purchased credits never expire and never count toward maxPlanCredits.
+- `planCreditLimit` (`PlanPlanCreditLimit | null`, required) — Credits plans only. The most plan credits a subscription spends per day or per week; null means no limit.
 - `sortOrder` (`Long`, required)
 - `planGroupId` (`String | null`, required)
 - `metadata` (`Map<String, Object> | null`, required)
@@ -1497,6 +1520,11 @@ Discriminator: `type`
 - `hasMore` (`Boolean`, required)
 - `nextCursor` (`String`, optional)
 
+### PlanPlanCreditLimit
+
+- `credits` (`Long`, required) — The most plan credits a subscription spends in one window.
+- `interval` (`String`, required) — The window length: `day` is 24 hours and `week` is 7 days, starting at the time of day of the subscription's billing anchor.
+
 ### PlanPrice
 
 - `id` (`String`, required) — Public plan price ID.
@@ -1505,6 +1533,7 @@ Discriminator: `type`
 - `price` (`Long`, required) — Price in the currency's minor unit (for example, cents for USD).
 - `isDefault` (`Boolean`, required)
 - `trialDays` (`Long`, required)
+- `trialRequiresPaymentMethod` (`Boolean | null`, required) — Whether the price's free trial needs a payment method to start. When false, a new subscription starts trialing right away without checkout; without a payment method added by the trial end, the customer moves to the plan group's default plan, or the subscription is canceled when there is none. Null when the price has no trial.
 - `includedBalance` (`Long | null`, required)
 - `includedCredits` (`Long | null`, required)
 - `offerId` (`String | null`, required) — Automatic introductory offer for this price.
@@ -1529,6 +1558,7 @@ Discriminator: `type`
 - `price` (`Long`, required) — Price in the currency's minor unit (for example, cents for USD).
 - `isDefault` (`Boolean`, required)
 - `trialDays` (`Long`, required)
+- `trialRequiresPaymentMethod` (`Boolean | null`, required) — Whether the price's free trial needs a payment method to start. When false, a new subscription starts trialing right away without checkout; without a payment method added by the trial end, the customer moves to the plan group's default plan, or the subscription is canceled when there is none. Null when the price has no trial.
 - `includedBalance` (`Long | null`, required)
 - `includedCredits` (`Long | null`, required)
 - `offerId` (`String | null`, required) — Automatic introductory offer for this price. Pass a Promotional Offer ID when creating a subscription to override it.
@@ -1579,6 +1609,27 @@ Discriminator: `type`
 - `data` (`List<Plan>`, required)
 - `hasMore` (`Boolean`, required)
 - `nextCursor` (`String`, optional)
+
+### PlanUnusedPlanCredits
+
+Variants:
+
+- `PlanUnusedPlanCreditsVariant1`
+- `PlanUnusedPlanCreditsVariant2`
+
+Discriminator: `type`
+
+- `"expire"` → `PlanUnusedPlanCreditsVariant1`
+- `"roll_over"` → `PlanUnusedPlanCreditsVariant2`
+
+### PlanUnusedPlanCreditsVariant1
+
+- `type` (`String`, required)
+
+### PlanUnusedPlanCreditsVariant2
+
+- `type` (`String`, required)
+- `maxPlanCredits` (`Long | null`, required) — The most plan credits a subscription holds after a reset, including the credits that reset grants; credits above it expire. At least the included credits of every price. null means no limit other than the largest storable balance, 2,147,483,647 plan credits.
 
 ### PortalAccess
 
@@ -1707,6 +1758,8 @@ Discriminator: `type`
 - `expiresAt` (`String | null`, required)
 - `isActive` (`Boolean`, required)
 - `redemptionCount` (`Long`, required)
+- `firstPurchaseOnly` (`Boolean`, required) — Whether the code only applies to a customer's first purchase: one with no paid invoice above zero and no paid subscription.
+- `managedBy` (`ManagedBy`, required) — Integration that manages this record, or null when the merchant does. While an integration manages it, its terms change only in that integration and edits answer 409 managed_by_integration.
 - `createdAt` (`String`, required)
 - `updatedAt` (`String`, required)
 - `object` (`String`, required)
@@ -1939,6 +1992,7 @@ Discriminator: `type`
 - `billingDayOfMonth` (`Long | null`, required)
 - `nextBillingDate` (`String | null`, required)
 - `checkoutUrl` (`String | null`, required)
+- `hasPaymentMethod` (`Boolean`, required) — Whether Commet can charge this subscription on its own at its next charge (the trial end or the renewal). A trial that started without a payment method reports false until the customer adds one for this subscription; a payment method saved for another subscription does not count. A subscription on a free plan reports false.
 - `createdAt` (`String`, required)
 - `updatedAt` (`String`, required)
 - `offerApplications` (`List<SubscriptionOfferApplication>`, required)
@@ -1959,6 +2013,24 @@ Discriminator: `type`
 - `proratedCharge` (`Long`, required)
 - `object` (`String`, required)
 - `livemode` (`Boolean`, required)
+
+### SubscriptionAutoTopUp
+
+- `enabled` (`Boolean`, required) — Whether credits are bought automatically. Always false when the plan does not sell credits.
+- `threshold` (`Long | null`, required) — Credits at or below which a top-up is bought, or null when never configured.
+- `quantity` (`Long | null`, required) — Credits each top-up buys, or null when never configured.
+- `maxPerPeriod` (`Long | null`, required) — Maximum top-ups per credit renewal period, or null when never configured.
+- `status` (`String`, required) — active buys when credits reach the threshold; paused stops after three consecutive failed top-ups, or after one whose charge could not be refunded, until the payment method changes, a credit purchase succeeds or it is saved enabled again; off buys nothing.
+- `topUpsThisPeriod` (`Long`, required) — Top-ups bought in the current credit renewal period.
+- `periodResetsAt` (`String | null`, required) — When the top-up count of the period resets, or null before the subscription starts its first period.
+- `lastFailure` (`SubscriptionAutoTopUpLastFailure | null`, required) — The last top-up that failed, or null when none has failed.
+- `object` (`String`, required)
+- `livemode` (`Boolean`, required)
+
+### SubscriptionAutoTopUpLastFailure
+
+- `reason` (`String`, required)
+- `at` (`String`, required)
 
 ### SubscriptionBalance
 
@@ -2259,6 +2331,7 @@ Discriminator: `status`
 - `billingDayOfMonth` (`Long | null`, required)
 - `nextBillingDate` (`String | null`, required)
 - `checkoutUrl` (`String | null`, required)
+- `hasPaymentMethod` (`Boolean`, required) — Whether Commet can charge this subscription on its own at its next charge (the trial end or the renewal). A trial that started without a payment method reports false until the customer adds one for this subscription; a payment method saved for another subscription does not count. A subscription on a free plan reports false.
 - `createdAt` (`String`, required)
 - `updatedAt` (`String`, required)
 - `offerApplications` (`List<SubscriptionOfferApplication>`, required)
@@ -2519,47 +2592,40 @@ Variants:
 - `UpdateOfferParamsPhasesItemVariant1`
 - `UpdateOfferParamsPhasesItemVariant2`
 - `UpdateOfferParamsPhasesItemVariant3`
-- `UpdateOfferParamsPhasesItemVariant4`
 
 Discriminator: `type`
 
-- `"free_trial"` → `UpdateOfferParamsPhasesItemVariant1`
-- `"percentage"` → `UpdateOfferParamsPhasesItemVariant2`
-- `"amount_off"` → `UpdateOfferParamsPhasesItemVariant3`
-- `"fixed_price"` → `UpdateOfferParamsPhasesItemVariant4`
+- `"percentage"` → `UpdateOfferParamsPhasesItemVariant1`
+- `"amount_off"` → `UpdateOfferParamsPhasesItemVariant2`
+- `"fixed_price"` → `UpdateOfferParamsPhasesItemVariant3`
 
 ### UpdateOfferParamsPhasesItemVariant1
-
-- `type` (`String`, required)
-- `durationDays` (`Long`, required)
-
-### UpdateOfferParamsPhasesItemVariant2
 
 - `type` (`String`, required)
 - `durationCycles` (`Long | null`, required)
 - `durationInterval` (`String | null`, optional) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
 - `percentage` (`Long`, required) — Discount in basis points. 5000 means 50%.
 
+### UpdateOfferParamsPhasesItemVariant2
+
+- `type` (`String`, required)
+- `durationCycles` (`Long | null`, required)
+- `durationInterval` (`String | null`, optional) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
+- `amounts` (`List<UpdateOfferParamsPhasesItemVariant2AmountsItem>`, required)
+
+### UpdateOfferParamsPhasesItemVariant2AmountsItem
+
+- `currency` (`String`, required)
+- `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
+
 ### UpdateOfferParamsPhasesItemVariant3
 
 - `type` (`String`, required)
 - `durationCycles` (`Long | null`, required)
 - `durationInterval` (`String | null`, optional) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
-- `amounts` (`List<UpdateOfferParamsPhasesItemVariant3AmountsItem>`, required)
+- `prices` (`List<UpdateOfferParamsPhasesItemVariant3PricesItem>`, required)
 
-### UpdateOfferParamsPhasesItemVariant3AmountsItem
-
-- `currency` (`String`, required)
-- `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
-
-### UpdateOfferParamsPhasesItemVariant4
-
-- `type` (`String`, required)
-- `durationCycles` (`Long | null`, required)
-- `durationInterval` (`String | null`, optional) — Unit the phase duration is counted in. Only a fixed-price phase may set it, because its amount is declared rather than derived from the plan. Defaults to the plan's own billing interval.
-- `prices` (`List<UpdateOfferParamsPhasesItemVariant4PricesItem>`, required)
-
-### UpdateOfferParamsPhasesItemVariant4PricesItem
+### UpdateOfferParamsPhasesItemVariant3PricesItem
 
 - `currency` (`String`, required)
 - `amount` (`Long`, required) — Amount in the currency's minor unit (for example, cents for USD).
@@ -2568,6 +2634,32 @@ Discriminator: `type`
 
 - `enabled` (`Boolean`, optional)
 - `unitPrice` (`Long`, optional)
+
+### UpdatePlanParamsPlanCreditLimit
+
+- `credits` (`Long`, required) — The most plan credits a subscription spends in one window.
+- `interval` (`String`, required) — The window length: `day` is 24 hours and `week` is 7 days, starting at the time of day of the subscription's billing anchor.
+
+### UpdatePlanParamsUnusedPlanCredits
+
+Variants:
+
+- `UpdatePlanParamsUnusedPlanCreditsVariant1`
+- `UpdatePlanParamsUnusedPlanCreditsVariant2`
+
+Discriminator: `type`
+
+- `"expire"` → `UpdatePlanParamsUnusedPlanCreditsVariant1`
+- `"roll_over"` → `UpdatePlanParamsUnusedPlanCreditsVariant2`
+
+### UpdatePlanParamsUnusedPlanCreditsVariant1
+
+- `type` (`String`, required)
+
+### UpdatePlanParamsUnusedPlanCreditsVariant2
+
+- `type` (`String`, required)
+- `maxPlanCredits` (`Long | null`, required) — The most plan credits a subscription holds after a reset, including the credits that reset grants; credits above it expire. At least the included credits of every price. null means no limit other than the largest storable balance, 2,147,483,647 plan credits.
 
 ### UpdatePlanPriceParamsMarketPricesItem
 
@@ -2641,8 +2733,17 @@ Discriminator: `consumptionModel`
 - `planCredits` (`Long`, required)
 - `purchasedCredits` (`Long`, required)
 - `totalCredits` (`Long`, required)
+- `planCreditLimit` (`UsageCheckVariant2PlanCreditLimit | null`, required)
 - `object` (`String`, required)
 - `livemode` (`Boolean`, required)
+
+### UsageCheckVariant2PlanCreditLimit
+
+- `credits` (`Long`, required) — The most plan credits the subscription spends per window.
+- `interval` (`String`, required) — The window length: 24 hours for `day`, 7 days for `week`.
+- `spent` (`Long`, required) — Plan credits spent in the current window.
+- `remaining` (`Long`, required) — Plan credits the subscription can still spend in the current window. Purchased credits are not limited.
+- `resetsAt` (`String`, required) — When the next window starts and spending resets.
 
 ### UsageCheckVariant3
 
@@ -2681,6 +2782,15 @@ Discriminator: `consumptionModel`
 - `deducted` (`Double`, required)
 - `remaining` (`Double`, required)
 - `blocked` (`Boolean`, required)
+- `planCreditLimit` (`UsageEventConsumptionPlanCreditLimit | null`, optional) — Credits consumption only, omitted for balance. The plan credit limit after this event; null when the plan has no limit.
+
+### UsageEventConsumptionPlanCreditLimit
+
+- `credits` (`Long`, required) — The most plan credits the subscription spends per window.
+- `interval` (`String`, required) — The window length: 24 hours for `day`, 7 days for `week`.
+- `spent` (`Long`, required) — Plan credits spent in the current window.
+- `remaining` (`Long`, required) — Plan credits the subscription can still spend in the current window. Purchased credits are not limited.
+- `resetsAt` (`String`, required) — When the next window starts and spending resets.
 
 ### UsageEventPropertiesItem
 

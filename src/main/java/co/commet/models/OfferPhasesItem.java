@@ -18,14 +18,12 @@ public interface OfferPhasesItem {
             JsonNode discriminator = node.get("type");
             if (discriminator != null) {
                 switch (discriminator.asText()) {
-                    case "free_trial":
-                        return mapper.treeToValue(node, OfferPhasesItemVariant1.class);
                     case "percentage":
-                        return mapper.treeToValue(node, OfferPhasesItemVariant2.class);
+                        return mapper.treeToValue(node, OfferPhasesItemVariant1.class);
                     case "amount_off":
-                        return mapper.treeToValue(node, OfferPhasesItemVariant3.class);
+                        return mapper.treeToValue(node, OfferPhasesItemVariant2.class);
                     case "fixed_price":
-                        return mapper.treeToValue(node, OfferPhasesItemVariant4.class);
+                        return mapper.treeToValue(node, OfferPhasesItemVariant3.class);
                     default:
                         break;
                 }

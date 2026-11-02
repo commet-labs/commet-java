@@ -9,6 +9,7 @@ public final class UpdatePlanPriceParams {
     private final Long price;
     private final Boolean isDefault;
     private final Long trialDays;
+    private final Boolean trialRequiresPaymentMethod;
     private final Long includedBalance;
     private final Long includedCredits;
     private final Map<String, Object> metadata;
@@ -19,6 +20,7 @@ public final class UpdatePlanPriceParams {
         this.price = builder.price;
         this.isDefault = builder.isDefault;
         this.trialDays = builder.trialDays;
+        this.trialRequiresPaymentMethod = builder.trialRequiresPaymentMethod;
         this.includedBalance = builder.includedBalance;
         this.includedCredits = builder.includedCredits;
         this.metadata = builder.metadata;
@@ -33,6 +35,7 @@ public final class UpdatePlanPriceParams {
     public Long getPrice() { return price; }
     public Boolean getIsDefault() { return isDefault; }
     public Long getTrialDays() { return trialDays; }
+    public Boolean getTrialRequiresPaymentMethod() { return trialRequiresPaymentMethod; }
     public Long getIncludedBalance() { return includedBalance; }
     public Long getIncludedCredits() { return includedCredits; }
     public Map<String, Object> getMetadata() { return metadata; }
@@ -44,6 +47,7 @@ public final class UpdatePlanPriceParams {
         private Long price;
         private Boolean isDefault;
         private Long trialDays;
+        private Boolean trialRequiresPaymentMethod;
         private Long includedBalance;
         private Long includedCredits;
         private Map<String, Object> metadata;
@@ -65,6 +69,11 @@ public final class UpdatePlanPriceParams {
 
         public Builder trialDays(Long trialDays) {
             this.trialDays = trialDays;
+            return this;
+        }
+
+        public Builder trialRequiresPaymentMethod(Boolean trialRequiresPaymentMethod) {
+            this.trialRequiresPaymentMethod = trialRequiresPaymentMethod;
             return this;
         }
 

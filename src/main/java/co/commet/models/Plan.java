@@ -20,6 +20,10 @@ public record Plan(
         @JsonProperty("is_free") boolean isFree,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("block_on_exhaustion") Boolean blockOnExhaustion,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("unused_plan_credits") PlanUnusedPlanCredits unusedPlanCredits,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("plan_credit_limit") PlanPlanCreditLimit planCreditLimit,
         @JsonProperty("sort_order") long sortOrder,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("plan_group_id") String planGroupId,

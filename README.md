@@ -80,8 +80,8 @@ var market = commet.markets().create(
 
 var offer = commet.offers().create(
     CreateOfferParams.builder(
-        "30-day trial",
-        List.of(new CreateOfferParamsPhasesItemVariant1("free_trial", 30L))
+        "First three months at 25% off",
+        List.of(new CreateOfferParamsPhasesItemVariant1("percentage", 3L, null, 2500L))
     ).build()
 );
 ```

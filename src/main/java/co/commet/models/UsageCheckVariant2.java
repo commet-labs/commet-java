@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -20,6 +21,8 @@ public record UsageCheckVariant2(
         @JsonProperty("plan_credits") long planCredits,
         @JsonProperty("purchased_credits") long purchasedCredits,
         @JsonProperty("total_credits") long totalCredits,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("plan_credit_limit") UsageCheckVariant2PlanCreditLimit planCreditLimit,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) implements UsageCheck {}

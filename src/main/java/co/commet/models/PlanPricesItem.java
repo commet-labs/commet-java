@@ -14,6 +14,8 @@ public record PlanPricesItem(
         @JsonProperty("is_default") boolean isDefault,
         @JsonProperty("trial_days") long trialDays,
         @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("trial_requires_payment_method") Boolean trialRequiresPaymentMethod,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("included_balance") Long includedBalance,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("included_credits") Long includedCredits,

@@ -18,14 +18,12 @@ public interface UpdateOfferParamsPhasesItem {
             JsonNode discriminator = node.get("type");
             if (discriminator != null) {
                 switch (discriminator.asText()) {
-                    case "free_trial":
-                        return mapper.treeToValue(node, UpdateOfferParamsPhasesItemVariant1.class);
                     case "percentage":
-                        return mapper.treeToValue(node, UpdateOfferParamsPhasesItemVariant2.class);
+                        return mapper.treeToValue(node, UpdateOfferParamsPhasesItemVariant1.class);
                     case "amount_off":
-                        return mapper.treeToValue(node, UpdateOfferParamsPhasesItemVariant3.class);
+                        return mapper.treeToValue(node, UpdateOfferParamsPhasesItemVariant2.class);
                     case "fixed_price":
-                        return mapper.treeToValue(node, UpdateOfferParamsPhasesItemVariant4.class);
+                        return mapper.treeToValue(node, UpdateOfferParamsPhasesItemVariant3.class);
                     default:
                         break;
                 }

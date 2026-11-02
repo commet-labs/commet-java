@@ -102,6 +102,7 @@ public class PlansResource {
                 "price", params.getPrice(),
                 "is_default", params.getIsDefault(),
                 "trial_days", params.getTrialDays(),
+                "trial_requires_payment_method", params.getTrialRequiresPaymentMethod(),
                 "included_balance", params.getIncludedBalance(),
                 "included_credits", params.getIncludedCredits(),
                 "metadata", params.getMetadata(),
@@ -125,6 +126,7 @@ public class PlansResource {
                 "metadata", params.getMetadata(),
                 "price", params.getPrice(),
                 "trial_days", params.getTrialDays(),
+                "trial_requires_payment_method", params.getTrialRequiresPaymentMethod(),
                 "is_default", params.getIsDefault(),
                 "included_balance", params.getIncludedBalance(),
                 "included_credits", params.getIncludedCredits(),
@@ -153,14 +155,17 @@ public class PlansResource {
     }
 
     /**
-     * Update a plan's name, description, visibility, or metadata.
+     * Update a plan's name, description, visibility, default status, metadata, what happens to its unused plan credits, or its plan credit limit.
      */
     public Plan update(String id, UpdatePlanParams params) {
         return http.patch("/plans/" + id, buildBody(
                 "name", params.getName(),
                 "description", params.getDescription(),
                 "metadata", params.getMetadata(),
-                "is_public", params.getIsPublic()
+                "is_public", params.getIsPublic(),
+                "unused_plan_credits", params.getUnusedPlanCredits(),
+                "plan_credit_limit", params.getPlanCreditLimit(),
+                "is_default", params.getIsDefault()
         ), params.getIdempotencyKey(), new TypeReference<Plan>() {}).getData();
     }
 
@@ -201,7 +206,10 @@ public class PlansResource {
                 "is_public", params.getIsPublic(),
                 "is_free", params.getIsFree(),
                 "block_on_exhaustion", params.getBlockOnExhaustion(),
+                "unused_plan_credits", params.getUnusedPlanCredits(),
+                "plan_credit_limit", params.getPlanCreditLimit(),
                 "plan_group_id", params.getPlanGroupId(),
+                "is_default", params.getIsDefault(),
                 "metadata", params.getMetadata()
         ), params.getIdempotencyKey(), new TypeReference<Plan>() {}).getData();
     }

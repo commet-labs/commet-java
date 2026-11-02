@@ -5,15 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.List;
 
 @JsonDeserialize(using = JsonDeserializer.None.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record OfferPhasesItemVariant4(
+public record UpdatePlanParamsUnusedPlanCreditsVariant2(
         @JsonProperty("type") String type,
         @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("duration_cycles") Long durationCycles,
-        @JsonInclude(JsonInclude.Include.ALWAYS)
-        @JsonProperty("duration_interval") String durationInterval,
-        @JsonProperty("prices") List<OfferPhasesItemVariant4PricesItem> prices
-) implements OfferPhasesItem {}
+        @JsonProperty("max_plan_credits") Long maxPlanCredits
+) implements UpdatePlanParamsUnusedPlanCredits {}

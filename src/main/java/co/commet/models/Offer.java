@@ -17,6 +17,7 @@ public record Offer(
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("ends_at") String endsAt,
         @JsonProperty("active") boolean active,
+        @JsonProperty("managed_by") ManagedBy managedBy,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,

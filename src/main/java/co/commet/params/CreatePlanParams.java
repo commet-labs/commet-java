@@ -1,5 +1,7 @@
 package co.commet.params;
 
+import co.commet.models.CreatePlanParamsPlanCreditLimit;
+import co.commet.models.CreatePlanParamsUnusedPlanCredits;
 import java.util.Map;
 
 public final class CreatePlanParams {
@@ -11,7 +13,10 @@ public final class CreatePlanParams {
     private final Boolean isPublic;
     private final Boolean isFree;
     private final Boolean blockOnExhaustion;
+    private final CreatePlanParamsUnusedPlanCredits unusedPlanCredits;
+    private final CreatePlanParamsPlanCreditLimit planCreditLimit;
     private final String planGroupId;
+    private final Boolean isDefault;
     private final Map<String, Object> metadata;
     private final String idempotencyKey;
 
@@ -23,7 +28,10 @@ public final class CreatePlanParams {
         this.isPublic = builder.isPublic;
         this.isFree = builder.isFree;
         this.blockOnExhaustion = builder.blockOnExhaustion;
+        this.unusedPlanCredits = builder.unusedPlanCredits;
+        this.planCreditLimit = builder.planCreditLimit;
         this.planGroupId = builder.planGroupId;
+        this.isDefault = builder.isDefault;
         this.metadata = builder.metadata;
         this.idempotencyKey = builder.idempotencyKey;
     }
@@ -39,7 +47,10 @@ public final class CreatePlanParams {
     public Boolean getIsPublic() { return isPublic; }
     public Boolean getIsFree() { return isFree; }
     public Boolean getBlockOnExhaustion() { return blockOnExhaustion; }
+    public CreatePlanParamsUnusedPlanCredits getUnusedPlanCredits() { return unusedPlanCredits; }
+    public CreatePlanParamsPlanCreditLimit getPlanCreditLimit() { return planCreditLimit; }
     public String getPlanGroupId() { return planGroupId; }
+    public Boolean getIsDefault() { return isDefault; }
     public Map<String, Object> getMetadata() { return metadata; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
@@ -52,7 +63,10 @@ public final class CreatePlanParams {
         private Boolean isPublic;
         private Boolean isFree;
         private Boolean blockOnExhaustion;
+        private CreatePlanParamsUnusedPlanCredits unusedPlanCredits;
+        private CreatePlanParamsPlanCreditLimit planCreditLimit;
         private String planGroupId;
+        private Boolean isDefault;
         private Map<String, Object> metadata;
         private String idempotencyKey;
 
@@ -86,8 +100,23 @@ public final class CreatePlanParams {
             return this;
         }
 
+        public Builder unusedPlanCredits(CreatePlanParamsUnusedPlanCredits unusedPlanCredits) {
+            this.unusedPlanCredits = unusedPlanCredits;
+            return this;
+        }
+
+        public Builder planCreditLimit(CreatePlanParamsPlanCreditLimit planCreditLimit) {
+            this.planCreditLimit = planCreditLimit;
+            return this;
+        }
+
         public Builder planGroupId(String planGroupId) {
             this.planGroupId = planGroupId;
+            return this;
+        }
+
+        public Builder isDefault(Boolean isDefault) {
+            this.isDefault = isDefault;
             return this;
         }
 
