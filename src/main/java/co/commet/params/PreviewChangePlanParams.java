@@ -5,12 +5,14 @@ public final class PreviewChangePlanParams {
     private final String planId;
     private final String billingInterval;
     private final String offerId;
+    private final String promoCode;
     private final String idempotencyKey;
 
     private PreviewChangePlanParams(Builder builder) {
         this.planId = builder.planId;
         this.billingInterval = builder.billingInterval;
         this.offerId = builder.offerId;
+        this.promoCode = builder.promoCode;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -21,6 +23,7 @@ public final class PreviewChangePlanParams {
     public String getPlanId() { return planId; }
     public String getBillingInterval() { return billingInterval; }
     public String getOfferId() { return offerId; }
+    public String getPromoCode() { return promoCode; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -28,6 +31,7 @@ public final class PreviewChangePlanParams {
         private final String planId;
         private String billingInterval;
         private String offerId;
+        private String promoCode;
         private String idempotencyKey;
 
         private Builder(String planId) {
@@ -41,6 +45,11 @@ public final class PreviewChangePlanParams {
 
         public Builder offerId(String offerId) {
             this.offerId = offerId;
+            return this;
+        }
+
+        public Builder promoCode(String promoCode) {
+            this.promoCode = promoCode;
             return this;
         }
 

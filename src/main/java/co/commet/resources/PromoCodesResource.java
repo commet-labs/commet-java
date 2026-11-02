@@ -35,7 +35,8 @@ public class PromoCodesResource {
                 "max_redemptions", params.getMaxRedemptions(),
                 "expires_at", params.getExpiresAt(),
                 "active", params.getActive(),
-                "plan_ids", params.getPlanIds()
+                "plan_ids", params.getPlanIds(),
+                "first_purchase_only", params.getFirstPurchaseOnly()
         ), params.getIdempotencyKey(), new TypeReference<PromoCode>() {}).getData();
     }
 
@@ -50,7 +51,7 @@ public class PromoCodesResource {
     }
 
     /**
-     * Create a distribution code for an existing Offer with one or more sequential discount phases and an optional leading trial. The code owns redemption restrictions.
+     * Create a distribution code for an existing Offer with one or more sequential discount phases. The code owns redemption restrictions.
      */
     public PromoCode create(CreatePromoCodeParams params) {
         return http.post("/promo-codes", buildBody(
@@ -59,7 +60,8 @@ public class PromoCodesResource {
                 "billing_interval", params.getBillingInterval(),
                 "max_redemptions", params.getMaxRedemptions(),
                 "expires_at", params.getExpiresAt(),
-                "plan_ids", params.getPlanIds()
+                "plan_ids", params.getPlanIds(),
+                "first_purchase_only", params.getFirstPurchaseOnly()
         ), params.getIdempotencyKey(), new TypeReference<PromoCode>() {}).getData();
     }
 }

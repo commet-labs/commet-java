@@ -17,6 +17,8 @@ public record PromoCode(
         @JsonProperty("expires_at") String expiresAt,
         @JsonProperty("is_active") boolean isActive,
         @JsonProperty("redemption_count") long redemptionCount,
+        @JsonProperty("first_purchase_only") boolean firstPurchaseOnly,
+        @JsonProperty("managed_by") ManagedBy managedBy,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("object") String object,

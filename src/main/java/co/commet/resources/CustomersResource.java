@@ -123,11 +123,12 @@ public class CustomersResource {
     }
 
     /**
-     * Create up to 100 customers in a single request.
+     * Create up to 100 customers in a single request. With planGroupId, each customer without an open subscription starts on that group's starting plan (see planGroupId), and the entry of a deleted customer fails with customer_deleted.
      */
     public CustomerBatch createBatch(BatchCreateCustomersParams params) {
         return http.post("/customers/batch", buildBody(
-                "customers", params.getCustomers()
+                "customers", params.getCustomers(),
+                "plan_group_id", params.getPlanGroupId()
         ), params.getIdempotencyKey(), new TypeReference<CustomerBatch>() {}).getData();
     }
 
@@ -143,7 +144,7 @@ public class CustomersResource {
     }
 
     /**
-     * Create a new customer. Idempotent when customerId is provided.
+     * Create a new customer. Idempotent when customerId is provided. With planGroupId, a customer without an open subscription starts on that group's starting plan (see planGroupId), and the externalId of a deleted customer is rejected.
      */
     public Customer create(CreateCustomerParams params) {
         return http.post("/customers", buildBody(
@@ -155,7 +156,8 @@ public class CustomersResource {
                 "address_id", params.getAddressId(),
                 "email", params.getEmail(),
                 "timezone", params.getTimezone(),
-                "metadata", params.getMetadata()
+                "metadata", params.getMetadata(),
+                "plan_group_id", params.getPlanGroupId()
         ), params.getIdempotencyKey(), new TypeReference<Customer>() {}).getData();
     }
 }

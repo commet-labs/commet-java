@@ -34,6 +34,7 @@ public record CreatedSubscription(
         @JsonProperty("next_billing_date") String nextBillingDate,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("checkout_url") String checkoutUrl,
+        @JsonProperty("has_payment_method") boolean hasPaymentMethod,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
         @JsonProperty("offer_applications") List<SubscriptionOfferApplication> offerApplications,

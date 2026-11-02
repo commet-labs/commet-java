@@ -10,6 +10,7 @@ public final class CreatePromoCodeParams {
     private final Long maxRedemptions;
     private final String expiresAt;
     private final List<String> planIds;
+    private final Boolean firstPurchaseOnly;
     private final String idempotencyKey;
 
     private CreatePromoCodeParams(Builder builder) {
@@ -19,6 +20,7 @@ public final class CreatePromoCodeParams {
         this.maxRedemptions = builder.maxRedemptions;
         this.expiresAt = builder.expiresAt;
         this.planIds = builder.planIds;
+        this.firstPurchaseOnly = builder.firstPurchaseOnly;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -32,6 +34,7 @@ public final class CreatePromoCodeParams {
     public Long getMaxRedemptions() { return maxRedemptions; }
     public String getExpiresAt() { return expiresAt; }
     public List<String> getPlanIds() { return planIds; }
+    public Boolean getFirstPurchaseOnly() { return firstPurchaseOnly; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -42,6 +45,7 @@ public final class CreatePromoCodeParams {
         private Long maxRedemptions;
         private String expiresAt;
         private List<String> planIds;
+        private Boolean firstPurchaseOnly;
         private String idempotencyKey;
 
         private Builder(String code, String offerId) {
@@ -66,6 +70,11 @@ public final class CreatePromoCodeParams {
 
         public Builder planIds(List<String> planIds) {
             this.planIds = planIds;
+            return this;
+        }
+
+        public Builder firstPurchaseOnly(Boolean firstPurchaseOnly) {
+            this.firstPurchaseOnly = firstPurchaseOnly;
             return this;
         }
 

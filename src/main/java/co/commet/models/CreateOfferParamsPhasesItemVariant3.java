@@ -14,5 +14,5 @@ public record CreateOfferParamsPhasesItemVariant3(
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("duration_cycles") Long durationCycles,
         @JsonProperty("duration_interval") String durationInterval,
-        @JsonProperty("amounts") List<CreateOfferParamsPhasesItemVariant3AmountsItem> amounts
+        @JsonProperty("prices") List<CreateOfferParamsPhasesItemVariant3PricesItem> prices
 ) implements CreateOfferParamsPhasesItem {}

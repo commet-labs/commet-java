@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record OfferPhasesItemVariant3AmountsItem(
+public record UpdateOfferParamsPhasesItemVariant3PricesItem(
         @JsonProperty("currency") String currency,
         @JsonProperty("amount") long amount
 ) {}

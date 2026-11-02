@@ -15,6 +15,7 @@ public final class CreateCustomerParams {
     private final String addressId;
     private final Timezone timezone;
     private final Map<String, Object> metadata;
+    private final String planGroupId;
     private final String idempotencyKey;
 
     private CreateCustomerParams(Builder builder) {
@@ -27,6 +28,7 @@ public final class CreateCustomerParams {
         this.addressId = builder.addressId;
         this.timezone = builder.timezone;
         this.metadata = builder.metadata;
+        this.planGroupId = builder.planGroupId;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -43,6 +45,7 @@ public final class CreateCustomerParams {
     public String getAddressId() { return addressId; }
     public Timezone getTimezone() { return timezone; }
     public Map<String, Object> getMetadata() { return metadata; }
+    public String getPlanGroupId() { return planGroupId; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -56,6 +59,7 @@ public final class CreateCustomerParams {
         private String addressId;
         private Timezone timezone;
         private Map<String, Object> metadata;
+        private String planGroupId;
         private String idempotencyKey;
 
         private Builder(String email) {
@@ -99,6 +103,11 @@ public final class CreateCustomerParams {
 
         public Builder metadata(Map<String, Object> metadata) {
             this.metadata = metadata;
+            return this;
+        }
+
+        public Builder planGroupId(String planGroupId) {
+            this.planGroupId = planGroupId;
             return this;
         }
 

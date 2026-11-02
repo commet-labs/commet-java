@@ -2,7 +2,7 @@ package co.commet;
 
 import co.commet.models.CreateApiKeyParamsPermissions;
 import co.commet.models.CreateCustomerParamsAddress;
-import co.commet.models.CreateOfferParamsPhasesItemVariant2;
+import co.commet.models.CreateOfferParamsPhasesItemVariant1;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.time.Duration;
 import java.util.List;
@@ -24,7 +24,7 @@ class HttpClientTest {
             Map<String, Object> body = CommetHttpClient.buildBody(
                     "expires_in_days", 30, "permissions", mapper.valueToTree(permissions),
                     "address", new CreateCustomerParamsAddress("Main", null, "City", null, "123", "US", null),
-                    "phases", List.of(new CreateOfferParamsPhasesItemVariant2("percentage", null, "month", 0)));
+                    "phases", List.of(new CreateOfferParamsPhasesItemVariant1("percentage", null, "month", 0)));
             body.put("duration_days", null);
             JsonNode actual = mapper.readTree(mapper.writeValueAsString(http.serializeRequestBody(body)));
             assertEquals(mapper.readTree("""

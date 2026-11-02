@@ -8,5 +8,6 @@ public record UsageEventConsumption(
         @JsonProperty("model") String model,
         @JsonProperty("deducted") double deducted,
         @JsonProperty("remaining") double remaining,
-        @JsonProperty("blocked") boolean blocked
+        @JsonProperty("blocked") boolean blocked,
+        @JsonProperty("plan_credit_limit") UsageEventConsumptionPlanCreditLimit planCreditLimit
 ) {}
