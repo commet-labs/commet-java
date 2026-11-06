@@ -24,6 +24,10 @@ public record Plan(
         @JsonProperty("unused_plan_credits") PlanUnusedPlanCredits unusedPlanCredits,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("plan_credit_limit") PlanPlanCreditLimit planCreditLimit,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("unused_plan_balance") PlanUnusedPlanBalance unusedPlanBalance,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("plan_balance_limit") PlanPlanBalanceLimit planBalanceLimit,
         @JsonProperty("sort_order") long sortOrder,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("plan_group_id") String planGroupId,

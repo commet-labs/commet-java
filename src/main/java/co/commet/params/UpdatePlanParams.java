@@ -1,6 +1,8 @@
 package co.commet.params;
 
+import co.commet.models.UpdatePlanParamsPlanBalanceLimit;
 import co.commet.models.UpdatePlanParamsPlanCreditLimit;
+import co.commet.models.UpdatePlanParamsUnusedPlanBalance;
 import co.commet.models.UpdatePlanParamsUnusedPlanCredits;
 import java.util.Map;
 
@@ -12,6 +14,9 @@ public final class UpdatePlanParams {
     private final Boolean isPublic;
     private final UpdatePlanParamsUnusedPlanCredits unusedPlanCredits;
     private final UpdatePlanParamsPlanCreditLimit planCreditLimit;
+    private final UpdatePlanParamsUnusedPlanBalance unusedPlanBalance;
+    private final UpdatePlanParamsPlanBalanceLimit planBalanceLimit;
+    private final Boolean blockOnExhaustion;
     private final Boolean isDefault;
     private final String idempotencyKey;
 
@@ -22,6 +27,9 @@ public final class UpdatePlanParams {
         this.isPublic = builder.isPublic;
         this.unusedPlanCredits = builder.unusedPlanCredits;
         this.planCreditLimit = builder.planCreditLimit;
+        this.unusedPlanBalance = builder.unusedPlanBalance;
+        this.planBalanceLimit = builder.planBalanceLimit;
+        this.blockOnExhaustion = builder.blockOnExhaustion;
         this.isDefault = builder.isDefault;
         this.idempotencyKey = builder.idempotencyKey;
     }
@@ -36,6 +44,9 @@ public final class UpdatePlanParams {
     public Boolean getIsPublic() { return isPublic; }
     public UpdatePlanParamsUnusedPlanCredits getUnusedPlanCredits() { return unusedPlanCredits; }
     public UpdatePlanParamsPlanCreditLimit getPlanCreditLimit() { return planCreditLimit; }
+    public UpdatePlanParamsUnusedPlanBalance getUnusedPlanBalance() { return unusedPlanBalance; }
+    public UpdatePlanParamsPlanBalanceLimit getPlanBalanceLimit() { return planBalanceLimit; }
+    public Boolean getBlockOnExhaustion() { return blockOnExhaustion; }
     public Boolean getIsDefault() { return isDefault; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
@@ -47,6 +58,9 @@ public final class UpdatePlanParams {
         private Boolean isPublic;
         private UpdatePlanParamsUnusedPlanCredits unusedPlanCredits;
         private UpdatePlanParamsPlanCreditLimit planCreditLimit;
+        private UpdatePlanParamsUnusedPlanBalance unusedPlanBalance;
+        private UpdatePlanParamsPlanBalanceLimit planBalanceLimit;
+        private Boolean blockOnExhaustion;
         private Boolean isDefault;
         private String idempotencyKey;
 
@@ -80,6 +94,21 @@ public final class UpdatePlanParams {
 
         public Builder planCreditLimit(UpdatePlanParamsPlanCreditLimit planCreditLimit) {
             this.planCreditLimit = planCreditLimit;
+            return this;
+        }
+
+        public Builder unusedPlanBalance(UpdatePlanParamsUnusedPlanBalance unusedPlanBalance) {
+            this.unusedPlanBalance = unusedPlanBalance;
+            return this;
+        }
+
+        public Builder planBalanceLimit(UpdatePlanParamsPlanBalanceLimit planBalanceLimit) {
+            this.planBalanceLimit = planBalanceLimit;
+            return this;
+        }
+
+        public Builder blockOnExhaustion(Boolean blockOnExhaustion) {
+            this.blockOnExhaustion = blockOnExhaustion;
             return this;
         }
 

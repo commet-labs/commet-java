@@ -12,6 +12,7 @@ public record CustomerUpdatedData(
         @JsonProperty("email") String email,
         @JsonProperty("taxDocument") String taxDocument,
         @JsonProperty("documentType") String documentType,
+        @JsonProperty("businessTaxId") Object businessTaxId,
         @JsonProperty("timezone") String timezone,
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("createdAt") String createdAt,

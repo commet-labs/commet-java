@@ -68,20 +68,21 @@ public class SubscriptionsResource {
     }
 
     /**
-     * Read whether the subscription buys credits automatically with its saved payment method when credits reach a threshold, with the top-ups used this period and the last failure.
+     * Read whether the subscription tops up automatically with its saved payment method when its available credits or balance reach a threshold, with the top-ups used this period and the last failure.
      */
     public SubscriptionAutoTopUp getAutoTopUp(String id) {
         return http.get("/subscriptions/" + id + "/auto-top-up", new TypeReference<SubscriptionAutoTopUp>() {}).getData();
     }
 
     /**
-     * Turn automatic credit purchases on or off and set the threshold, the credits each top-up buys and the maximum top-ups per period. Send only the fields that change. Enabling requires a plan that sells credits. The quantity must be at least the plan's purchase minimum when auto top-up is enabled or when the quantity changes, so turning it off keeps working after the minimum rises. Saving it enabled resumes a paused auto top-up.
+     * Turn automatic top-ups on or off and set the threshold, the size of each top-up and the maximum top-ups per period. Send only the fields that change. On a credits plan each top-up buys `quantity` credits; on a balance plan it adds `amount` in minor units of the subscription currency, plus tax, and `threshold` is in the same minor units. Enabling requires a plan that sells credits or has balance top-ups on. The size must be at least the plan's minimum when auto top-up is enabled or when the size changes, so turning it off keeps working after the minimum rises. Saving it enabled resumes a paused auto top-up.
      */
     public SubscriptionAutoTopUp updateAutoTopUp(String id, UpdateSubscriptionAutoTopUpParams params) {
         return http.patch("/subscriptions/" + id + "/auto-top-up", buildBody(
                 "enabled", params.getEnabled(),
                 "threshold", params.getThreshold(),
                 "quantity", params.getQuantity(),
+                "amount", params.getAmount(),
                 "max_per_period", params.getMaxPerPeriod()
         ), params.getIdempotencyKey(), new TypeReference<SubscriptionAutoTopUp>() {}).getData();
     }
@@ -98,7 +99,7 @@ public class SubscriptionsResource {
     }
 
     /**
-     * Top up a subscription's balance. Charges the customer's payment method for the specified amount.
+     * Top up a balance subscription. Charges the customer's payment method for the amount plus tax, adds it to the subscription's purchased balance (after paying back any overage owed on the plan balance), creates its invoice and emits `balance.topped_up`. Purchased balance is spent after the plan balance and is kept until the subscription ends. Rejected with 400 when the subscription is not on a balance plan, its plan has top-ups turned off, or the amount is below the effective minimum: the plan's minimum top-up in the subscription currency, raised to the currency's minimum charge.
      */
     public BalanceTopup topupBalance(String id, TopupBalanceParams params) {
         return http.post("/subscriptions/" + id + "/balance/topup", buildBody(
@@ -290,6 +291,7 @@ public class SubscriptionsResource {
                 "price_id", params.getPriceId(),
                 "initial_seats", params.getInitialSeats(),
                 "provider", params.getProvider(),
+                "payment_method_types", params.getPaymentMethodTypes(),
                 "name", params.getName(),
                 "start_date", params.getStartDate(),
                 "success_url", params.getSuccessUrl(),

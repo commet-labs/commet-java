@@ -18,6 +18,8 @@ public record Customer(
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("document_type") String documentType,
         @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("business_tax_id") BusinessTaxId businessTaxId,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("timezone") String timezone,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("metadata") Map<String, Object> metadata,

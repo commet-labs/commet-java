@@ -5,6 +5,7 @@ public final class UpdateSubscriptionAutoTopUpParams {
     private final Boolean enabled;
     private final Long threshold;
     private final Long quantity;
+    private final Long amount;
     private final Long maxPerPeriod;
     private final String idempotencyKey;
 
@@ -12,6 +13,7 @@ public final class UpdateSubscriptionAutoTopUpParams {
         this.enabled = builder.enabled;
         this.threshold = builder.threshold;
         this.quantity = builder.quantity;
+        this.amount = builder.amount;
         this.maxPerPeriod = builder.maxPerPeriod;
         this.idempotencyKey = builder.idempotencyKey;
     }
@@ -23,6 +25,7 @@ public final class UpdateSubscriptionAutoTopUpParams {
     public Boolean getEnabled() { return enabled; }
     public Long getThreshold() { return threshold; }
     public Long getQuantity() { return quantity; }
+    public Long getAmount() { return amount; }
     public Long getMaxPerPeriod() { return maxPerPeriod; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
@@ -31,6 +34,7 @@ public final class UpdateSubscriptionAutoTopUpParams {
         private Boolean enabled;
         private Long threshold;
         private Long quantity;
+        private Long amount;
         private Long maxPerPeriod;
         private String idempotencyKey;
 
@@ -49,6 +53,11 @@ public final class UpdateSubscriptionAutoTopUpParams {
 
         public Builder quantity(Long quantity) {
             this.quantity = quantity;
+            return this;
+        }
+
+        public Builder amount(Long amount) {
+            this.amount = amount;
             return this;
         }
 
