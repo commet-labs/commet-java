@@ -12,6 +12,8 @@ public record SubscriptionAutoTopUp(
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("quantity") Long quantity,
         @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("amount") Long amount,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("max_per_period") Long maxPerPeriod,
         @JsonProperty("status") String status,
         @JsonProperty("top_ups_this_period") long topUpsThisPeriod,

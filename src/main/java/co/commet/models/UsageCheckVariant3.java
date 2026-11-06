@@ -1,6 +1,7 @@
 package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -18,6 +19,11 @@ public record UsageCheckVariant3(
         @JsonProperty("unit_price") double unitPrice,
         @JsonProperty("estimated_amount") double estimatedAmount,
         @JsonProperty("current_balance") double currentBalance,
+        @JsonProperty("plan_balance") double planBalance,
+        @JsonProperty("purchased_balance") double purchasedBalance,
+        @JsonProperty("total_balance") double totalBalance,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("plan_balance_limit") UsageCheckVariant3PlanBalanceLimit planBalanceLimit,
         @JsonProperty("block_on_exhaustion") boolean blockOnExhaustion,
         @JsonProperty("currency") String currency,
         @JsonProperty("object") String object,

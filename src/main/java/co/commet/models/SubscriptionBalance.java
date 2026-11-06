@@ -7,5 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record SubscriptionBalance(
         @JsonProperty("remaining") double remaining,
         @JsonProperty("included") double included,
-        @JsonProperty("currency") String currency
+        @JsonProperty("currency") String currency,
+        @JsonProperty("plan") double plan,
+        @JsonProperty("purchased") double purchased,
+        @JsonProperty("total") double total
 ) {}

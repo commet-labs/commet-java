@@ -1,5 +1,6 @@
 package co.commet.params;
 
+import java.util.List;
 import java.util.Map;
 
 public final class CreateSubscriptionParams {
@@ -9,6 +10,7 @@ public final class CreateSubscriptionParams {
     private final String priceId;
     private final Map<String, Long> initialSeats;
     private final String provider;
+    private final List<String> paymentMethodTypes;
     private final String name;
     private final String startDate;
     private final String successUrl;
@@ -29,6 +31,7 @@ public final class CreateSubscriptionParams {
         this.priceId = builder.priceId;
         this.initialSeats = builder.initialSeats;
         this.provider = builder.provider;
+        this.paymentMethodTypes = builder.paymentMethodTypes;
         this.name = builder.name;
         this.startDate = builder.startDate;
         this.successUrl = builder.successUrl;
@@ -53,6 +56,7 @@ public final class CreateSubscriptionParams {
     public String getPriceId() { return priceId; }
     public Map<String, Long> getInitialSeats() { return initialSeats; }
     public String getProvider() { return provider; }
+    public List<String> getPaymentMethodTypes() { return paymentMethodTypes; }
     public String getName() { return name; }
     public String getStartDate() { return startDate; }
     public String getSuccessUrl() { return successUrl; }
@@ -74,6 +78,7 @@ public final class CreateSubscriptionParams {
         private String priceId;
         private Map<String, Long> initialSeats;
         private String provider;
+        private List<String> paymentMethodTypes;
         private String name;
         private String startDate;
         private String successUrl;
@@ -109,6 +114,11 @@ public final class CreateSubscriptionParams {
 
         public Builder provider(String provider) {
             this.provider = provider;
+            return this;
+        }
+
+        public Builder paymentMethodTypes(List<String> paymentMethodTypes) {
+            this.paymentMethodTypes = paymentMethodTypes;
             return this;
         }
 

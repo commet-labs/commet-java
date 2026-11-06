@@ -47,6 +47,7 @@ import co.commet.models.InvoiceOverdueData;
 import co.commet.models.InvoiceUpcomingData;
 import co.commet.models.PaymentMethodAttachedData;
 import co.commet.models.PaymentMethodUpdatedData;
+import co.commet.models.PaymentMethodDetachedData;
 import co.commet.models.CustomerCreatedData;
 import co.commet.models.CustomerUpdatedData;
 import co.commet.models.CustomerStateChangedData;
@@ -59,9 +60,11 @@ import co.commet.models.CreditsPurchasedData;
 import co.commet.models.CreditsLowData;
 import co.commet.models.CreditsDepletedData;
 import co.commet.models.CreditsExpiredData;
+import co.commet.models.BalanceGrantedData;
 import co.commet.models.BalanceToppedUpData;
 import co.commet.models.BalanceLowData;
 import co.commet.models.BalanceDepletedData;
+import co.commet.models.BalanceExpiredData;
 import co.commet.models.QuotaThresholdReachedData;
 import co.commet.models.QuotaExceededData;
 import co.commet.models.SeatsUpdatedData;
@@ -259,6 +262,10 @@ public record WebhookEvent(
         return convert(PaymentMethodUpdatedData.class);
     }
 
+    public PaymentMethodDetachedData asPaymentMethodDetached() {
+        return convert(PaymentMethodDetachedData.class);
+    }
+
     public CustomerCreatedData asCustomerCreated() {
         return convert(CustomerCreatedData.class);
     }
@@ -307,6 +314,10 @@ public record WebhookEvent(
         return convert(CreditsExpiredData.class);
     }
 
+    public BalanceGrantedData asBalanceGranted() {
+        return convert(BalanceGrantedData.class);
+    }
+
     public BalanceToppedUpData asBalanceToppedUp() {
         return convert(BalanceToppedUpData.class);
     }
@@ -317,6 +328,10 @@ public record WebhookEvent(
 
     public BalanceDepletedData asBalanceDepleted() {
         return convert(BalanceDepletedData.class);
+    }
+
+    public BalanceExpiredData asBalanceExpired() {
+        return convert(BalanceExpiredData.class);
     }
 
     public QuotaThresholdReachedData asQuotaThresholdReached() {

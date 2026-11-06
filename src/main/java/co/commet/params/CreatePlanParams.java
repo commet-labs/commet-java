@@ -1,6 +1,8 @@
 package co.commet.params;
 
+import co.commet.models.CreatePlanParamsPlanBalanceLimit;
 import co.commet.models.CreatePlanParamsPlanCreditLimit;
+import co.commet.models.CreatePlanParamsUnusedPlanBalance;
 import co.commet.models.CreatePlanParamsUnusedPlanCredits;
 import java.util.Map;
 
@@ -15,6 +17,8 @@ public final class CreatePlanParams {
     private final Boolean blockOnExhaustion;
     private final CreatePlanParamsUnusedPlanCredits unusedPlanCredits;
     private final CreatePlanParamsPlanCreditLimit planCreditLimit;
+    private final CreatePlanParamsUnusedPlanBalance unusedPlanBalance;
+    private final CreatePlanParamsPlanBalanceLimit planBalanceLimit;
     private final String planGroupId;
     private final Boolean isDefault;
     private final Map<String, Object> metadata;
@@ -30,6 +34,8 @@ public final class CreatePlanParams {
         this.blockOnExhaustion = builder.blockOnExhaustion;
         this.unusedPlanCredits = builder.unusedPlanCredits;
         this.planCreditLimit = builder.planCreditLimit;
+        this.unusedPlanBalance = builder.unusedPlanBalance;
+        this.planBalanceLimit = builder.planBalanceLimit;
         this.planGroupId = builder.planGroupId;
         this.isDefault = builder.isDefault;
         this.metadata = builder.metadata;
@@ -49,6 +55,8 @@ public final class CreatePlanParams {
     public Boolean getBlockOnExhaustion() { return blockOnExhaustion; }
     public CreatePlanParamsUnusedPlanCredits getUnusedPlanCredits() { return unusedPlanCredits; }
     public CreatePlanParamsPlanCreditLimit getPlanCreditLimit() { return planCreditLimit; }
+    public CreatePlanParamsUnusedPlanBalance getUnusedPlanBalance() { return unusedPlanBalance; }
+    public CreatePlanParamsPlanBalanceLimit getPlanBalanceLimit() { return planBalanceLimit; }
     public String getPlanGroupId() { return planGroupId; }
     public Boolean getIsDefault() { return isDefault; }
     public Map<String, Object> getMetadata() { return metadata; }
@@ -65,6 +73,8 @@ public final class CreatePlanParams {
         private Boolean blockOnExhaustion;
         private CreatePlanParamsUnusedPlanCredits unusedPlanCredits;
         private CreatePlanParamsPlanCreditLimit planCreditLimit;
+        private CreatePlanParamsUnusedPlanBalance unusedPlanBalance;
+        private CreatePlanParamsPlanBalanceLimit planBalanceLimit;
         private String planGroupId;
         private Boolean isDefault;
         private Map<String, Object> metadata;
@@ -107,6 +117,16 @@ public final class CreatePlanParams {
 
         public Builder planCreditLimit(CreatePlanParamsPlanCreditLimit planCreditLimit) {
             this.planCreditLimit = planCreditLimit;
+            return this;
+        }
+
+        public Builder unusedPlanBalance(CreatePlanParamsUnusedPlanBalance unusedPlanBalance) {
+            this.unusedPlanBalance = unusedPlanBalance;
+            return this;
+        }
+
+        public Builder planBalanceLimit(CreatePlanParamsPlanBalanceLimit planBalanceLimit) {
+            this.planBalanceLimit = planBalanceLimit;
             return this;
         }
 

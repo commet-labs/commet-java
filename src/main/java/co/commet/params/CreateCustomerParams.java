@@ -11,6 +11,7 @@ public final class CreateCustomerParams {
     private final String externalId;
     private final String fullName;
     private final String taxDocument;
+    private final String businessTaxId;
     private final CreateCustomerParamsAddress address;
     private final String addressId;
     private final Timezone timezone;
@@ -24,6 +25,7 @@ public final class CreateCustomerParams {
         this.externalId = builder.externalId;
         this.fullName = builder.fullName;
         this.taxDocument = builder.taxDocument;
+        this.businessTaxId = builder.businessTaxId;
         this.address = builder.address;
         this.addressId = builder.addressId;
         this.timezone = builder.timezone;
@@ -41,6 +43,7 @@ public final class CreateCustomerParams {
     public String getExternalId() { return externalId; }
     public String getFullName() { return fullName; }
     public String getTaxDocument() { return taxDocument; }
+    public String getBusinessTaxId() { return businessTaxId; }
     public CreateCustomerParamsAddress getAddress() { return address; }
     public String getAddressId() { return addressId; }
     public Timezone getTimezone() { return timezone; }
@@ -55,6 +58,7 @@ public final class CreateCustomerParams {
         private String externalId;
         private String fullName;
         private String taxDocument;
+        private String businessTaxId;
         private CreateCustomerParamsAddress address;
         private String addressId;
         private Timezone timezone;
@@ -83,6 +87,11 @@ public final class CreateCustomerParams {
 
         public Builder taxDocument(String taxDocument) {
             this.taxDocument = taxDocument;
+            return this;
+        }
+
+        public Builder businessTaxId(String businessTaxId) {
+            this.businessTaxId = businessTaxId;
             return this;
         }
 

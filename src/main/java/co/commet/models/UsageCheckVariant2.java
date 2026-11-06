@@ -23,6 +23,7 @@ public record UsageCheckVariant2(
         @JsonProperty("total_credits") long totalCredits,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("plan_credit_limit") UsageCheckVariant2PlanCreditLimit planCreditLimit,
+        @JsonProperty("block_on_exhaustion") boolean blockOnExhaustion,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) implements UsageCheck {}

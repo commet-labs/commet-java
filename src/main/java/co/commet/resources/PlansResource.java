@@ -155,7 +155,7 @@ public class PlansResource {
     }
 
     /**
-     * Update a plan's name, description, visibility, default status, metadata, what happens to its unused plan credits, or its plan credit limit.
+     * Update a plan's name, description, visibility, default status, metadata, overage behavior, what happens to its unused plan credits or plan balance, or its plan credit or plan balance limit.
      */
     public Plan update(String id, UpdatePlanParams params) {
         return http.patch("/plans/" + id, buildBody(
@@ -165,6 +165,9 @@ public class PlansResource {
                 "is_public", params.getIsPublic(),
                 "unused_plan_credits", params.getUnusedPlanCredits(),
                 "plan_credit_limit", params.getPlanCreditLimit(),
+                "unused_plan_balance", params.getUnusedPlanBalance(),
+                "plan_balance_limit", params.getPlanBalanceLimit(),
+                "block_on_exhaustion", params.getBlockOnExhaustion(),
                 "is_default", params.getIsDefault()
         ), params.getIdempotencyKey(), new TypeReference<Plan>() {}).getData();
     }
@@ -195,7 +198,7 @@ public class PlansResource {
     }
 
     /**
-     * Create a new plan with optional consumption model, visibility, and plan group assignment.
+     * Create a new plan with optional consumption model, visibility, plan group assignment, overage behavior, and the rollover and spend limit of its plan credits or plan balance.
      */
     public Plan create(CreatePlanParams params) {
         return http.post("/plans", buildBody(
@@ -208,6 +211,8 @@ public class PlansResource {
                 "block_on_exhaustion", params.getBlockOnExhaustion(),
                 "unused_plan_credits", params.getUnusedPlanCredits(),
                 "plan_credit_limit", params.getPlanCreditLimit(),
+                "unused_plan_balance", params.getUnusedPlanBalance(),
+                "plan_balance_limit", params.getPlanBalanceLimit(),
                 "plan_group_id", params.getPlanGroupId(),
                 "is_default", params.getIsDefault(),
                 "metadata", params.getMetadata()
