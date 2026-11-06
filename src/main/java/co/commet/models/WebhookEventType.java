@@ -20,6 +20,8 @@ public enum WebhookEventType {
     SUBSCRIPTION_CANCELLATION_REVOKED("subscription.cancellation_revoked"),
     SUBSCRIPTION_PLAN_CHANGE_SCHEDULED("subscription.plan_change_scheduled"),
     SUBSCRIPTION_PLAN_CHANGE_REVOKED("subscription.plan_change_revoked"),
+    SUBSCRIPTION_VERSION_CHANGED("subscription.version_changed"),
+    SUBSCRIPTION_VERSION_CHANGE_CANCELED("subscription.version_change_canceled"),
     SUBSCRIPTION_PAST_DUE("subscription.past_due"),
     TRIAL_STARTED("trial.started"),
     TRIAL_CONVERTED("trial.converted"),

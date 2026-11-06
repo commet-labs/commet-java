@@ -37,6 +37,8 @@ public record CreatedSubscription(
         @JsonProperty("has_payment_method") boolean hasPaymentMethod,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("plan_version") CreatedSubscriptionPlanVersion planVersion,
         @JsonProperty("offer_applications") List<SubscriptionOfferApplication> offerApplications,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("pause") CreatedSubscriptionPause pause,

@@ -1,5 +1,7 @@
 package co.commet.params;
 
+import java.util.List;
+
 public final class UpdateCreditPackParams {
 
     private final String name;
@@ -7,6 +9,7 @@ public final class UpdateCreditPackParams {
     private final Long credits;
     private final Long price;
     private final Boolean isActive;
+    private final List<String> planIds;
     private final String idempotencyKey;
 
     private UpdateCreditPackParams(Builder builder) {
@@ -15,6 +18,7 @@ public final class UpdateCreditPackParams {
         this.credits = builder.credits;
         this.price = builder.price;
         this.isActive = builder.isActive;
+        this.planIds = builder.planIds;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -27,6 +31,7 @@ public final class UpdateCreditPackParams {
     public Long getCredits() { return credits; }
     public Long getPrice() { return price; }
     public Boolean getIsActive() { return isActive; }
+    public List<String> getPlanIds() { return planIds; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -36,6 +41,7 @@ public final class UpdateCreditPackParams {
         private Long credits;
         private Long price;
         private Boolean isActive;
+        private List<String> planIds;
         private String idempotencyKey;
 
         private Builder() {
@@ -63,6 +69,11 @@ public final class UpdateCreditPackParams {
 
         public Builder isActive(Boolean isActive) {
             this.isActive = isActive;
+            return this;
+        }
+
+        public Builder planIds(List<String> planIds) {
+            this.planIds = planIds;
             return this;
         }
 

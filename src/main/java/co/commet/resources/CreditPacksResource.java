@@ -21,7 +21,7 @@ public class CreditPacksResource {
     }
 
     /**
-     * Update a credit pack's name, description, credits, price, or active status.
+     * Update a credit pack's name, description, credits, price, active status, or the plans that sell it.
      */
     public CreditPack update(String id, UpdateCreditPackParams params) {
         return http.patch("/credit-packs/" + id, buildBody(
@@ -29,7 +29,8 @@ public class CreditPacksResource {
                 "description", params.getDescription(),
                 "credits", params.getCredits(),
                 "price", params.getPrice(),
-                "is_active", params.getIsActive()
+                "is_active", params.getIsActive(),
+                "plan_ids", params.getPlanIds()
         ), params.getIdempotencyKey(), new TypeReference<CreditPack>() {}).getData();
     }
 
@@ -56,7 +57,8 @@ public class CreditPacksResource {
                 "description", params.getDescription(),
                 "credits", params.getCredits(),
                 "price", params.getPrice(),
-                "is_active", params.getIsActive()
+                "is_active", params.getIsActive(),
+                "plan_ids", params.getPlanIds()
         ), params.getIdempotencyKey(), new TypeReference<CreditPack>() {}).getData();
     }
 }

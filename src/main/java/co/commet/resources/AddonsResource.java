@@ -39,7 +39,7 @@ public class AddonsResource {
     }
 
     /**
-     * Update an add-on's name, description, or pricing.
+     * Update an add-on's name, description, pricing, or the plans that sell it.
      */
     public Addon update(String id, UpdateAddonParams params) {
         return http.patch("/addons/" + id, buildBody(
@@ -47,7 +47,8 @@ public class AddonsResource {
                 "description", params.getDescription(),
                 "base_price", params.getBasePrice(),
                 "included_units", params.getIncludedUnits(),
-                "overage_rate", params.getOverageRate()
+                "overage_rate", params.getOverageRate(),
+                "plan_ids", params.getPlanIds()
         ), params.getIdempotencyKey(), new TypeReference<Addon>() {}).getData();
     }
 
@@ -77,6 +78,7 @@ public class AddonsResource {
                 "description", params.getDescription(),
                 "base_price", params.getBasePrice(),
                 "feature_id", params.getFeatureId(),
+                "plan_ids", params.getPlanIds(),
                 "consumption_model", params.getConsumptionModel(),
                 "included_units", params.getIncludedUnits(),
                 "overage_rate", params.getOverageRate(),

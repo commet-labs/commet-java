@@ -1,5 +1,7 @@
 package co.commet.params;
 
+import java.util.List;
+
 public final class CreateAddonParams {
 
     private final String name;
@@ -7,6 +9,7 @@ public final class CreateAddonParams {
     private final String featureId;
     private final String consumptionModel;
     private final String description;
+    private final List<String> planIds;
     private final Long includedUnits;
     private final Long overageRate;
     private final Long creditCost;
@@ -18,6 +21,7 @@ public final class CreateAddonParams {
         this.featureId = builder.featureId;
         this.consumptionModel = builder.consumptionModel;
         this.description = builder.description;
+        this.planIds = builder.planIds;
         this.includedUnits = builder.includedUnits;
         this.overageRate = builder.overageRate;
         this.creditCost = builder.creditCost;
@@ -33,6 +37,7 @@ public final class CreateAddonParams {
     public String getFeatureId() { return featureId; }
     public String getConsumptionModel() { return consumptionModel; }
     public String getDescription() { return description; }
+    public List<String> getPlanIds() { return planIds; }
     public Long getIncludedUnits() { return includedUnits; }
     public Long getOverageRate() { return overageRate; }
     public Long getCreditCost() { return creditCost; }
@@ -45,6 +50,7 @@ public final class CreateAddonParams {
         private final String featureId;
         private final String consumptionModel;
         private String description;
+        private List<String> planIds;
         private Long includedUnits;
         private Long overageRate;
         private Long creditCost;
@@ -59,6 +65,11 @@ public final class CreateAddonParams {
 
         public Builder description(String description) {
             this.description = description;
+            return this;
+        }
+
+        public Builder planIds(List<String> planIds) {
+            this.planIds = planIds;
             return this;
         }
 
