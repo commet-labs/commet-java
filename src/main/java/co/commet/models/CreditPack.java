@@ -3,6 +3,7 @@ package co.commet.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CreditPack(
@@ -12,6 +13,7 @@ public record CreditPack(
         @JsonProperty("description") String description,
         @JsonProperty("credits") long credits,
         @JsonProperty("price") long price,
+        @JsonProperty("plan_ids") List<String> planIds,
         @JsonProperty("is_active") boolean isActive,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,

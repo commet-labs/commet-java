@@ -1,5 +1,7 @@
 package co.commet.params;
 
+import java.util.List;
+
 public final class UpdateAddonParams {
 
     private final String name;
@@ -7,6 +9,7 @@ public final class UpdateAddonParams {
     private final Long basePrice;
     private final Long includedUnits;
     private final Long overageRate;
+    private final List<String> planIds;
     private final String idempotencyKey;
 
     private UpdateAddonParams(Builder builder) {
@@ -15,6 +18,7 @@ public final class UpdateAddonParams {
         this.basePrice = builder.basePrice;
         this.includedUnits = builder.includedUnits;
         this.overageRate = builder.overageRate;
+        this.planIds = builder.planIds;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -27,6 +31,7 @@ public final class UpdateAddonParams {
     public Long getBasePrice() { return basePrice; }
     public Long getIncludedUnits() { return includedUnits; }
     public Long getOverageRate() { return overageRate; }
+    public List<String> getPlanIds() { return planIds; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
@@ -36,6 +41,7 @@ public final class UpdateAddonParams {
         private Long basePrice;
         private Long includedUnits;
         private Long overageRate;
+        private List<String> planIds;
         private String idempotencyKey;
 
         private Builder() {
@@ -63,6 +69,11 @@ public final class UpdateAddonParams {
 
         public Builder overageRate(Long overageRate) {
             this.overageRate = overageRate;
+            return this;
+        }
+
+        public Builder planIds(List<String> planIds) {
+            this.planIds = planIds;
             return this;
         }
 
