@@ -23,6 +23,8 @@ import co.commet.models.SubscriptionCancellationScheduledData;
 import co.commet.models.SubscriptionCancellationRevokedData;
 import co.commet.models.SubscriptionPlanChangeScheduledData;
 import co.commet.models.SubscriptionPlanChangeRevokedData;
+import co.commet.models.SubscriptionVersionChangedData;
+import co.commet.models.SubscriptionVersionChangeCanceledData;
 import co.commet.models.SubscriptionPastDueData;
 import co.commet.models.TrialStartedData;
 import co.commet.models.TrialConvertedData;
@@ -164,6 +166,14 @@ public record WebhookEvent(
 
     public SubscriptionPlanChangeRevokedData asSubscriptionPlanChangeRevoked() {
         return convert(SubscriptionPlanChangeRevokedData.class);
+    }
+
+    public SubscriptionVersionChangedData asSubscriptionVersionChanged() {
+        return convert(SubscriptionVersionChangedData.class);
+    }
+
+    public SubscriptionVersionChangeCanceledData asSubscriptionVersionChangeCanceled() {
+        return convert(SubscriptionVersionChangeCanceledData.class);
     }
 
     public SubscriptionPastDueData asSubscriptionPastDue() {

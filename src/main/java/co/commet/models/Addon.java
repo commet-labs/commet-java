@@ -3,6 +3,7 @@ package co.commet.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Addon(
@@ -23,6 +24,7 @@ public record Addon(
         @JsonProperty("overage_rate") Long overageRate,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("credit_cost") Long creditCost,
+        @JsonProperty("plan_ids") List<String> planIds,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) {}

@@ -23,6 +23,7 @@ import co.commet.params.AdjustBalanceParams;
 import co.commet.params.ApplySubscriptionOfferParams;
 import co.commet.params.CancelSubscriptionParams;
 import co.commet.params.ChangePlanParams;
+import co.commet.params.ChangeSubscriptionVersionParams;
 import co.commet.params.CreatePrepaidPeriodsCheckoutParams;
 import co.commet.params.CreateSubscriptionParams;
 import co.commet.params.CreateSubscriptionRecoveryLinkParams;
@@ -59,7 +60,7 @@ public class SubscriptionsResource {
     }
 
     /**
-     * Activate an add-on on a subscription. Charges a prorated amount for the current billing period.
+     * Activate an add-on on a subscription. Charges a prorated amount for the current billing period. An add-on that the subscription's plan version does not sell is rejected with addon_unavailable.
      */
     public SubscriptionAddon activateAddon(String id, ActivateAddonParams params) {
         return http.post("/subscriptions/" + id + "/addons", buildBody(
@@ -131,7 +132,17 @@ public class SubscriptionsResource {
     }
 
     /**
-     * Purchase a fixed credit pack or choose a whole credit quantity at the subscription plan price and minimum. Charges the saved payment method and adds purchased credits.
+     * Move a subscription to a newer published version of its plan, now or at the end of the period, without proration; an older version is rejected with version_not_newer, and a subscription on a running experiment moves only to a later version of that experiment. The subscription keeps its currency and its price: a destination that does not sell its currency is rejected with missing_regional_price, and one that does not sell the price it pays with price_not_found. A free version moves only to a free version and a paid one only to a paid one (validation_error). A subscription whose usage does not fit the destination, or with an active add-on the destination does not sell, is not moved either, and the error says why. Each change is recorded as a move of this one subscription in the plan's moves. Repeating the same request changes nothing; a new one replaces the pending move.
+     */
+    public Subscription changeVersion(String id, ChangeSubscriptionVersionParams params) {
+        return http.post("/subscriptions/" + id + "/change-version", buildBody(
+                "plan_version_id", params.getPlanVersionId(),
+                "effective", params.getEffective()
+        ), params.getIdempotencyKey(), new TypeReference<Subscription>() {}).getData();
+    }
+
+    /**
+     * Purchase a fixed credit pack or choose a whole credit quantity at the subscription plan price and minimum. Charges the saved payment method and adds purchased credits. A credit pack that the subscription's plan version does not sell is rejected with credit_pack_unavailable.
      */
     public CreditGrant purchaseCredits(String id, PurchaseCreditsParams params) {
         return http.post("/subscriptions/" + id + "/credits", buildBody(
@@ -256,6 +267,13 @@ public class SubscriptionsResource {
     }
 
     /**
+     * Cancel the move to another plan version pending for the next renewal, so the subscription stays on its version, and send subscription.version_change_canceled with reason canceled_by_merchant. A move made now has nothing pending to revoke. With nothing pending it changes nothing. Returns the subscription.
+     */
+    public Subscription revokeScheduledVersionChange(String id) {
+        return http.delete("/subscriptions/" + id + "/scheduled-version-change", null, new TypeReference<Subscription>() {}).getData();
+    }
+
+    /**
      * Revert a scheduled cancellation and return the updated subscription. Only works before cancellation takes effect.
      */
     public Subscription uncancel(String id, UncancelSubscriptionParams params) {
@@ -277,7 +295,8 @@ public class SubscriptionsResource {
     public SubscriptionsListResult list(ListSubscriptionsParams params) {
         return http.get("/subscriptions", buildBody(
                 "customer_id", params.getCustomerId(),
-                "status", params.getStatus()
+                "status", params.getStatus(),
+                "plan_version_id", params.getPlanVersionId()
         ), new TypeReference<SubscriptionsListResult>() {}).getData();
     }
 
@@ -297,6 +316,7 @@ public class SubscriptionsResource {
                 "success_url", params.getSuccessUrl(),
                 "prepaid_periods", params.getPrepaidPeriods(),
                 "cancel_at_period_end", params.getCancelAtPeriodEnd(),
+                "plan_version_id", params.getPlanVersionId(),
                 "offer_id", params.getOfferId(),
                 "promo_code", params.getPromoCode(),
                 "custom_trial_days", params.getCustomTrialDays(),

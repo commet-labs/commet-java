@@ -16,6 +16,7 @@ public final class CreateSubscriptionParams {
     private final String successUrl;
     private final Long prepaidPeriods;
     private final Boolean cancelAtPeriodEnd;
+    private final String planVersionId;
     private final String offerId;
     private final String promoCode;
     private final Long customTrialDays;
@@ -37,6 +38,7 @@ public final class CreateSubscriptionParams {
         this.successUrl = builder.successUrl;
         this.prepaidPeriods = builder.prepaidPeriods;
         this.cancelAtPeriodEnd = builder.cancelAtPeriodEnd;
+        this.planVersionId = builder.planVersionId;
         this.offerId = builder.offerId;
         this.promoCode = builder.promoCode;
         this.customTrialDays = builder.customTrialDays;
@@ -62,6 +64,7 @@ public final class CreateSubscriptionParams {
     public String getSuccessUrl() { return successUrl; }
     public Long getPrepaidPeriods() { return prepaidPeriods; }
     public Boolean getCancelAtPeriodEnd() { return cancelAtPeriodEnd; }
+    public String getPlanVersionId() { return planVersionId; }
     public String getOfferId() { return offerId; }
     public String getPromoCode() { return promoCode; }
     public Long getCustomTrialDays() { return customTrialDays; }
@@ -84,6 +87,7 @@ public final class CreateSubscriptionParams {
         private String successUrl;
         private Long prepaidPeriods;
         private Boolean cancelAtPeriodEnd;
+        private String planVersionId;
         private String offerId;
         private String promoCode;
         private Long customTrialDays;
@@ -144,6 +148,11 @@ public final class CreateSubscriptionParams {
 
         public Builder cancelAtPeriodEnd(Boolean cancelAtPeriodEnd) {
             this.cancelAtPeriodEnd = cancelAtPeriodEnd;
+            return this;
+        }
+
+        public Builder planVersionId(String planVersionId) {
+            this.planVersionId = planVersionId;
             return this;
         }
 

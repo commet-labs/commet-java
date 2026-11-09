@@ -37,9 +37,13 @@ public record Subscription(
         @JsonProperty("has_payment_method") boolean hasPaymentMethod,
         @JsonProperty("created_at") String createdAt,
         @JsonProperty("updated_at") String updatedAt,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("plan_version") SubscriptionPlanVersion planVersion,
         @JsonProperty("offer_applications") List<SubscriptionOfferApplication> offerApplications,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("pause") SubscriptionPause pause,
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        @JsonProperty("scheduled_version_change") SubscriptionScheduledVersionChange scheduledVersionChange,
         @JsonProperty("plan_grant") SubscriptionPlanGrant planGrant,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("consumption_model") String consumptionModelAsString,

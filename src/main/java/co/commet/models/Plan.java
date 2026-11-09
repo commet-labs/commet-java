@@ -38,6 +38,7 @@ public record Plan(
         @JsonProperty("features") List<PlanFeaturesItem> features,
         @JsonProperty("prices") List<PlanPricesItem> prices,
         @JsonProperty("exchange_rates") List<PlanExchangeRatesItem> exchangeRates,
+        @JsonProperty("countries") List<PlanCountriesItem> countries,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) {

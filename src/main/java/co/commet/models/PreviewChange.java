@@ -2,6 +2,7 @@ package co.commet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PreviewChange(
@@ -13,6 +14,7 @@ public record PreviewChange(
         @JsonProperty("days_remaining") long daysRemaining,
         @JsonProperty("total_days") long totalDays,
         @JsonProperty("is_upgrade") boolean isUpgrade,
+        @JsonProperty("deactivated_addons") List<PreviewChangeDeactivatedAddonsItem> deactivatedAddons,
         @JsonProperty("offer_application") PreviewChangeOfferApplication offerApplication,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
