@@ -355,6 +355,7 @@ Fired when a payment is refunded, fully or partially. A refund does not change t
 - `invoiceNumber` (`String`)
 - `customerId` (`String`)
 - `subscriptionId` (`String`)
+- `amountRefunded` (`Long`)
 - `refundAmount` (`Double`)
 - `currency` (`String`)
 

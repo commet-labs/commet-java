@@ -23,10 +23,12 @@ public class TransactionsResource {
     }
 
     /**
-     * Issue a full refund and return the provider-neutral refund resource with its actual status.
+     * Refund a positive amount in the payment currency’s smallest unit, or omit amount to refund the remaining amount. Returns the refund resource with its actual status.
      */
     public Refund refund(String id, RefundTransactionParams params) {
-        return http.post("/transactions/" + id + "/refund", Map.of(), params.getIdempotencyKey(), new TypeReference<Refund>() {}).getData();
+        return http.post("/transactions/" + id + "/refund", buildBody(
+                "amount", params.getAmount()
+        ), params.getIdempotencyKey(), new TypeReference<Refund>() {}).getData();
     }
 
     /**

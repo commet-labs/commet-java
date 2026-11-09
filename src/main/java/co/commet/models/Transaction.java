@@ -19,6 +19,7 @@ public record Transaction(
         @JsonProperty("tax_amount") Long taxAmount,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("presentment_amount") Long presentmentAmount,
+        @JsonProperty("amount_refunded") long amountRefunded,
         @JsonProperty("currency") String currency,
         @JsonProperty("provider") String providerAsString,
         @JsonInclude(JsonInclude.Include.ALWAYS)
