@@ -232,7 +232,7 @@ public class PlansResource {
     }
 
     /**
-     * List a plan's latest moves of subscribers between versions, newest first, with how many are moving, moved, need a change, were left out, canceled or kept on their version.
+     * List a plan's latest moves of subscribers between versions, newest first, including the change of a single subscription, with how many are moving, moved, need a change, were left out, canceled or kept on their version.
      */
     public PlansListMovesResult listMoves(String id) {
         return http.get("/plans/" + id + "/moves", new TypeReference<PlansListMovesResult>() {}).getData();

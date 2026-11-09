@@ -2395,7 +2395,7 @@ Discriminator: `type`
 ### SubscriberNeedingAChange
 
 - `subscriptionId` (`String`, required)
-- `moveId` (`String | null`, required) — The move it could not complete, or null for a single change.
+- `moveId` (`String`, required) — The move it could not complete.
 - `fromVersionId` (`String`, required) — The version it stays on.
 - `toVersionId` (`String`, required) — The version it could not move to.
 - `code` (`String`, required) — Why it could not move.
