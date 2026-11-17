@@ -13,8 +13,10 @@ public final class UpdatePlanParams {
     private final Map<String, Object> metadata;
     private final Boolean isPublic;
     private final UpdatePlanParamsUnusedPlanCredits unusedPlanCredits;
+    private final Boolean unlimitedPlanCredits;
     private final UpdatePlanParamsPlanCreditLimit planCreditLimit;
     private final UpdatePlanParamsUnusedPlanBalance unusedPlanBalance;
+    private final Boolean unlimitedPlanBalance;
     private final UpdatePlanParamsPlanBalanceLimit planBalanceLimit;
     private final Boolean blockOnExhaustion;
     private final Boolean isDefault;
@@ -26,8 +28,10 @@ public final class UpdatePlanParams {
         this.metadata = builder.metadata;
         this.isPublic = builder.isPublic;
         this.unusedPlanCredits = builder.unusedPlanCredits;
+        this.unlimitedPlanCredits = builder.unlimitedPlanCredits;
         this.planCreditLimit = builder.planCreditLimit;
         this.unusedPlanBalance = builder.unusedPlanBalance;
+        this.unlimitedPlanBalance = builder.unlimitedPlanBalance;
         this.planBalanceLimit = builder.planBalanceLimit;
         this.blockOnExhaustion = builder.blockOnExhaustion;
         this.isDefault = builder.isDefault;
@@ -43,8 +47,10 @@ public final class UpdatePlanParams {
     public Map<String, Object> getMetadata() { return metadata; }
     public Boolean getIsPublic() { return isPublic; }
     public UpdatePlanParamsUnusedPlanCredits getUnusedPlanCredits() { return unusedPlanCredits; }
+    public Boolean getUnlimitedPlanCredits() { return unlimitedPlanCredits; }
     public UpdatePlanParamsPlanCreditLimit getPlanCreditLimit() { return planCreditLimit; }
     public UpdatePlanParamsUnusedPlanBalance getUnusedPlanBalance() { return unusedPlanBalance; }
+    public Boolean getUnlimitedPlanBalance() { return unlimitedPlanBalance; }
     public UpdatePlanParamsPlanBalanceLimit getPlanBalanceLimit() { return planBalanceLimit; }
     public Boolean getBlockOnExhaustion() { return blockOnExhaustion; }
     public Boolean getIsDefault() { return isDefault; }
@@ -57,8 +63,10 @@ public final class UpdatePlanParams {
         private Map<String, Object> metadata;
         private Boolean isPublic;
         private UpdatePlanParamsUnusedPlanCredits unusedPlanCredits;
+        private Boolean unlimitedPlanCredits;
         private UpdatePlanParamsPlanCreditLimit planCreditLimit;
         private UpdatePlanParamsUnusedPlanBalance unusedPlanBalance;
+        private Boolean unlimitedPlanBalance;
         private UpdatePlanParamsPlanBalanceLimit planBalanceLimit;
         private Boolean blockOnExhaustion;
         private Boolean isDefault;
@@ -92,6 +100,11 @@ public final class UpdatePlanParams {
             return this;
         }
 
+        public Builder unlimitedPlanCredits(Boolean unlimitedPlanCredits) {
+            this.unlimitedPlanCredits = unlimitedPlanCredits;
+            return this;
+        }
+
         public Builder planCreditLimit(UpdatePlanParamsPlanCreditLimit planCreditLimit) {
             this.planCreditLimit = planCreditLimit;
             return this;
@@ -99,6 +112,11 @@ public final class UpdatePlanParams {
 
         public Builder unusedPlanBalance(UpdatePlanParamsUnusedPlanBalance unusedPlanBalance) {
             this.unusedPlanBalance = unusedPlanBalance;
+            return this;
+        }
+
+        public Builder unlimitedPlanBalance(Boolean unlimitedPlanBalance) {
+            this.unlimitedPlanBalance = unlimitedPlanBalance;
             return this;
         }
 

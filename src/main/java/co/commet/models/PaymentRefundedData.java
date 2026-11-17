@@ -12,6 +12,7 @@ public record PaymentRefundedData(
         @JsonProperty("invoiceNumber") String invoiceNumber,
         @JsonProperty("customerId") String customerId,
         @JsonProperty("subscriptionId") String subscriptionId,
+        @JsonProperty("amountRefunded") long amountRefunded,
         @JsonProperty("refundAmount") double refundAmount,
         @JsonProperty("currency") String currency
 ) {}

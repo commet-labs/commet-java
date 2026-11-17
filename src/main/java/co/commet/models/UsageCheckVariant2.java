@@ -18,9 +18,10 @@ public record UsageCheckVariant2(
         @JsonProperty("consumption_model") String consumptionModel,
         @JsonProperty("credits_per_unit") long creditsPerUnit,
         @JsonProperty("estimated_credits") long estimatedCredits,
-        @JsonProperty("plan_credits") long planCredits,
+        @JsonProperty("unlimited") boolean unlimited,
+        @JsonProperty("plan_credits") Long planCredits,
         @JsonProperty("purchased_credits") long purchasedCredits,
-        @JsonProperty("total_credits") long totalCredits,
+        @JsonProperty("total_credits") Long totalCredits,
         @JsonInclude(JsonInclude.Include.ALWAYS)
         @JsonProperty("plan_credit_limit") UsageCheckVariant2PlanCreditLimit planCreditLimit,
         @JsonProperty("block_on_exhaustion") boolean blockOnExhaustion,

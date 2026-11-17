@@ -16,8 +16,10 @@ public final class CreatePlanParams {
     private final Boolean isFree;
     private final Boolean blockOnExhaustion;
     private final CreatePlanParamsUnusedPlanCredits unusedPlanCredits;
+    private final Boolean unlimitedPlanCredits;
     private final CreatePlanParamsPlanCreditLimit planCreditLimit;
     private final CreatePlanParamsUnusedPlanBalance unusedPlanBalance;
+    private final Boolean unlimitedPlanBalance;
     private final CreatePlanParamsPlanBalanceLimit planBalanceLimit;
     private final String planGroupId;
     private final Boolean isDefault;
@@ -33,8 +35,10 @@ public final class CreatePlanParams {
         this.isFree = builder.isFree;
         this.blockOnExhaustion = builder.blockOnExhaustion;
         this.unusedPlanCredits = builder.unusedPlanCredits;
+        this.unlimitedPlanCredits = builder.unlimitedPlanCredits;
         this.planCreditLimit = builder.planCreditLimit;
         this.unusedPlanBalance = builder.unusedPlanBalance;
+        this.unlimitedPlanBalance = builder.unlimitedPlanBalance;
         this.planBalanceLimit = builder.planBalanceLimit;
         this.planGroupId = builder.planGroupId;
         this.isDefault = builder.isDefault;
@@ -54,8 +58,10 @@ public final class CreatePlanParams {
     public Boolean getIsFree() { return isFree; }
     public Boolean getBlockOnExhaustion() { return blockOnExhaustion; }
     public CreatePlanParamsUnusedPlanCredits getUnusedPlanCredits() { return unusedPlanCredits; }
+    public Boolean getUnlimitedPlanCredits() { return unlimitedPlanCredits; }
     public CreatePlanParamsPlanCreditLimit getPlanCreditLimit() { return planCreditLimit; }
     public CreatePlanParamsUnusedPlanBalance getUnusedPlanBalance() { return unusedPlanBalance; }
+    public Boolean getUnlimitedPlanBalance() { return unlimitedPlanBalance; }
     public CreatePlanParamsPlanBalanceLimit getPlanBalanceLimit() { return planBalanceLimit; }
     public String getPlanGroupId() { return planGroupId; }
     public Boolean getIsDefault() { return isDefault; }
@@ -72,8 +78,10 @@ public final class CreatePlanParams {
         private Boolean isFree;
         private Boolean blockOnExhaustion;
         private CreatePlanParamsUnusedPlanCredits unusedPlanCredits;
+        private Boolean unlimitedPlanCredits;
         private CreatePlanParamsPlanCreditLimit planCreditLimit;
         private CreatePlanParamsUnusedPlanBalance unusedPlanBalance;
+        private Boolean unlimitedPlanBalance;
         private CreatePlanParamsPlanBalanceLimit planBalanceLimit;
         private String planGroupId;
         private Boolean isDefault;
@@ -115,6 +123,11 @@ public final class CreatePlanParams {
             return this;
         }
 
+        public Builder unlimitedPlanCredits(Boolean unlimitedPlanCredits) {
+            this.unlimitedPlanCredits = unlimitedPlanCredits;
+            return this;
+        }
+
         public Builder planCreditLimit(CreatePlanParamsPlanCreditLimit planCreditLimit) {
             this.planCreditLimit = planCreditLimit;
             return this;
@@ -122,6 +135,11 @@ public final class CreatePlanParams {
 
         public Builder unusedPlanBalance(CreatePlanParamsUnusedPlanBalance unusedPlanBalance) {
             this.unusedPlanBalance = unusedPlanBalance;
+            return this;
+        }
+
+        public Builder unlimitedPlanBalance(Boolean unlimitedPlanBalance) {
+            this.unlimitedPlanBalance = unlimitedPlanBalance;
             return this;
         }
 

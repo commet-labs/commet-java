@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record WebhookCreditsBalance(
-        @JsonProperty("plan_credits") double planCredits,
+        @JsonProperty("unlimited") boolean unlimited,
+        @JsonProperty("plan_credits") Double planCredits,
         @JsonProperty("purchased_credits") double purchasedCredits,
-        @JsonProperty("total_credits") double totalCredits
+        @JsonProperty("total_credits") Double totalCredits
 ) {}

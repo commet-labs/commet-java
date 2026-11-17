@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record UsageEventConsumption(
         @JsonProperty("model") String model,
         @JsonProperty("deducted") double deducted,
-        @JsonProperty("remaining") double remaining,
+        @JsonProperty("unlimited") boolean unlimited,
+        @JsonProperty("remaining") Double remaining,
         @JsonProperty("blocked") boolean blocked,
         @JsonProperty("plan_credit_limit") UsageEventConsumptionPlanCreditLimit planCreditLimit,
         @JsonProperty("plan_balance_limit") UsageEventConsumptionPlanBalanceLimit planBalanceLimit

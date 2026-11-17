@@ -7,5 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record SubscriptionScheduledVersionChange(
         @JsonProperty("plan_version_id") String planVersionId,
         @JsonProperty("label") String label,
-        @JsonProperty("effective_at") String effectiveAt
+        @JsonProperty("effective_at") String effectiveAt,
+        @JsonProperty("currency") String currency
 ) {}

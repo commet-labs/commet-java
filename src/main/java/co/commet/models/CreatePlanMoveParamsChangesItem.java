@@ -10,5 +10,6 @@ public record CreatePlanMoveParamsChangesItem(
         @JsonProperty("keep_on_version") Object keepOnVersion,
         @JsonProperty("billing_interval") String billingInterval,
         @JsonProperty("seat_limit") Object seatLimit,
-        @JsonProperty("remove_addon_ids") List<String> removeAddonIds
+        @JsonProperty("remove_addon_ids") List<String> removeAddonIds,
+        @JsonProperty("currency") String currency
 ) {}
