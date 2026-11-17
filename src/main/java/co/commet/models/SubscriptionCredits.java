@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SubscriptionCredits(
-        @JsonProperty("remaining") double remaining,
+        @JsonProperty("unlimited") boolean unlimited,
+        @JsonProperty("remaining") Double remaining,
         @JsonProperty("included") double included,
         @JsonProperty("purchased") double purchased,
-        @JsonProperty("plan") double plan,
-        @JsonProperty("total") double total
+        @JsonProperty("plan") Double plan,
+        @JsonProperty("total") Double total
 ) {}

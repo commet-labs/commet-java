@@ -46,12 +46,12 @@ public class InvoicesResource {
     }
 
     /**
-     * Mark an outstanding invoice as "paid" or "void" and return the updated invoice. Cannot change the status of already paid or voided invoices.
+     * Deprecated. No longer changes the invoice. An invoice is paid when its charge settles: to collect a past-due subscription, reactivate it or send the customer a recovery link.
+     * @deprecated
      */
-    public Invoice updateStatus(String id, UpdateInvoiceStatusParams params) {
-        return http.patch("/invoices/" + id + "/status", buildBody(
-                "status", params.getStatus()
-        ), params.getIdempotencyKey(), new TypeReference<Invoice>() {}).getData();
+    @Deprecated
+    public Void updateStatus(String id, UpdateInvoiceStatusParams params) {
+        return http.patch("/invoices/" + id + "/status", Map.of(), params.getIdempotencyKey(), new TypeReference<Void>() {}).getData();
     }
 
     /**

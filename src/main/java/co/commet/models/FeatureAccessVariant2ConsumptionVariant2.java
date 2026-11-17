@@ -13,5 +13,6 @@ public record FeatureAccessVariant2ConsumptionVariant2(
         @JsonProperty("units_used") double unitsUsed,
         @JsonProperty("credits_per_unit") long creditsPerUnit,
         @JsonProperty("credits_consumed") double creditsConsumed,
-        @JsonProperty("available_units") long availableUnits
+        @JsonProperty("unlimited") boolean unlimited,
+        @JsonProperty("available_units") Long availableUnits
 ) implements FeatureAccessVariant2Consumption {}

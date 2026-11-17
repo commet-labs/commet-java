@@ -11,6 +11,7 @@ public record CustomerBatchFailedItemData(
         @JsonProperty("email") String email,
         @JsonProperty("full_name") String fullName,
         @JsonProperty("tax_document") String taxDocument,
+        @JsonProperty("business_tax_id") String businessTaxId,
         @JsonProperty("timezone") String timezone,
         @JsonProperty("metadata") Map<String, Object> metadata,
         @JsonProperty("address") CustomerBatchFailedItemDataAddress address

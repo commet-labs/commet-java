@@ -12,6 +12,7 @@ public record FeatureAccessVariant2ConsumptionVariant3(
         @JsonProperty("period") FeatureAccessVariant2ConsumptionVariant3Period period,
         @JsonProperty("units_used") double unitsUsed,
         @JsonProperty("spent") FeatureAccessVariant2ConsumptionVariant3Spent spent,
+        @JsonProperty("unlimited") boolean unlimited,
         @JsonProperty("available_units") Long availableUnits,
         @JsonProperty("unit_price") FeatureAccessVariant2ConsumptionVariant3UnitPrice unitPrice
 ) implements FeatureAccessVariant2Consumption {}

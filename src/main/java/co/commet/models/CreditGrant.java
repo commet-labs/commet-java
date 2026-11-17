@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CreditGrant(
         @JsonProperty("credits") long credits,
+        @JsonProperty("status") String status,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) {}
