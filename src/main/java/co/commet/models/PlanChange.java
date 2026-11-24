@@ -24,6 +24,8 @@ public interface PlanChange {
                         return mapper.treeToValue(node, PlanChangeVariant2.class);
                     case "completed":
                         return mapper.treeToValue(node, PlanChangeVariant3.class);
+                    case "processing":
+                        return mapper.treeToValue(node, PlanChangeVariant4.class);
                     default:
                         break;
                 }

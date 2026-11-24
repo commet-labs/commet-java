@@ -4,11 +4,13 @@ public final class PurchaseCreditsParams {
 
     private final String creditPackId;
     private final Long quantity;
+    private final String successUrl;
     private final String idempotencyKey;
 
     private PurchaseCreditsParams(Builder builder) {
         this.creditPackId = builder.creditPackId;
         this.quantity = builder.quantity;
+        this.successUrl = builder.successUrl;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -18,12 +20,14 @@ public final class PurchaseCreditsParams {
 
     public String getCreditPackId() { return creditPackId; }
     public Long getQuantity() { return quantity; }
+    public String getSuccessUrl() { return successUrl; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
 
         private String creditPackId;
         private Long quantity;
+        private String successUrl;
         private String idempotencyKey;
 
         private Builder() {
@@ -36,6 +40,11 @@ public final class PurchaseCreditsParams {
 
         public Builder quantity(Long quantity) {
             this.quantity = quantity;
+            return this;
+        }
+
+        public Builder successUrl(String successUrl) {
+            this.successUrl = successUrl;
             return this;
         }
 
