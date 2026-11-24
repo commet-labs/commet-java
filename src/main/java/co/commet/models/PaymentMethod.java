@@ -9,6 +9,8 @@ public enum PaymentMethod {
     MERCADO_PAGO("mercado_pago"),
     GOOGLE_PAY("google_pay"),
     SMARTPIX("smartpix"),
+    APPLE_PAY("apple_pay"),
+    LINK("link"),
     /** A value added to the API after this SDK version. Read it from the model's matching AsString accessor. */
     UNKNOWN_TO_SDK_VERSION(null);
 

@@ -3,10 +3,12 @@ package co.commet.params;
 public final class TopupBalanceParams {
 
     private final long amount;
+    private final String successUrl;
     private final String idempotencyKey;
 
     private TopupBalanceParams(Builder builder) {
         this.amount = builder.amount;
+        this.successUrl = builder.successUrl;
         this.idempotencyKey = builder.idempotencyKey;
     }
 
@@ -15,15 +17,22 @@ public final class TopupBalanceParams {
     }
 
     public long getAmount() { return amount; }
+    public String getSuccessUrl() { return successUrl; }
     public String getIdempotencyKey() { return idempotencyKey; }
 
     public static final class Builder {
 
         private final long amount;
+        private String successUrl;
         private String idempotencyKey;
 
         private Builder(long amount) {
             this.amount = amount;
+        }
+
+        public Builder successUrl(String successUrl) {
+            this.successUrl = successUrl;
+            return this;
         }
 
         public Builder idempotencyKey(String idempotencyKey) {

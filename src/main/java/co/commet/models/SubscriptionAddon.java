@@ -8,6 +8,7 @@ public record SubscriptionAddon(
         @JsonProperty("addon_id") String addonId,
         @JsonProperty("status") String status,
         @JsonProperty("prorated_charge") long proratedCharge,
+        @JsonProperty("checkout_url") String checkoutUrl,
         @JsonProperty("object") String object,
         @JsonProperty("livemode") boolean livemode
 ) {}
